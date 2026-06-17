@@ -1,0 +1,4 @@
+flask
+reportlab
+gunicorn
+psycopg[binary]
