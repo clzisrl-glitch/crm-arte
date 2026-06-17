@@ -107,7 +107,7 @@ def api_logout():
 @app.route("/api/chisono")
 def api_chisono():
     u=_utente_corrente()
-    if not u: return jsonify({"login":False})
+    if not u: return jsonify({"login":False,"online":crm_auth.USE_AUTH})
     return jsonify({"login":True,"nome":u["nome"],"ruolo":u["ruolo"],"online":crm_auth.USE_AUTH})
 @app.route('/api/status')
 def status():
