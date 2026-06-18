@@ -27,24 +27,45 @@ USE_DB = bool(DATABASE_URL)
 # ─────────────────────────────────────────────────────────────
 _pg = None
 def _get_pg():
-    """Connessione PostgreSQL (psycopg 3). I dati del CRM stanno in
-    un'unica riga JSON nella tabella crm_blob: semplice e robusto,
-    e mantiene identica la struttura dati che il programma già usa."""
+    """Connessione PostgreSQL (psycopg 3). I dati del CRM stanno COMPRESSI
+    (gzip) in un'unica riga della tabella crm_blob: cosi invece di ~70MB
+    se ne trasmettono ~7MB, evitando le interruzioni SSL su payload grandi."""
     global _pg
     import psycopg
     url = DATABASE_URL
     if url.startswith('postgres://'):
         url = 'postgresql://' + url[len('postgres://'):]
     if _pg is None or _pg.closed:
-        _pg = psycopg.connect(url, autocommit=True)
+        # keepalives: tiene viva la connessione durante scritture grandi
+        _pg = psycopg.connect(url, autocommit=True,
+                              keepalives=1, keepalives_idle=30,
+                              keepalives_interval=10, keepalives_count=5)
     return _pg
 
 def _db_init():
     conn = _get_pg()
     with conn.cursor() as cur:
-        cur.execute("CREATE TABLE IF NOT EXISTS crm_blob (id INT PRIMARY KEY, data JSONB)")
-        # tabella per i backup giornalieri (uno per giorno)
-        cur.execute("CREATE TABLE IF NOT EXISTS crm_backup (giorno TEXT PRIMARY KEY, data JSONB, creato TIMESTAMP DEFAULT now())")
+        # BYTEA = dati binari (qui ci mettiamo il JSON compresso gzip)
+        cur.execute("CREATE TABLE IF NOT EXISTS crm_blob (id INT PRIMARY KEY, data BYTEA)")
+        cur.execute("CREATE TABLE IF NOT EXISTS crm_backup (giorno TEXT PRIMARY KEY, data BYTEA, creato TIMESTAMP DEFAULT now())")
+
+def _comprimi(data):
+    import gzip as _g
+    return _g.compress(json.dumps(data, ensure_ascii=False, separators=(',',':')).encode('utf-8'))
+
+def _decomprimi(blob):
+    import gzip as _g
+    if blob is None:
+        return {}
+    b = bytes(blob)
+    # se per qualche motivo non e' compresso (vecchio formato), provo a leggerlo come testo
+    try:
+        return json.loads(_g.decompress(b).decode('utf-8'))
+    except Exception:
+        try:
+            return json.loads(b.decode('utf-8'))
+        except Exception:
+            return {}
 
 def _db_load():
     _db_init()
@@ -52,8 +73,8 @@ def _db_load():
     with conn.cursor() as cur:
         cur.execute("SELECT data FROM crm_blob WHERE id=1")
         row = cur.fetchone()
-        if row and row[0]:
-            return row[0] if isinstance(row[0], dict) else json.loads(row[0])
+        if row and row[0] is not None:
+            return _decomprimi(row[0])
     return {}
 
 _last_db_backup_day = None
@@ -61,7 +82,7 @@ def _db_save(data):
     global _last_db_backup_day
     _db_init()
     conn = _get_pg()
-    payload = json.dumps(data, ensure_ascii=False)
+    payload = _comprimi(data)
     with conn.cursor() as cur:
         cur.execute("INSERT INTO crm_blob (id, data) VALUES (1, %s) "
                     "ON CONFLICT (id) DO UPDATE SET data = EXCLUDED.data", (payload,))
@@ -146,12 +167,49 @@ def modo():
 
 # Caricamento iniziale dei dati nel database, da file, una sola volta.
 # Si usa al primo avvio online: se il DB è vuoto e c'è il file, lo importa.
+def _forza_reset_tabelle():
+    """Cancella le tabelle se sono di vecchio formato (jsonb invece di bytea).
+    Usa una connessione fresca e controlla il tipo della colonna 'data'."""
+    import psycopg
+    url = DATABASE_URL
+    if url.startswith('postgres://'):
+        url = 'postgresql://' + url[len('postgres://'):]
+    conn = psycopg.connect(url, autocommit=True,
+                           keepalives=1, keepalives_idle=30,
+                           keepalives_interval=10, keepalives_count=5)
+    try:
+        with conn.cursor() as cur:
+            # controllo il tipo della colonna data in crm_blob
+            cur.execute("""SELECT data_type FROM information_schema.columns
+                           WHERE table_name='crm_blob' AND column_name='data'""")
+            row = cur.fetchone()
+            tipo = (row[0] if row else '').lower()
+            # se non e' bytea (es. e' jsonb vecchio, o json), butto via e ricreo
+            if tipo and tipo != 'bytea':
+                cur.execute("DROP TABLE IF EXISTS crm_blob")
+                cur.execute("DROP TABLE IF EXISTS crm_backup")
+                print(f"  (tabelle vecchio formato '{tipo}' rimosse: verranno ricreate)")
+            # ricreo se mancano (formato corretto bytea)
+            cur.execute("CREATE TABLE IF NOT EXISTS crm_blob (id INT PRIMARY KEY, data BYTEA)")
+            cur.execute("CREATE TABLE IF NOT EXISTS crm_backup (giorno TEXT PRIMARY KEY, data BYTEA, creato TIMESTAMP DEFAULT now())")
+    finally:
+        conn.close()
+
 def seed_from_file_if_empty():
     if not USE_DB:
         return False
     try:
-        if _db_has_data():
-            return False
+        # assicuro che le tabelle siano del formato giusto (bytea); ricreo se vecchie
+        try:
+            _forza_reset_tabelle()
+        except Exception as _e0:
+            print(f"  (controllo tabelle: {_e0})")
+        # ora controllo se ci sono gia dati validi
+        try:
+            if _db_has_data():
+                return False
+        except Exception:
+            pass  # se il controllo fallisce, proseguo a importare
         d = None
         # 1) provo dal file compresso crm_data.json.gz (per l'online, piccolo abbastanza per GitHub)
         gz = BASE_DIR / 'crm_data.json.gz'
@@ -167,6 +225,8 @@ def seed_from_file_if_empty():
             _db_save(d)
             print(f"  PRIMO CARICAMENTO: {len(d['contacts'])} contatti importati nel database.")
             return True
+        else:
+            print("  (primo caricamento: file dati non trovato o vuoto)")
     except Exception as e:
         print(f"  (primo caricamento non riuscito: {e})")
     return False

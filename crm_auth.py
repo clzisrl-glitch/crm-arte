@@ -79,6 +79,35 @@ def controlla_login(nome, password):
         return {'nome': u['nome'], 'ruolo': u['ruolo']}
     return None
 
+# ── blocco dopo troppi tentativi sbagliati ──
+MAX_TENTATIVI = 3          # tentativi consentiti prima del blocco
+BLOCCO_MINUTI = 5          # durata del blocco in minuti
+_tentativi = {}            # {nome: [numero_falliti, timestamp_blocco]}
+
+def stato_blocco(nome):
+    """Restituisce i secondi di blocco rimanenti per questo utente (0 se libero)."""
+    k = (nome or '').lower().strip()
+    rec = _tentativi.get(k)
+    if not rec:
+        return 0
+    falliti, bloccato_fino = rec
+    if bloccato_fino and bloccato_fino > time.time():
+        return int(bloccato_fino - time.time())
+    return 0
+
+def registra_tentativo(nome, ok):
+    """Aggiorna il contatore tentativi. Se ok=True azzera, altrimenti incrementa e blocca."""
+    k = (nome or '').lower().strip()
+    if ok:
+        _tentativi.pop(k, None)
+        return
+    rec = _tentativi.get(k, [0, 0])
+    rec[0] += 1
+    if rec[0] >= MAX_TENTATIVI:
+        rec[1] = time.time() + BLOCCO_MINUTI * 60   # blocca
+        rec[0] = 0                                  # azzera il contatore dopo il blocco
+    _tentativi[k] = rec
+
 # ── azioni riservate al solo TITOLARE ──
 AZIONI_SOLO_TITOLARE = {
     'reset',            # azzerare il database
