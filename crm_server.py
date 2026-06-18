@@ -93,6 +93,19 @@ def index():
         return send_file(str(HTML_FILE))
     return "CRM_Arte.html non trovato nella stessa cartella di crm_server.py", 404
 
+@app.route('/manifest.json')
+def _pwa_manifest():
+    return send_from_directory(str(BASE_DIR), 'manifest.json', mimetype='application/json')
+@app.route('/sw.js')
+def _pwa_sw():
+    return send_from_directory(str(BASE_DIR), 'sw.js', mimetype='application/javascript')
+@app.route('/<path:_fname>')
+def _pwa_static(_fname):
+    import os as _os  # STATIC_PWA: servo icone e simili
+    if _fname.endswith(('.png','.ico','.json','.js')) and _os.path.exists(str(BASE_DIR/_fname)):
+        return send_from_directory(str(BASE_DIR), _fname)
+    from flask import abort; abort(404)
+
 @app.route("/api/login", methods=["POST"])
 def api_login():
     if not crm_auth.USE_AUTH:
