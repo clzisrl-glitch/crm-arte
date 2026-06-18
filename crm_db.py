@@ -27,45 +27,24 @@ USE_DB = bool(DATABASE_URL)
 # ─────────────────────────────────────────────────────────────
 _pg = None
 def _get_pg():
-    """Connessione PostgreSQL (psycopg 3). I dati del CRM stanno COMPRESSI
-    (gzip) in un'unica riga della tabella crm_blob: cosi invece di ~70MB
-    se ne trasmettono ~7MB, evitando le interruzioni SSL su payload grandi."""
+    """Connessione PostgreSQL (psycopg 3). I dati del CRM stanno in
+    un'unica riga JSON nella tabella crm_blob: semplice e robusto,
+    e mantiene identica la struttura dati che il programma già usa."""
     global _pg
     import psycopg
     url = DATABASE_URL
     if url.startswith('postgres://'):
         url = 'postgresql://' + url[len('postgres://'):]
     if _pg is None or _pg.closed:
-        # keepalives: tiene viva la connessione durante scritture grandi
-        _pg = psycopg.connect(url, autocommit=True,
-                              keepalives=1, keepalives_idle=30,
-                              keepalives_interval=10, keepalives_count=5)
+        _pg = psycopg.connect(url, autocommit=True)
     return _pg
 
 def _db_init():
     conn = _get_pg()
     with conn.cursor() as cur:
-        # BYTEA = dati binari (qui ci mettiamo il JSON compresso gzip)
-        cur.execute("CREATE TABLE IF NOT EXISTS crm_blob (id INT PRIMARY KEY, data BYTEA)")
-        cur.execute("CREATE TABLE IF NOT EXISTS crm_backup (giorno TEXT PRIMARY KEY, data BYTEA, creato TIMESTAMP DEFAULT now())")
-
-def _comprimi(data):
-    import gzip as _g
-    return _g.compress(json.dumps(data, ensure_ascii=False, separators=(',',':')).encode('utf-8'))
-
-def _decomprimi(blob):
-    import gzip as _g
-    if blob is None:
-        return {}
-    b = bytes(blob)
-    # se per qualche motivo non e' compresso (vecchio formato), provo a leggerlo come testo
-    try:
-        return json.loads(_g.decompress(b).decode('utf-8'))
-    except Exception:
-        try:
-            return json.loads(b.decode('utf-8'))
-        except Exception:
-            return {}
+        cur.execute("CREATE TABLE IF NOT EXISTS crm_blob (id INT PRIMARY KEY, data JSONB)")
+        # tabella per i backup giornalieri (uno per giorno)
+        cur.execute("CREATE TABLE IF NOT EXISTS crm_backup (giorno TEXT PRIMARY KEY, data JSONB, creato TIMESTAMP DEFAULT now())")
 
 def _db_load():
     _db_init()
@@ -73,8 +52,8 @@ def _db_load():
     with conn.cursor() as cur:
         cur.execute("SELECT data FROM crm_blob WHERE id=1")
         row = cur.fetchone()
-        if row and row[0] is not None:
-            return _decomprimi(row[0])
+        if row and row[0]:
+            return row[0] if isinstance(row[0], dict) else json.loads(row[0])
     return {}
 
 _last_db_backup_day = None
@@ -82,7 +61,7 @@ def _db_save(data):
     global _last_db_backup_day
     _db_init()
     conn = _get_pg()
-    payload = _comprimi(data)
+    payload = json.dumps(data, ensure_ascii=False)
     with conn.cursor() as cur:
         cur.execute("INSERT INTO crm_blob (id, data) VALUES (1, %s) "
                     "ON CONFLICT (id) DO UPDATE SET data = EXCLUDED.data", (payload,))
@@ -171,16 +150,6 @@ def seed_from_file_if_empty():
     if not USE_DB:
         return False
     try:
-        # se in passato e' stata salvata una struttura VUOTA o in formato vecchio,
-        # ripulisco le tabelle cosi posso reimportare pulito dal file
-        try:
-            conn = _get_pg()
-            with conn.cursor() as cur:
-                cur.execute("DROP TABLE IF EXISTS crm_blob")
-                cur.execute("DROP TABLE IF EXISTS crm_backup")
-        except Exception as _e0:
-            print(f"  (pulizia tabelle: {_e0})")
-        _db_init()
         if _db_has_data():
             return False
         d = None
@@ -198,8 +167,6 @@ def seed_from_file_if_empty():
             _db_save(d)
             print(f"  PRIMO CARICAMENTO: {len(d['contacts'])} contatti importati nel database.")
             return True
-        else:
-            print("  (primo caricamento: file dati non trovato o vuoto)")
     except Exception as e:
         print(f"  (primo caricamento non riuscito: {e})")
     return False

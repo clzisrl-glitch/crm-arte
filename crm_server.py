@@ -34,6 +34,13 @@ def solo_titolare(azione):
             return f(*a, **k)
         return w
     return deco
+def richiede_login(f):
+    @wraps(f)
+    def w(*a, **k):
+        if crm_auth.USE_AUTH and not _utente_corrente():
+            return jsonify({"error":"Devi prima accedere."}), 401
+        return f(*a, **k)
+    return w
 
 
 # Data file path — same folder as this script
@@ -116,6 +123,7 @@ def status():
     return jsonify({'hasData': has_data, 'contacts': len(data.get('contacts', []))})
 
 @app.route('/api/load')
+@richiede_login
 def api_load():
     data = load_data()
     if not data.get('contacts'):
@@ -123,6 +131,7 @@ def api_load():
     return jsonify(data)
 
 @app.route('/api/save', methods=['POST'])
+@richiede_login
 def api_save():
     try:
         incoming = request.get_json(force=True)
@@ -139,6 +148,7 @@ def api_save():
         return jsonify({'error': str(e)}), 500
 
 @app.route('/api/save_full', methods=['POST'])
+@richiede_login
 def api_save_full():
     """Called on first load to save everything. Preserves verifiche (and any
     other keys already on disk) so a full re-save never wipes the queue."""
