@@ -593,7 +593,7 @@ body[data-ruolo="operatore"] [onclick^="deleteContact"]{display:none !important;
       <input class="pr-search" id="quickSearch" placeholder="Cerca cognome..." oninput="liveSearch(this.value)">
       <span class="pr-nav-info" id="prNav"></span>
       <button class="btn-u btn-blue-soft" id="btnAzzera" onclick="azzeraRicerca()" style="display:none" title="Torna a navigare tutto il database">&#10005; Azzera ricerca</button>
-<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 19/06/2026 15:59</span>
+<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 19/06/2026 21:17</span>
       <div style="flex:1"></div>
       <button class="btn-u btn-del-discreet" onclick="deleteContact()" title="Elimina questo contatto">&#128465;</button>
     </div>
@@ -764,6 +764,7 @@ body[data-ruolo="operatore"] [onclick^="deleteContact"]{display:none !important;
       <h2 style="font-size:23px;color:#1a3a6a;margin:0 0 2px">&#127912; Arte Editoria Monete</h2>
       <div style="color:#777;margin-bottom:18px">Guida rapida. Le sezioni in alto sono i pulsanti della barra. Clicca un argomento per saltarci.</div>
       <div id="welcome-strumenti" style="background:#f4f6fa;border:1px solid #dfe5ee;border-radius:12px;padding:16px 18px;margin-bottom:22px"><div style="font-size:15px;font-weight:700;color:#1a3a6a;margin-bottom:4px">&#128295; Strumenti</div><div style="font-size:12.5px;color:#777;margin-bottom:12px">Backup, esportazioni e viste complete. <b>Backup, Excel e Completo sono riservati al titolare.</b></div><div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center"><button class="btn-u btn-green" onclick="backupCompleto()" title="Scarica una copia di sicurezza di tutti i dati (crm_data.json) sul tuo computer.">&#128190; Backup</button><button class="btn-u pt-mail" onclick="exportExcel(false)" title="Esporta tutti i contatti in un file Excel.">&#128202; Excel</button><button class="btn-u pt-lista" onclick="vistaCompleto()" title="Mostra tutti i contatti, dal piu recente inserito al primo.">&#128203; Completo</button><button class="btn-u" onclick="showTab('deceduti')" title="Contatti segnati come deceduti: tenuti da parte ed esclusi dalle ricerche.">&#9904; Deceduti</button></div></div>
+      <div id="welcome-compleanni" style="background:#fff8ee;border:1px solid #f0e0c0;border-radius:12px;padding:16px 18px;margin-bottom:22px"><div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px"><div style="font-size:15px;font-weight:700;color:#9a6500">&#127874; Prossimi compleanni</div><select id="complRegione" onchange="renderCompleanni()" style="padding:6px 10px;border:1px solid #e0cba0;border-radius:7px;font-size:12.5px;color:#7a5500;background:#fff"><option value="">Tutte le regioni</option></select></div><div style="font-size:12px;color:#a08040;margin-bottom:10px">Clienti che compiono gli anni nei prossimi 30 giorni. Un'occasione per una telefonata di auguri.</div><div id="complLista" style="display:flex;flex-direction:column;gap:4px;max-height:320px;overflow-y:auto"></div></div>
       <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:22px">
         <a href="#w-barra" class="tb-btn" style="text-decoration:none">Le sezioni</a>
         <a href="#w-giorno" class="tb-btn" style="text-decoration:none">La giornata tipo</a>
@@ -1114,6 +1115,7 @@ async function buildCRM(){
       const result=await loadFromDB();
       allContacts=contacts.filter(c=>c.Stato!=='da_verificare'&&c.Stato!=='potenziale'&&!(typeof _isDeceduto==='function'&&_isDeceduto(c))).sort((a,b)=>(a.Cognome+a.Nome).localeCompare(b.Cognome+b.Nome,'it'));
       currentResults=allContacts;
+      try{_aggiornaBadgeCompleanni();}catch(e){}
       currentIdx=result&&result.lastIdx<allContacts.length?result.lastIdx:0;
       currentWeek=getMonday(new Date());
       buildAgendaIndex();
@@ -1354,6 +1356,7 @@ function showTab(name){
   if(name==='zonalibera'){initZlRadbar();setTimeout(()=>document.getElementById('zlPlace')?.focus(),100);}
   if(name==='controllare')renderControllare();
   if(name==='deceduti')renderDeceduti();
+  if(name==='welcome'){try{renderCompleanni();}catch(e){}}
   if(name==='potenziali')renderPotenziali();
   if(name==='nocell')renderNocell();
 }
@@ -1826,6 +1829,11 @@ function _dataNascitaParsed(c){
   if(m){var a=parseInt(m[3],10); if(a<100)a=a<=(new Date().getFullYear()%100)?2000+a:1900+a; return {giorno:parseInt(m[1],10),mese:parseInt(m[2],10),anno:a};}
   return _dataDaCF(c.Codice_fiscale);
 }
+function _dataNascitaFmt(c){
+  var d=_dataNascitaParsed(c); if(!d)return null;
+  var gg=('0'+d.giorno).slice(-2), mm=('0'+d.mese).slice(-2);
+  return gg+'/'+mm+'/'+d.anno;
+}
 function _calcolaEta(c){
   var d=_dataNascitaParsed(c); if(!d)return null;
   var oggi=new Date(); var eta=oggi.getFullYear()-d.anno;
@@ -1845,6 +1853,67 @@ function _infoCompleanno(c){
   if(giorni===0)return {oggi:true};
   if(giorni<=7)return {giorni:giorni};
   return null;
+}
+function _prossimoCompleanno(c){
+  var d=_dataNascitaParsed(c); if(!d)return null;
+  var oggi=new Date(); oggi.setHours(0,0,0,0);
+  var anno=oggi.getFullYear();
+  var pross=new Date(anno,d.mese-1,d.giorno); pross.setHours(0,0,0,0);
+  if(pross<oggi)pross=new Date(anno+1,d.mese-1,d.giorno);
+  var giorni=Math.round((pross-oggi)/86400000);
+  return {giorni:giorni,giorno:d.giorno,mese:d.mese,data:pross};
+}
+function _popolaRegioniCompl(){
+  var sel=document.getElementById("complRegione"); if(!sel)return;
+  var regs={};
+  allContacts.forEach(function(c){var r=(c.Regione||"").trim(); if(r)regs[r]=1;});
+  var lista=Object.keys(regs).sort();
+  // se gia popolato non rifaccio
+  if(sel.options.length>1)return;
+  lista.forEach(function(r){var o=document.createElement("option");o.value=r;o.textContent=r;sel.appendChild(o);});
+}
+function _aggiornaBadgeCompleanni(){
+  try{
+    var oggi=0;
+    allContacts.forEach(function(c){var pc=_prossimoCompleanno(c); if(pc&&pc.giorni===0)oggi++;});
+    var tab=document.querySelector('.tab[data-tab="welcome"]');
+    if(!tab)return;
+    var b=tab.querySelector(".compl-badge");
+    if(oggi>0){
+      if(!b){b=document.createElement("span");b.className="compl-badge";b.style.cssText="margin-left:5px;background:#e0a83c;color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;font-weight:700";tab.appendChild(b);}
+      b.textContent="\uD83C\uDF82 "+oggi;
+      b.title=oggi+" compleanni oggi";
+    } else if(b){b.remove();}
+  }catch(e){}
+}
+function renderCompleanni(){
+  var box=document.getElementById("complLista"); if(!box)return;
+  _popolaRegioniCompl();
+  var regSel=(document.getElementById("complRegione")||{}).value||"";
+  var lista=[];
+  allContacts.forEach(function(c){
+    if(regSel && (c.Regione||"").trim()!==regSel)return;
+    var pc=_prossimoCompleanno(c); if(!pc)return;
+    if(pc.giorni<=30)lista.push({c:c,pc:pc});
+  });
+  lista.sort(function(a,b){return a.pc.giorni-b.pc.giorni;});
+  if(!lista.length){box.innerHTML='<div style="color:#a08040;font-size:13px;padding:8px">Nessun compleanno nei prossimi 30 giorni'+(regSel?' in '+regSel:'')+'.</div>';return;}
+  box.innerHTML=lista.map(function(x){
+    var c=x.c, pc=x.pc, eta=_calcolaEta(c);
+    var quando = pc.giorni===0?'<b style="color:#c0392b">oggi!</b>':(pc.giorni===1?'domani':'tra '+pc.giorni+' giorni');
+    var dataLbl=('0'+pc.giorno).slice(-2)+'/'+('0'+pc.mese).slice(-2);
+    var nome=esc((c.Cognome||'')+' '+(c.Nome||''));
+    var citta=esc(c.Citta||'')+(c.Provincia?' ('+esc(c.Provincia)+')':'');
+    return '<div onclick="apriContattoDaId(\''+esc(String(c.ID_contatto))+'\')" style="cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:7px 10px;background:#fff;border:1px solid #f0e4cc;border-radius:8px">'+
+      '<div><b style="color:#7a5500">'+nome+'</b>'+(eta!=null?' <span style="color:#a08040;font-size:12px">('+(eta+ (pc.giorni===0?0:0))+' &rarr; '+(eta+1)+' anni)</span>':'')+'<div style="font-size:11px;color:#b0966a">'+citta+'</div></div>'+
+      '<div style="text-align:right;white-space:nowrap"><div style="font-size:13px;color:#9a6500">'+quando+'</div><div style="font-size:11px;color:#b0966a">'+dataLbl+'</div></div>'+
+    '</div>';
+  }).join('');
+}
+function apriContattoDaId(id){
+  var c=contactMap[String(id)]; if(!c){alert("Contatto non trovato.");return;}
+  currentResults=[c]; currentIdx=0; searchActive=true;
+  renderContactAndMap(c); showTab('principale');
 }
 function renderContactAndMap(c){
   if(editMode)exitEditMode();
@@ -1887,7 +1956,7 @@ function renderContact(c){
     ${c.Cellulare2?`<div class="phsub">cell. 2 · <a class="tap tel" href="${telHref(c.Cellulare2)}">${esc(c.Cellulare2)}</a> <a class="wa-ico" href="${waHref(c.Cellulare2)}" target="_blank" rel="noopener" title="Scrivi su WhatsApp">${WA_SVG}</a></div>`:''}
     ${c.Tel_Ufficio?`<div class="phsub">uff. · <a class="tap tel" href="${telHref(c.Tel_Ufficio)}">${esc(c.Tel_Ufficio)}</a></div>`:''}
     ${c.Email?`<div class="phsub mail"><a href="${mailHref(c.Email)}">${esc(c.Email)}</a></div>`:''}
-    ${(c.Data_nascita||c.Luogo_nascita||c.Codice_fiscale)?`<div class="phsub born">${c.Data_nascita?`Nato il <b>${esc(fd(c.Data_nascita))}</b>`:''}${(function(){var e=_calcolaEta(c);return e!=null?` <b style="color:#1a3a6a">(${e} anni)</b>`:'';})()}${c.Luogo_nascita?`${c.Data_nascita?' a ':'Nato a '}<b>${esc(c.Luogo_nascita)}</b>`:''}${c.Codice_fiscale?`${(c.Data_nascita||c.Luogo_nascita)?' · ':''}CF <b>${esc(c.Codice_fiscale)}</b>`:''}</div>`:''}
+    ${(c.Data_nascita||c.Luogo_nascita||c.Codice_fiscale)?`<div class="phsub born">${c.Data_nascita?`Nato il <b>${esc(fd(c.Data_nascita))}</b>`:(function(){var df=_dataNascitaFmt(c);return df?`Nato il <b>${df}</b> <span style="font-size:10px;color:#999">(da CF)</span>`:'';})()}${(function(){var e=_calcolaEta(c);return e!=null?` <b style="color:#1a3a6a">(${e} anni)</b>`:'';})()}${c.Luogo_nascita?`${c.Data_nascita?' a ':'Nato a '}<b>${esc(c.Luogo_nascita)}</b>`:''}${c.Codice_fiscale?`${(c.Data_nascita||c.Luogo_nascita)?' · ':''}CF <b>${esc(c.Codice_fiscale)}</b>`:''}</div>`:''}
     ${(function(){var b=_infoCompleanno(c);if(!b)return'';if(b.oggi)return'<div style="margin-top:6px;background:#ffe9c7;border:1px solid #e0a83c;border-radius:8px;padding:6px 10px;font-size:13px;color:#9a6500;font-weight:600">🎂 Oggi compie gli anni! Fai gli auguri</div>';return'<div style="margin-top:6px;background:#fff5e0;border:1px solid #e9c87a;border-radius:8px;padding:6px 10px;font-size:13px;color:#9a6500">🎂 Compleanno tra '+b.giorni+(b.giorni===1?' giorno':' giorni')+'</div>';})()}
   </div>
   ${c.Note_telefono?`<div class="numstate"><span class="numstate-lbl">Stato numero</span><span class="numstate-val">${esc(c.Note_telefono)}</span></div>`:''}
