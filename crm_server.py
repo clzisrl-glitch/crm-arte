@@ -115,8 +115,8 @@ def api_login():
     if not u:
         return jsonify({"error":"Utente o password errati."}), 401
     from flask import make_response
-    resp=make_response(jsonify({"ok":True,"ruolo":u["ruolo"],"nome":u["nome"]}))
-    resp.set_cookie("crm_token", crm_auth.crea_token(u["nome"],u["ruolo"]), httponly=True, samesite="Lax", max_age=12*3600)
+    resp=make_response(jsonify({"ok":True,"ruolo":u["ruolo"],"nome":u["nome"],"zona":u.get("zona","")}))
+    resp.set_cookie("crm_token", crm_auth.crea_token(u["nome"],u["ruolo"],zona=u.get("zona","")), httponly=True, samesite="Lax", max_age=12*3600)
     return resp
 @app.route("/api/logout", methods=["POST"])
 def api_logout():
@@ -128,19 +128,49 @@ def api_logout():
 def api_chisono():
     u=_utente_corrente()
     if not u: return jsonify({"login":False,"online":crm_auth.USE_AUTH})
-    return jsonify({"login":True,"nome":u["nome"],"ruolo":u["ruolo"],"online":crm_auth.USE_AUTH})
+    zona=u.get("zona","")
+    regioni=crm_auth.regioni_della_zona(zona) if zona else None
+    return jsonify({"login":True,"nome":u["nome"],"ruolo":u["ruolo"],"online":crm_auth.USE_AUTH,"zona":zona,"regioni":regioni})
 @app.route('/api/status')
 def status():
     data = load_data()
     has_data = bool(data.get('contacts') and len(data['contacts']) > 0)
     return jsonify({'hasData': has_data, 'contacts': len(data.get('contacts', []))})
 
+def _filtra_per_zona(data, regioni):
+    if not regioni:
+        return data
+    regset=set(r.strip().lower() for r in regioni)
+    contatti=[c for c in data.get('contacts',[]) if (c.get('Regione') or '').strip().lower() in regset]
+    ids=set(str(c.get('ID_contatto')) for c in contatti)
+    opere=[o for o in data.get('opere',[]) if str(o.get('ID_contatto')) in ids]
+    tel=[t for t in data.get('telefonate',[]) if str(t.get('ID_contatto')) in ids]
+    out=dict(data); out['contacts']=contatti; out['opere']=opere; out['telefonate']=tel
+    return out
+def _merge_zona(existing, incoming, regioni):
+    regset=set(r.strip().lower() for r in regioni)
+    fuori=[c for c in existing.get('contacts',[]) if (c.get('Regione') or '').strip().lower() not in regset]
+    in_zona=[c for c in incoming.get('contacts',[]) if (c.get('Regione') or '').strip().lower() in regset]
+    merged_contacts=fuori+in_zona
+    ids_zona=set(str(c.get('ID_contatto')) for c in in_zona)
+    ids_fuori=set(str(c.get('ID_contatto')) for c in fuori)
+    tel_fuori=[t for t in existing.get('telefonate',[]) if str(t.get('ID_contatto')) in ids_fuori]
+    tel_in=[t for t in incoming.get('telefonate',[]) if str(t.get('ID_contatto')) in ids_zona]
+    return merged_contacts, tel_fuori+tel_in
+def _regioni_utente():
+    u=_utente_corrente()
+    if u and u.get('zona'):
+        return crm_auth.regioni_della_zona(u.get('zona'))
+    return None
 @app.route('/api/load')
 @richiede_login
 def api_load():
     data = load_data()
     if not data.get('contacts'):
         return jsonify({'error': 'no data'}), 404
+    _reg=_regioni_utente()
+    if _reg:
+        data=_filtra_per_zona(data,_reg)
     return jsonify(data)
 
 @app.route('/api/save', methods=['POST'])
@@ -151,8 +181,12 @@ def api_save():
         # Load existing data to preserve opere
         existing = load_data()
         # Update contacts and telefonate (user-editable)
-        existing['contacts']  = incoming.get('contacts', existing.get('contacts', []))
-        existing['telefonate'] = incoming.get('telefonate', existing.get('telefonate', []))
+        _reg=_regioni_utente()
+        if _reg:
+            existing['contacts'], existing['telefonate'] = _merge_zona(existing, incoming, _reg)
+        else:
+            existing['contacts']  = incoming.get('contacts', existing.get('contacts', []))
+            existing['telefonate'] = incoming.get('telefonate', existing.get('telefonate', []))
         existing['lastIdx']   = incoming.get('lastIdx', 0)
         save_data(existing)
         return jsonify({'ok': True, 'contacts': len(existing['contacts'])})
@@ -168,9 +202,13 @@ def api_save_full():
     try:
         incoming = request.get_json(force=True)
         existing = load_data() or {}
-        existing['contacts']   = incoming.get('contacts', existing.get('contacts', []))
-        existing['telefonate'] = incoming.get('telefonate', existing.get('telefonate', []))
-        existing['opere']      = incoming.get('opere', existing.get('opere', []))
+        _reg=_regioni_utente()
+        if _reg:
+            existing['contacts'], existing['telefonate'] = _merge_zona(existing, incoming, _reg)
+        else:
+            existing['contacts']   = incoming.get('contacts', existing.get('contacts', []))
+            existing['telefonate'] = incoming.get('telefonate', existing.get('telefonate', []))
+            existing['opere']      = incoming.get('opere', existing.get('opere', []))
         existing['lastIdx']    = incoming.get('lastIdx', existing.get('lastIdx', 0))
         # verifiche: usa quelle inviate se presenti, altrimenti conserva quelle su disco
         if 'verifiche' in incoming:
