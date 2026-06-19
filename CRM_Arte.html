@@ -357,7 +357,7 @@ body{background:var(--bg);color:var(--ink);font-size:13px}
 @media(max-width:1024px){
   .topbar{flex-wrap:wrap;height:auto;padding:4px 10px}
   .tabs{flex-wrap:wrap;gap:2px}
-  .tab{padding:9px 12px;font-size:13px;border-radius:9px;min-height:44px;box-sizing:border-box}
+  .tab{padding:7px 10px;font-size:12px;border-radius:7px;min-height:0}
   .pr-actions{gap:5px;padding:7px 10px}
   .btn-u{padding:7px 11px;font-size:12px;min-height:38px}
   .pr-search,.list-search{min-width:130px}
@@ -373,7 +373,7 @@ body{background:var(--bg);color:var(--ink);font-size:13px}
 }
 @media(max-width:560px){
   .topbar-title,.topbar h1{font-size:15px}
-  .tab{padding:7px 8px;font-size:12px;flex:1 1 auto;text-align:center}
+  .tab{padding:7px 8px;font-size:12px;flex:0 0 auto;text-align:center;border-radius:7px;min-height:0}
   .btn-u{padding:9px 12px;font-size:13px;min-height:44px}      /* tocco comodo */
   .pr-search,.list-search{flex:1 1 100%;min-width:0;font-size:16px;padding:9px} /* 16px = niente zoom iOS */
   .pr-field{flex-direction:column;margin-bottom:6px}
@@ -469,6 +469,7 @@ input:focus,select:focus,textarea:focus,.edit-inp:focus,.pr-search:focus,.list-s
   .tbl-scroll.opere .dtbl{font-size:10px!important}
 }
 
+body[data-ruolo="operatore"] #welcome-strumenti [onclick^="backupCompleto"],body[data-ruolo="operatore"] #welcome-strumenti [onclick^="exportExcel"],body[data-ruolo="operatore"] #welcome-strumenti [onclick^="vistaCompleto"]{display:none}
 body[data-ruolo="operatore"] [onclick^="backupCompleto"],
 body[data-ruolo="operatore"] [onclick^="exportExcel"],
 body[data-ruolo="operatore"] [onclick^="deleteContact"]{display:none !important;}
@@ -502,11 +503,9 @@ body[data-ruolo="operatore"] [onclick^="deleteContact"]{display:none !important;
 <div id="loginOverlay" style="display:none;position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#1a3a6a,#2a5a9a);align-items:center;justify-content:center"><div style="background:#fff;border-radius:14px;padding:32px 30px;width:330px;box-shadow:0 10px 40px rgba(0,0,0,.3);text-align:center"><div style="font-size:22px;font-weight:700;color:#1a3a6a;margin-bottom:4px">&#127912; Arte Editoria Monete</div><div style="font-size:12px;color:#888;margin-bottom:20px">Accedi per continuare</div><input id="loginUser" placeholder="Nome utente" autocomplete="username" style="width:100%;padding:10px 12px;margin-bottom:10px;border:1px solid #ccd;border-radius:7px;font-size:14px;box-sizing:border-box"><input id="loginPass" type="password" placeholder="Password" autocomplete="current-password" onkeydown="if(event.key===&apos;Enter&apos;)faiLogin()" style="width:100%;padding:10px 12px;margin-bottom:14px;border:1px solid #ccd;border-radius:7px;font-size:14px;box-sizing:border-box"><button onclick="faiLogin()" style="width:100%;padding:11px;background:#1a3a6a;color:#fff;border:none;border-radius:7px;font-size:15px;font-weight:600;cursor:pointer">Entra</button><div id="loginErr" style="color:#c0392b;font-size:12px;margin-top:10px;min-height:16px"></div></div></div>
 <div id="app">
   <div class="topbar">
-    <span class="topbar-title">Arte Editoria Monete</span><span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:10px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:980px;padding:2px 10px;white-space:nowrap">v. 19/06/2026 11:06</span>
+    <span class="topbar-title">CRM</span>
     <div style="display:flex;align-items:center;gap:8px;margin-right:10px">
       <span id="dbStatus" style="font-size:10px;color:#666;min-width:80px;text-align:right"></span>
-      <button class="topbtn topbtn-blue" onclick="backupCompleto()" title="Scarica backup completo (crm_data.json)">&#128190; Backup</button>
-      <button class="topbtn topbtn-green" onclick="exportExcel(false)" title="Esporta tutti in Excel">&#128202; Excel</button>
     </div>
     <div class="tabs">
       <button class="tab active" data-tab="agenda" onclick="showTab('agenda')" title="AGENDA: gli appuntamenti e le telefonate da fare oggi e nei prossimi giorni, in ordine di data.">AGENDA</button>
@@ -516,7 +515,6 @@ body[data-ruolo="operatore"] [onclick^="deleteContact"]{display:none !important;
       <button class="tab" data-tab="zonalibera" onclick="showTab('zonalibera')" title="ZONA: trova i contatti vicini a un punto entro un raggio in km, utile per riempire i buchi tra un appuntamento e l'altro.">Zona</button>
       <button class="tab" data-tab="recupero" onclick="showTab('recupero')" style="color:#c06010;font-weight:700" title="DA RECUPERARE: i contatti da richiamare (telefonata mancata, da risentire) in base alla data di prossimo richiamo.">&#9203; Da Recuperare</button>
       <button class="tab" data-tab="controllare" onclick="showTab('controllare')" style="color:#7a3ea0;font-weight:700" title="DA CONTROLLARE: la coda dei casi dubbi (doppioni, numeri sospetti, import UTET da confermare). Si risolvono uno a uno e lo stato si salva.">&#128270; Da controllare</button>
-            <button class="tab" data-tab="deceduti" onclick="showTab('deceduti')" style="color:#666;font-weight:700" title="Contatti con DECEDUTO nelle note: tenuti da parte ed esclusi dalle ricerche.">&#9904; Deceduti</button>
       <button class="tab" data-tab="potenziali" onclick="showTab('potenziali')" style="color:#a06a00;font-weight:700" title="Nominativi da una vecchia lista nazionale (CANI): non sono ancora tuoi clienti. Tenuti da parte, fuori dalle ricerche normali, da contattare quando vuoi.">&#9742; Potenziali</button>
       <button class="tab" data-tab="nocell" onclick="showTab('nocell')" style="color:#1a6a8a;font-weight:700" title="Clienti attivi SENZA numero di cellulare. Scegli la regione e stampa l'elenco con indirizzo, data di nascita e codice fiscale per cercare i cellulari mancanti.">&#128241; Da controllare cellulare</button>
 <button class="tab" data-tab="welcome" onclick="showTab('welcome')" title="WELCOME: la pagina iniziale con riepilogo e scorciatoie.">Welcome</button>
@@ -595,7 +593,7 @@ body[data-ruolo="operatore"] [onclick^="deleteContact"]{display:none !important;
       <input class="pr-search" id="quickSearch" placeholder="Cerca cognome..." oninput="liveSearch(this.value)">
       <span class="pr-nav-info" id="prNav"></span>
       <button class="btn-u btn-blue-soft" id="btnAzzera" onclick="azzeraRicerca()" style="display:none" title="Torna a navigare tutto il database">&#10005; Azzera ricerca</button>
-      <button class="btn-u pt-lista" onclick="vistaCompleto()" title="Tutti i contatti, dal piu recente inserito">&#128203; Completo</button>
+<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 19/06/2026 11:31</span>
       <div style="flex:1"></div>
       <button class="btn-u btn-del-discreet" onclick="deleteContact()" title="Elimina questo contatto">&#128465;</button>
     </div>
@@ -765,6 +763,7 @@ body[data-ruolo="operatore"] [onclick^="deleteContact"]{display:none !important;
     <div class="list-scroll" style="padding:24px 32px;max-width:1080px;font-size:13.5px;line-height:1.6;color:#222">
       <h2 style="font-size:23px;color:#1a3a6a;margin:0 0 2px">&#127912; Arte Editoria Monete</h2>
       <div style="color:#777;margin-bottom:18px">Guida rapida. Le sezioni in alto sono i pulsanti della barra. Clicca un argomento per saltarci.</div>
+      <div id="welcome-strumenti" style="background:#f4f6fa;border:1px solid #dfe5ee;border-radius:12px;padding:16px 18px;margin-bottom:22px"><div style="font-size:15px;font-weight:700;color:#1a3a6a;margin-bottom:4px">&#128295; Strumenti</div><div style="font-size:12.5px;color:#777;margin-bottom:12px">Backup, esportazioni e viste complete. <b>Backup, Excel e Completo sono riservati al titolare.</b></div><div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center"><button class="btn-u btn-green" onclick="backupCompleto()" title="Scarica una copia di sicurezza di tutti i dati (crm_data.json) sul tuo computer.">&#128190; Backup</button><button class="btn-u pt-mail" onclick="exportExcel(false)" title="Esporta tutti i contatti in un file Excel.">&#128202; Excel</button><button class="btn-u pt-lista" onclick="vistaCompleto()" title="Mostra tutti i contatti, dal piu recente inserito al primo.">&#128203; Completo</button><button class="btn-u" onclick="showTab('deceduti')" title="Contatti segnati come deceduti: tenuti da parte ed esclusi dalle ricerche.">&#9904; Deceduti</button></div></div>
       <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:22px">
         <a href="#w-barra" class="tb-btn" style="text-decoration:none">Le sezioni</a>
         <a href="#w-giorno" class="tb-btn" style="text-decoration:none">La giornata tipo</a>
@@ -783,7 +782,7 @@ body[data-ruolo="operatore"] [onclick^="deleteContact"]{display:none !important;
         <li><b>Provincia / Zona</b> &#8212; ricerca per zona geografica e contatti vicini.</li>
         <li><b>Da Recuperare</b> &#8212; schede da completare (senza numero o dati mancanti).</li>
         <li><b>Da controllare</b> &#8212; la coda dei casi da sistemare (numeri doppi, anomalie, possibili deceduti...). Vedi sotto.</li>
-        <li><b>&#9904; Deceduti</b> &#8212; contatti segnati come deceduti: messi da parte, esclusi dalle ricerche.</li>
+        <li><b>&#9904; Deceduti</b> &#8212; contatti segnati come deceduti (esclusi dalle ricerche): si aprono dal riquadro <b>Strumenti</b> qui in Welcome.</li>
         <li><b>&#9742; Potenziali</b> &#8212; nominativi di una vecchia lista nazionale, non ancora clienti. Tenuti a parte.</li>
         <li><b>&#128241; Da controllare cellulare</b> &#8212; clienti senza numero di cellulare, da cercare. Filtrabile per regione e provincia, con stampa.</li>
       </ul>
@@ -831,8 +830,8 @@ body[data-ruolo="operatore"] [onclick^="deleteContact"]{display:none !important;
       <h3 id="w-salva" style="color:#1a3a6a;border-bottom:2px solid #1a3a6a;padding-bottom:4px;margin:22px 0 8px">&#128190; Salvataggi e backup</h3>
       <ul style="margin-left:18px">
         <li>Ogni modifica si <b>salva da sola</b> (conferma verde in basso a destra).</li>
-        <li><b>Backup</b> (in alto) crea una copia di sicurezza; <b>Excel</b> esporta i dati.</li>
-        <li>La versione del programma &#232; scritta in alto accanto al titolo (es. <i>v. data ora</i>): se non corrisponde, stai usando una cartella vecchia.</li>
+        <li><b>Backup</b>, <b>Excel</b> e <b>Completo</b> sono qui nella pagina <b>Welcome</b>, nel riquadro Strumenti in alto (riservati al titolare).</li>
+        <li>La <b>versione</b> del programma (es. <i>v. data ora</i>) &#232; in basso nella barra azioni: se non corrisponde, stai usando una cartella vecchia o la cache del browser.</li>
       </ul>
       <div style="margin-top:24px;padding:12px 14px;background:#eef4fc;border-left:4px solid #1a3a6a;border-radius:6px;color:#33506f">
         <b>In due parole:</b> AGENDA per sapere chi chiamare oggi, la scheda per chiamare e annotare, Da controllare per sistemare i casi dubbi. Il resto sono archivi di servizio.
@@ -1768,6 +1767,7 @@ function azzeraRicerca(){
   updateAzzeraBtn();
 }
 function vistaCompleto(){
+  if(typeof _soloTitolare==='function' && !_soloTitolare('Vista Completo'))return;
   // tutti i contatti dal piu recente inserito (in fondo all'elenco) al primo
   currentResults=[...allContacts].reverse();
   searchActive=true; currentIdx=0;
