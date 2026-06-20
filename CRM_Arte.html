@@ -473,6 +473,7 @@ body[data-ruolo="operatore"] #welcome-strumenti [onclick^="backupCompleto"],body
 body[data-ruolo="operatore"] [onclick^="backupCompleto"],
 body[data-ruolo="operatore"] [onclick^="exportExcel"],
 body[data-ruolo="operatore"] [onclick^="deleteContact"]{display:none !important;}
+body[data-ruolo="operatore"] .tab-soloadmin{display:none!important}
 </style>
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#1a3a6a">
@@ -518,6 +519,7 @@ body[data-ruolo="operatore"] [onclick^="deleteContact"]{display:none !important;
       <button class="tab" data-tab="potenziali" onclick="showTab('potenziali')" style="color:#a06a00;font-weight:700" title="Nominativi da una vecchia lista nazionale (CANI): non sono ancora tuoi clienti. Tenuti da parte, fuori dalle ricerche normali, da contattare quando vuoi.">&#9742; Potenziali</button>
       <button class="tab" data-tab="nocell" onclick="showTab('nocell')" style="color:#1a6a8a;font-weight:700" title="Clienti attivi SENZA numero di cellulare. Scegli la regione e stampa l'elenco con indirizzo, data di nascita e codice fiscale per cercare i cellulari mancanti.">&#128241; Da controllare cellulare</button>
 <button class="tab" data-tab="welcome" onclick="showTab('welcome')" title="WELCOME: la pagina iniziale con riepilogo e scorciatoie.">Welcome</button>
+<button class="tab tab-soloadmin" data-tab="statistiche" onclick="showTab('statistiche')" title="STATISTICHE (solo titolare): andamento chiamate, esiti, telefoniste.">&#128202; Statistiche</button>
     </div>
   </div>
   <div id="page-agenda" class="page active">
@@ -593,7 +595,7 @@ body[data-ruolo="operatore"] [onclick^="deleteContact"]{display:none !important;
       <input class="pr-search" id="quickSearch" placeholder="Cerca cognome..." oninput="liveSearch(this.value)">
       <span class="pr-nav-info" id="prNav"></span>
       <button class="btn-u btn-blue-soft" id="btnAzzera" onclick="azzeraRicerca()" style="display:none" title="Torna a navigare tutto il database">&#10005; Azzera ricerca</button>
-<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 19/06/2026 21:17</span>
+<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 20/06/2026 04:36</span>
       <div style="flex:1"></div>
       <button class="btn-u btn-del-discreet" onclick="deleteContact()" title="Elimina questo contatto">&#128465;</button>
     </div>
@@ -674,6 +676,11 @@ body[data-ruolo="operatore"] [onclick^="deleteContact"]{display:none !important;
         <option value="all">Tutti</option>
         <option value="appuntamento">Solo appuntamenti</option>
         <option value="richiamo">Solo richiami</option>
+      </select>
+      <select id="recuperoPeriodo" onchange="renderRecupero()" style="padding:3px 6px;border:1px solid #c06010;border-radius:3px;font-size:11px;font-weight:600;color:#c06010" title="Da quanto e scaduto il richiamo">
+        <option value="recenti">Da fare ora (ultimi 6 mesi)</option>
+        <option value="anno">Ultimo anno</option>
+        <option value="tutti">Tutti (anche i piu vecchi)</option>
       </select>
       <span class="list-count" id="recuperoCount"></span>
       <button onclick="exportRecupero()" style="padding:3px 10px;background:#1a7a30;color:#fff;border:1px solid #0a5a20;border-radius:3px;font-size:11px;cursor:pointer">&#128202; Excel</button>
@@ -759,6 +766,7 @@ body[data-ruolo="operatore"] [onclick^="deleteContact"]{display:none !important;
     </div>
     <div id="decBody" class="list-scroll"></div>
   </div>
+  <div id="page-statistiche" class="page" style="padding:24px;overflow-y:auto"><div id="statBody" style="max-width:900px;margin:0 auto"></div></div>
   <div id="page-welcome" class="page"><!-- WELCOME-V2 -->
     <div class="list-scroll" style="padding:24px 32px;max-width:1080px;font-size:13.5px;line-height:1.6;color:#222">
       <h2 style="font-size:23px;color:#1a3a6a;margin:0 0 2px">&#127912; Arte Editoria Monete</h2>
@@ -925,6 +933,7 @@ async function _verificaAccesso(){
   try{const r=await fetch("/api/chisono");const j=await r.json();
     if(j.online&&!j.login){document.getElementById("loginOverlay").style.display="flex";return false;}
     if(j.ruolo){window._ruolo=j.ruolo;document.body.setAttribute("data-ruolo",j.ruolo);}
+    if(j.nome){window._nomeUtente=j.nome;}
     return true;
   }catch(e){return true;}
 }
@@ -933,7 +942,7 @@ async function faiLogin(){
   const err=document.getElementById("loginErr");err.textContent="";
   try{const r=await fetch("/api/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({utente:u,password:pw})});
     const j=await r.json();
-    if(j.ok){document.getElementById("loginOverlay").style.display="none";window._ruolo=j.ruolo;document.body.setAttribute("data-ruolo",j.ruolo);location.reload();}
+    if(j.ok){document.getElementById("loginOverlay").style.display="none";window._ruolo=j.ruolo;window._nomeUtente=j.nome;document.body.setAttribute("data-ruolo",j.ruolo);location.reload();}
     else err.textContent=j.error||"Accesso negato.";
   }catch(e){err.textContent="Errore di collegamento.";}
 }
@@ -1357,6 +1366,7 @@ function showTab(name){
   if(name==='controllare')renderControllare();
   if(name==='deceduti')renderDeceduti();
   if(name==='welcome'){try{renderCompleanni();}catch(e){}}
+  if(name==='statistiche'){try{renderStatistiche();}catch(e){}}
   if(name==='potenziali')renderPotenziali();
   if(name==='nocell')renderNocell();
 }
@@ -1915,6 +1925,73 @@ function apriContattoDaId(id){
   currentResults=[c]; currentIdx=0; searchActive=true;
   renderContactAndMap(c); showTab('principale');
 }
+function renderStatistiche(){
+  var box=document.getElementById('statBody'); if(!box)return;
+  if(window._ruolo && window._ruolo!=='titolare'){box.innerHTML='<div style="padding:30px;text-align:center;color:#888">Sezione riservata al titolare.</div>';return;}
+  var oggi=new Date(); oggi.setHours(0,0,0,0);
+  function parseD(s){if(!s)return null;var m=String(s).match(/(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{2,4})/);if(!m)return null;var a=parseInt(m[3],10);if(a<100)a=2000+a;return new Date(a,parseInt(m[2],10)-1,parseInt(m[1],10));}
+  // raccolgo le telefonate (con data)
+  var tutte=(typeof telefonate!=='undefined'?telefonate:[]);
+  var oggiC=0, sett=0, mese=0, tot=tutte.length;
+  var esiti={}, perOperatore={}, perMese={};
+  var inizioSett=new Date(oggi); inizioSett.setDate(oggi.getDate()-7);
+  var inizioMese=new Date(oggi); inizioMese.setDate(oggi.getDate()-30);
+  tutte.forEach(function(tel){
+    var d=parseD(tel.Data_da_fare)||parseD(tel.Data_appuntamento);
+    var es=(tel.Esito||'(nessuno)').trim()||'(nessuno)';
+    esiti[es]=(esiti[es]||0)+1;
+    var op=(tel.Operatore||'').trim();
+    if(op){if(!perOperatore[op])perOperatore[op]={tot:0,oggi:0,sett:0};perOperatore[op].tot++;}
+    if(d){
+      if(d.getTime()===oggi.getTime()){oggiC++; if(op)perOperatore[op].oggi++;}
+      if(d>=inizioSett){sett++; if(op)perOperatore[op].sett++;}
+      if(d>=inizioMese)mese++;
+      var ym=d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2);
+      perMese[ym]=(perMese[ym]||0)+1;
+    }
+  });
+  // conteggi contatti per stato
+  var nAttivi=allContacts.length;
+  // box riassuntivi
+  function card(lbl,val,col){return '<div style="flex:1;min-width:130px;background:#fff;border:1px solid #e6e6ea;border-radius:12px;padding:14px 16px"><div style="font-size:26px;font-weight:700;color:'+(col||'#1a3a6a')+'">'+val+'</div><div style="font-size:12px;color:#888">'+lbl+'</div></div>';}
+  var html='<h2 style="color:#1a3a6a;margin:0 0 4px">&#128202; Statistiche</h2><div style="color:#999;font-size:13px;margin-bottom:18px">Riservato al titolare. Le statistiche per telefonista si popolano dalle chiamate registrate da oggi in avanti.</div>';
+  html+='<div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:22px">'+card('Chiamate oggi',oggiC)+card('Ultimi 7 giorni',sett)+card('Ultimi 30 giorni',mese)+card('Totale registrate',tot,'#666')+'</div>';
+  // esiti
+  var esitiArr=Object.keys(esiti).map(function(k){return [k,esiti[k]];}).sort(function(a,b){return b[1]-a[1];});
+  html+='<h3 style="color:#1a3a6a;border-bottom:2px solid #eee;padding-bottom:6px">Esiti delle chiamate</h3><div style="display:flex;flex-direction:column;gap:5px;margin-bottom:22px">';
+  var maxE=esitiArr.length?esitiArr[0][1]:1;
+  esitiArr.slice(0,10).forEach(function(e){
+    var w=Math.round(e[1]/maxE*100);
+    html+='<div style="display:flex;align-items:center;gap:10px"><div style="width:140px;font-size:13px;color:#555">'+esc(e[0])+'</div><div style="flex:1;background:#eef;border-radius:6px;height:20px;position:relative"><div style="width:'+w+'%;background:#7aa3d6;height:100%;border-radius:6px"></div></div><div style="width:60px;text-align:right;font-size:13px;color:#888">'+e[1]+'</div></div>';
+  });
+  html+='</div>';
+  // per telefonista
+  var opArr=Object.keys(perOperatore);
+  html+='<h3 style="color:#1a3a6a;border-bottom:2px solid #eee;padding-bottom:6px">Per telefonista</h3>';
+  if(!opArr.length){
+    html+='<div style="color:#999;font-size:13px;padding:10px;background:#fafafa;border-radius:8px;margin-bottom:22px">Ancora nessuna chiamata registrata con il nome della telefonista. Da oggi, ogni chiamata salver&agrave; chi l\'ha fatta, e qui vedrai i conteggi per ciascuna.</div>';
+  } else {
+    html+='<table style="width:100%;border-collapse:collapse;margin-bottom:22px"><tr style="background:#f4f6fa"><th style="text-align:left;padding:8px;font-size:12px;color:#666">Telefonista</th><th style="padding:8px;font-size:12px;color:#666">Oggi</th><th style="padding:8px;font-size:12px;color:#666">7 giorni</th><th style="padding:8px;font-size:12px;color:#666">Totale</th></tr>';
+    opArr.sort(function(a,b){return perOperatore[b].tot-perOperatore[a].tot;}).forEach(function(op){
+      var o=perOperatore[op];
+      html+='<tr style="border-bottom:1px solid #eee"><td style="padding:8px;font-weight:600;color:#1a3a6a">'+esc(op)+'</td><td style="text-align:center;padding:8px">'+o.oggi+'</td><td style="text-align:center;padding:8px">'+o.sett+'</td><td style="text-align:center;padding:8px;color:#888">'+o.tot+'</td></tr>';
+    });
+    html+='</table>';
+  }
+  // andamento per mese (ultimi 12)
+  var mesiArr=Object.keys(perMese).sort().slice(-12);
+  if(mesiArr.length){
+    html+='<h3 style="color:#1a3a6a;border-bottom:2px solid #eee;padding-bottom:6px">Andamento (ultimi mesi)</h3><div style="display:flex;align-items:flex-end;gap:6px;height:120px;margin-bottom:10px">';
+    var maxM=Math.max.apply(null,mesiArr.map(function(m){return perMese[m];}));
+    mesiArr.forEach(function(m){
+      var h=Math.round(perMese[m]/maxM*100);
+      html+='<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%"><div style="font-size:10px;color:#888">'+perMese[m]+'</div><div style="width:100%;background:#7aa3d6;border-radius:4px 4px 0 0;height:'+h+'%"></div><div style="font-size:9px;color:#aaa;margin-top:3px;transform:rotate(-45deg);white-space:nowrap">'+m.slice(2)+'</div></div>';
+    });
+    html+='</div>';
+  }
+  box.innerHTML=html;
+}
+
 function renderContactAndMap(c){
   if(editMode)exitEditMode();
   renderContact(c);setTimeout(()=>initContactMap(c),80);
@@ -2721,7 +2798,7 @@ function saveRegTel(){
   const todayStr=String(today.getDate()).padStart(2,'0')+'/'+String(today.getMonth()+1).padStart(2,'0')+'/'+today.getFullYear();
   const _now=new Date();const oraChiamata=String(_now.getHours()).padStart(2,'0')+':'+String(_now.getMinutes()).padStart(2,'0');
   const t={ID_contatto:c.ID_contatto,Data_da_fare:todayStr,Ora_chiamata:oraChiamata,Esito:esito,
-    Data_appuntamento:dataDDMM,Ora_appuntamento:oraStr,Note_appuntamento:note,_local:true};
+    Data_appuntamento:dataDDMM,Ora_appuntamento:oraStr,Note_appuntamento:note,Operatore:(window._nomeUtente||''),_local:true};
   // Add to telByContact AND to telefonate (so buildAgendaIndex sees it)
   if(!telByContact[c.ID_contatto])telByContact[c.ID_contatto]=[];
   telByContact[c.ID_contatto].unshift(t);
@@ -2971,6 +3048,12 @@ function renderRecupero(){
   const provFilter=(provSel?.value||'').toUpperCase();
   const q=(document.getElementById('recuperoSearch')?.value||'').toLowerCase().trim();
   let list=getRecuperoList();
+  // filtro PERIODO: "da fare ora" = scaduti di recente; evita di affollare con i vecchissimi
+  var _per=(document.getElementById('recuperoPeriodo')||{}).value||'recenti';
+  if(_per==='recenti')list=list.filter(x=>x.daysAgo<=180);
+  else if(_per==='anno')list=list.filter(x=>x.daysAgo<=400);
+  // 'tutti' = nessun filtro periodo
+
   // popola il menu province (una volta, in base alla lista completa)
   if(provSel && provSel.options.length<=1){
     const provs=[...new Set(getRecuperoList().map(x=>(x.c.Provincia||'').trim().toUpperCase()).filter(Boolean))].sort();
@@ -2989,10 +3072,17 @@ function renderRecupero(){
   window._recuperoResults=list.map(x=>x.c);
   document.getElementById('recuperoCount').textContent=`${list.length.toLocaleString('it')} da recuperare`;
   const MAX=1000;
+  var _raggr=(sort==='prov_asc'||sort==='prov_desc');
+  var _provCorr=null;
+  // conteggio per provincia (per l'intestazione)
+  var _provCnt={};
+  if(_raggr){list.forEach(function(x){var pr=(x.c.Provincia||'(senza provincia)').trim().toUpperCase();_provCnt[pr]=(_provCnt[pr]||0)+1;});}
   document.getElementById('recuperoBody').innerHTML=list.slice(0,MAX).map(x=>{
     const c=x.c;
     const t=x.daysAgo>365?`${Math.floor(x.daysAgo/365)} anni`:`${Math.floor(x.daysAgo/30)} mesi`;
-    return `<tr onclick="openContact('${esc(c.ID_contatto)}',window._recuperoResults)">
+    var _intest='';
+    if(_raggr){var _pr=(c.Provincia||'(senza provincia)').trim().toUpperCase(); if(_pr!==_provCorr){_provCorr=_pr; _intest=`<tr><td colspan="8" style="background:#fff1e0;color:#c06010;font-weight:700;padding:6px 10px;font-size:12px">\u{1F4CD} ${esc(_pr)} <span style="color:#b08050;font-weight:400">(${_provCnt[_pr]})</span></td></tr>`;}}
+    return _intest+`<tr onclick="openContact('${esc(c.ID_contatto)}',window._recuperoResults)">
       <td style="color:#888;font-family:monospace;font-size:10px">${esc(c.ID_contatto)}</td>
       <td><strong>${esc(c.Cognome||'')}</strong></td><td>${esc(c.Nome||'')}</td>
       <td>${esc(c.Citta||'')}${c.Provincia?' - '+esc(c.Provincia):''}</td>
