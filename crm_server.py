@@ -166,6 +166,23 @@ def api_backup_scarica():
     except Exception as e:
         return jsonify({'error':str(e)}),500
 
+
+@app.route('/api/diag_utenti')
+def api_diag_utenti():
+    import os as _os
+    raw = _os.environ.get('CRM_UTENTI','')
+    info = {
+        'variabile_presente': bool(raw),
+        'lunghezza_variabile': len(raw),
+        'utenti_caricati': sorted(list(crm_auth.UTENTI.keys())),
+        'numero_utenti': len(crm_auth.UTENTI),
+        'secret_presente': bool(_os.environ.get('CRM_SECRET','')),
+        'auth_attiva': crm_auth.USE_AUTH,
+    }
+    # dettaglio ruoli/zone (senza password)
+    info['dettaglio'] = {k: {'ruolo': v.get('ruolo'), 'zona': v.get('zona','')} for k,v in crm_auth.UTENTI.items()}
+    return jsonify(info)
+
 @app.route('/api/status')
 def status():
     data = load_data()

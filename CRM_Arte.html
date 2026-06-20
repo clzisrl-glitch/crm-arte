@@ -595,7 +595,7 @@ body[data-ruolo="operatore"] .tab-soloadmin{display:none!important}
       <input class="pr-search" id="quickSearch" placeholder="Cerca cognome..." oninput="liveSearch(this.value)">
       <span class="pr-nav-info" id="prNav"></span>
       <button class="btn-u btn-blue-soft" id="btnAzzera" onclick="azzeraRicerca()" style="display:none" title="Torna a navigare tutto il database">&#10005; Azzera ricerca</button>
-<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 20/06/2026 05:13</span>
+<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 20/06/2026 19:32</span>
       <div style="flex:1"></div>
       <button class="btn-u btn-del-discreet" onclick="deleteContact()" title="Elimina questo contatto">&#128465;</button>
     </div>
@@ -773,6 +773,7 @@ body[data-ruolo="operatore"] .tab-soloadmin{display:none!important}
       <div style="color:#777;margin-bottom:18px">Guida rapida. Le sezioni in alto sono i pulsanti della barra. Clicca un argomento per saltarci.</div>
       <div id="welcome-strumenti" style="background:#f4f6fa;border:1px solid #dfe5ee;border-radius:12px;padding:16px 18px;margin-bottom:22px"><div style="font-size:15px;font-weight:700;color:#1a3a6a;margin-bottom:4px">&#128295; Strumenti</div><div style="font-size:12.5px;color:#777;margin-bottom:12px">Backup, esportazioni e viste complete. <b>Backup, Excel e Completo sono riservati al titolare.</b></div><div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center"><button class="btn-u btn-green" onclick="backupCompleto()" title="Scarica una copia di sicurezza di tutti i dati (crm_data.json) sul tuo computer.">&#128190; Backup</button><button class="btn-u btn-blue" onclick="mostraBackupAuto()" title="Vedi e scarica le copie di sicurezza automatiche degli ultimi 60 giorni.">&#128338; Backup automatici</button><button class="btn-u pt-mail" onclick="exportExcel(false)" title="Esporta tutti i contatti in un file Excel.">&#128202; Excel</button><button class="btn-u pt-lista" onclick="vistaCompleto()" title="Mostra tutti i contatti, dal piu recente inserito al primo.">&#128203; Completo</button><button class="btn-u" onclick="showTab('deceduti')" title="Contatti segnati come deceduti: tenuti da parte ed esclusi dalle ricerche.">&#9904; Deceduti</button></div></div>
       <div id="welcome-compleanni" style="background:#fff8ee;border:1px solid #f0e0c0;border-radius:12px;padding:16px 18px;margin-bottom:22px"><div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px"><div style="font-size:15px;font-weight:700;color:#9a6500">&#127874; Prossimi compleanni</div><select id="complRegione" onchange="renderCompleanni()" style="padding:6px 10px;border:1px solid #e0cba0;border-radius:7px;font-size:12.5px;color:#7a5500;background:#fff"><option value="">Tutte le regioni</option></select></div><div style="font-size:12px;color:#a08040;margin-bottom:10px">Clienti che compiono gli anni nei prossimi 30 giorni. Un'occasione per una telefonata di auguri.</div><div id="complLista" style="display:flex;flex-direction:column;gap:4px;max-height:320px;overflow-y:auto"></div></div>
+      <div id="welcome-anziani" style="background:#f3f0fa;border:1px solid #ddd0ee;border-radius:12px;padding:16px 18px;margin-bottom:22px"><div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px"><div style="font-size:15px;font-weight:700;color:#5b3a8a">&#128081; Clienti dai 90 anni in su</div><div style="display:flex;gap:6px;flex-wrap:wrap"><select id="anzRegione" onchange="_anzProvince();renderAnziani()" style="padding:6px 10px;border:1px solid #cdb8e6;border-radius:7px;font-size:12.5px;color:#5b3a8a;background:#fff"><option value="">Tutte le regioni</option></select><select id="anzProvincia" onchange="renderAnziani()" style="padding:6px 10px;border:1px solid #cdb8e6;border-radius:7px;font-size:12.5px;color:#5b3a8a;background:#fff"><option value="">Tutte le province</option></select></div></div><div style="font-size:12px;color:#8a72b0;margin-bottom:10px">Elenco aggiornato automaticamente in base all'et&agrave; (calcolata dal codice fiscale). <span id="anzConteggio" style="font-weight:600"></span></div><div id="anzLista" style="display:flex;flex-direction:column;gap:4px;max-height:360px;overflow-y:auto"></div></div>
       <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:22px">
         <a href="#w-barra" class="tb-btn" style="text-decoration:none">Le sezioni</a>
         <a href="#w-giorno" class="tb-btn" style="text-decoration:none">La giornata tipo</a>
@@ -1365,7 +1366,7 @@ function showTab(name){
   if(name==='zonalibera'){initZlRadbar();setTimeout(()=>document.getElementById('zlPlace')?.focus(),100);}
   if(name==='controllare')renderControllare();
   if(name==='deceduti')renderDeceduti();
-  if(name==='welcome'){try{renderCompleanni();}catch(e){}}
+  if(name==='welcome'){try{renderCompleanni();}catch(e){}try{renderAnziani();}catch(e){}}
   if(name==='statistiche'){try{renderStatistiche();}catch(e){}}
   if(name==='potenziali')renderPotenziali();
   if(name==='nocell')renderNocell();
@@ -1896,6 +1897,56 @@ function _aggiornaBadgeCompleanni(){
     } else if(b){b.remove();}
   }catch(e){}
 }
+function _listaAnziani(){
+  var out=[];
+  allContacts.forEach(function(c){
+    var eta=_calcolaEta(c);
+    if(eta!=null && eta>=90 && eta<=120)out.push({c:c,eta:eta});
+  });
+  return out;
+}
+function _anzPopolaRegioni(){
+  var sel=document.getElementById('anzRegione'); if(!sel||sel.options.length>1)return;
+  var regs={};
+  _listaAnziani().forEach(function(x){var r=(x.c.Regione||'').trim(); if(r)regs[r]=1;});
+  Object.keys(regs).sort().forEach(function(r){var o=document.createElement('option');o.value=r;o.textContent=r;sel.appendChild(o);});
+}
+function _anzProvince(){
+  var selP=document.getElementById('anzProvincia'); if(!selP)return;
+  var regSel=(document.getElementById('anzRegione')||{}).value||'';
+  selP.innerHTML='<option value="">Tutte le province</option>';
+  var provs={};
+  _listaAnziani().forEach(function(x){
+    if(regSel && (x.c.Regione||'').trim()!==regSel)return;
+    var pr=(x.c.Provincia||'').trim(); if(pr)provs[pr]=1;
+  });
+  Object.keys(provs).sort().forEach(function(pr){var o=document.createElement('option');o.value=pr;o.textContent=pr;selP.appendChild(o);});
+}
+function renderAnziani(){
+  var box=document.getElementById('anzLista'); if(!box)return;
+  _anzPopolaRegioni();
+  var regSel=(document.getElementById('anzRegione')||{}).value||'';
+  var provSel=(document.getElementById('anzProvincia')||{}).value||'';
+  var lista=_listaAnziani().filter(function(x){
+    if(regSel && (x.c.Regione||'').trim()!==regSel)return false;
+    if(provSel && (x.c.Provincia||'').trim()!==provSel)return false;
+    return true;
+  });
+  lista.sort(function(a,b){return b.eta-a.eta;});
+  var cnt=document.getElementById('anzConteggio'); if(cnt)cnt.textContent=lista.length+(lista.length===1?' cliente':' clienti');
+  if(!lista.length){box.innerHTML='<div style="color:#8a72b0;font-size:13px;padding:8px">Nessun cliente di 90+ anni'+(regSel||provSel?' con questi filtri':'')+'.</div>';return;}
+  box.innerHTML=lista.map(function(x){
+    var c=x.c;
+    var nome=esc((c.Cognome||'')+' '+(c.Nome||''));
+    var citta=esc(c.Citta||'')+(c.Provincia?' ('+esc(c.Provincia)+')':'');
+    var tel=esc(c.Cellulare||c.Telefono||'');
+    return '<div onclick="apriContattoDaId(\''+esc(String(c.ID_contatto))+'\')" style="cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:7px 10px;background:#fff;border:1px solid #e6dcf2;border-radius:8px">'+
+      '<div><b style="color:#5b3a8a">'+nome+'</b><div style="font-size:11px;color:#9b86bd">'+citta+(tel?' &middot; '+tel:'')+'</div></div>'+
+      '<div style="text-align:right;white-space:nowrap"><div style="font-size:16px;font-weight:700;color:#7a5aa8">'+x.eta+'</div><div style="font-size:10px;color:#9b86bd">anni</div></div>'+
+    '</div>';
+  }).join('');
+}
+
 function renderCompleanni(){
   var box=document.getElementById("complLista"); if(!box)return;
   _popolaRegioniCompl();
