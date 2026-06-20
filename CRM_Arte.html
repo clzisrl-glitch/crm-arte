@@ -595,7 +595,7 @@ body[data-ruolo="operatore"] .tab-soloadmin{display:none!important}
       <input class="pr-search" id="quickSearch" placeholder="Cerca cognome..." oninput="liveSearch(this.value)">
       <span class="pr-nav-info" id="prNav"></span>
       <button class="btn-u btn-blue-soft" id="btnAzzera" onclick="azzeraRicerca()" style="display:none" title="Torna a navigare tutto il database">&#10005; Azzera ricerca</button>
-<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 20/06/2026 04:36</span>
+<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 20/06/2026 05:13</span>
       <div style="flex:1"></div>
       <button class="btn-u btn-del-discreet" onclick="deleteContact()" title="Elimina questo contatto">&#128465;</button>
     </div>
@@ -771,7 +771,7 @@ body[data-ruolo="operatore"] .tab-soloadmin{display:none!important}
     <div class="list-scroll" style="padding:24px 32px;max-width:1080px;font-size:13.5px;line-height:1.6;color:#222">
       <h2 style="font-size:23px;color:#1a3a6a;margin:0 0 2px">&#127912; Arte Editoria Monete</h2>
       <div style="color:#777;margin-bottom:18px">Guida rapida. Le sezioni in alto sono i pulsanti della barra. Clicca un argomento per saltarci.</div>
-      <div id="welcome-strumenti" style="background:#f4f6fa;border:1px solid #dfe5ee;border-radius:12px;padding:16px 18px;margin-bottom:22px"><div style="font-size:15px;font-weight:700;color:#1a3a6a;margin-bottom:4px">&#128295; Strumenti</div><div style="font-size:12.5px;color:#777;margin-bottom:12px">Backup, esportazioni e viste complete. <b>Backup, Excel e Completo sono riservati al titolare.</b></div><div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center"><button class="btn-u btn-green" onclick="backupCompleto()" title="Scarica una copia di sicurezza di tutti i dati (crm_data.json) sul tuo computer.">&#128190; Backup</button><button class="btn-u pt-mail" onclick="exportExcel(false)" title="Esporta tutti i contatti in un file Excel.">&#128202; Excel</button><button class="btn-u pt-lista" onclick="vistaCompleto()" title="Mostra tutti i contatti, dal piu recente inserito al primo.">&#128203; Completo</button><button class="btn-u" onclick="showTab('deceduti')" title="Contatti segnati come deceduti: tenuti da parte ed esclusi dalle ricerche.">&#9904; Deceduti</button></div></div>
+      <div id="welcome-strumenti" style="background:#f4f6fa;border:1px solid #dfe5ee;border-radius:12px;padding:16px 18px;margin-bottom:22px"><div style="font-size:15px;font-weight:700;color:#1a3a6a;margin-bottom:4px">&#128295; Strumenti</div><div style="font-size:12.5px;color:#777;margin-bottom:12px">Backup, esportazioni e viste complete. <b>Backup, Excel e Completo sono riservati al titolare.</b></div><div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center"><button class="btn-u btn-green" onclick="backupCompleto()" title="Scarica una copia di sicurezza di tutti i dati (crm_data.json) sul tuo computer.">&#128190; Backup</button><button class="btn-u btn-blue" onclick="mostraBackupAuto()" title="Vedi e scarica le copie di sicurezza automatiche degli ultimi 60 giorni.">&#128338; Backup automatici</button><button class="btn-u pt-mail" onclick="exportExcel(false)" title="Esporta tutti i contatti in un file Excel.">&#128202; Excel</button><button class="btn-u pt-lista" onclick="vistaCompleto()" title="Mostra tutti i contatti, dal piu recente inserito al primo.">&#128203; Completo</button><button class="btn-u" onclick="showTab('deceduti')" title="Contatti segnati come deceduti: tenuti da parte ed esclusi dalle ricerche.">&#9904; Deceduti</button></div></div>
       <div id="welcome-compleanni" style="background:#fff8ee;border:1px solid #f0e0c0;border-radius:12px;padding:16px 18px;margin-bottom:22px"><div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px"><div style="font-size:15px;font-weight:700;color:#9a6500">&#127874; Prossimi compleanni</div><select id="complRegione" onchange="renderCompleanni()" style="padding:6px 10px;border:1px solid #e0cba0;border-radius:7px;font-size:12.5px;color:#7a5500;background:#fff"><option value="">Tutte le regioni</option></select></div><div style="font-size:12px;color:#a08040;margin-bottom:10px">Clienti che compiono gli anni nei prossimi 30 giorni. Un'occasione per una telefonata di auguri.</div><div id="complLista" style="display:flex;flex-direction:column;gap:4px;max-height:320px;overflow-y:auto"></div></div>
       <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:22px">
         <a href="#w-barra" class="tb-btn" style="text-decoration:none">Le sezioni</a>
@@ -3104,6 +3104,29 @@ function exportRecupero(){
 }
 
 // BACKUP COMPLETO
+async function mostraBackupAuto(){
+  if(window._ruolo && window._ruolo!=='titolare'){alert('Riservato al titolare.');return;}
+  var modal=document.getElementById('backupAutoModal');
+  var box=document.getElementById('backupAutoLista');
+  box.innerHTML='<div style="color:#999;padding:10px">Carico l\'elenco...</div>';
+  modal.style.display='flex';
+  try{
+    var r=await fetch('/api/backup_lista');
+    if(!r.ok){box.innerHTML='<div style="color:#c0392b;padding:10px">Backup disponibili solo nella versione online.</div>';return;}
+    var j=await r.json();
+    var lista=j.backup||[];
+    if(!lista.length){box.innerHTML='<div style="color:#999;padding:10px">Nessun backup automatico ancora presente. Ne verr&agrave; creato uno ad ogni giorno di utilizzo.</div>';return;}
+    box.innerHTML=lista.map(function(b){
+      var d=b.giorno, parti=d.split('-');
+      var lbl=parti.length===3?(parti[2]+'/'+parti[1]+'/'+parti[0]):d;
+      return '<div style="display:flex;justify-content:space-between;align-items:center;padding:9px 12px;background:#f4f6fa;border:1px solid #e0e6ef;border-radius:8px">'+
+        '<div style="font-weight:600;color:#1a3a6a">'+lbl+'</div>'+
+        '<a href="/api/backup_scarica?giorno='+encodeURIComponent(d)+'" style="text-decoration:none;background:#3a7acc;color:#fff;padding:6px 12px;border-radius:7px;font-size:13px">&#11015; Scarica</a>'+
+      '</div>';
+    }).join('');
+  }catch(e){box.innerHTML='<div style="color:#c0392b;padding:10px">Errore nel caricamento dei backup.</div>';}
+}
+
 async function backupCompleto(){
   if(!_soloTitolare("Backup completo"))return;
   try{
@@ -3389,5 +3412,6 @@ const EMBEDDED_APPUNTAMENTI=``
   </div>
 </div>
 
+<div id="backupAutoModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;align-items:center;justify-content:center"><div style="background:#fff;border-radius:14px;padding:22px;max-width:520px;width:90%;max-height:80vh;overflow-y:auto"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><div style="font-size:18px;font-weight:700;color:#1a3a6a">&#128338; Backup automatici</div><button onclick="document.getElementById('backupAutoModal').style.display='none'" style="background:none;border:none;font-size:22px;cursor:pointer;color:#999">&times;</button></div><div style="font-size:12.5px;color:#888;margin-bottom:14px">Copie di sicurezza automatiche giornaliere (ultimi 60 giorni). Clicca per scaricare quella che vuoi sul tuo computer.</div><div id="backupAutoLista" style="display:flex;flex-direction:column;gap:5px"></div></div></div>
 </body>
 </html>

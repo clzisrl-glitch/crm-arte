@@ -131,6 +131,41 @@ def api_chisono():
     zona=u.get("zona","")
     regioni=crm_auth.regioni_della_zona(zona) if zona else None
     return jsonify({"login":True,"nome":u["nome"],"ruolo":u["ruolo"],"online":crm_auth.USE_AUTH,"zona":zona,"regioni":regioni})
+
+def _solo_titolare_api():
+    u=_utente_corrente()
+    if crm_auth.USE_AUTH and (not u or u.get('ruolo')!='titolare'):
+        return False
+    return True
+
+@app.route('/api/backup_lista')
+@richiede_login
+def api_backup_lista():
+    if not _solo_titolare_api():
+        return jsonify({'error':'riservato al titolare'}),403
+    try:
+        return jsonify({'backup': crm_db.lista_backup()})
+    except Exception as e:
+        return jsonify({'error':str(e)}),500
+
+@app.route('/api/backup_scarica')
+@richiede_login
+def api_backup_scarica():
+    if not _solo_titolare_api():
+        return jsonify({'error':'riservato al titolare'}),403
+    giorno=request.args.get('giorno','')
+    try:
+        dati=crm_db.carica_backup(giorno)
+        if dati is None:
+            return jsonify({'error':'backup non trovato'}),404
+        import json as _json
+        from flask import Response
+        testo=_json.dumps(dati,ensure_ascii=False)
+        return Response(testo, mimetype='application/json',
+            headers={'Content-Disposition':f'attachment;filename=crm_backup_{giorno}.json'})
+    except Exception as e:
+        return jsonify({'error':str(e)}),500
+
 @app.route('/api/status')
 def status():
     data = load_data()

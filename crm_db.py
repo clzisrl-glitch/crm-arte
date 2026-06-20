@@ -230,3 +230,48 @@ def seed_from_file_if_empty():
     except Exception as e:
         print(f"  (primo caricamento non riuscito: {e})")
     return False
+
+
+# ─────────────────────────────────────────────────────────────
+#  BACKUP: lista e lettura delle copie giornaliere (per la pagina Backup admin)
+# ─────────────────────────────────────────────────────────────
+def lista_backup():
+    """Ritorna la lista dei backup giornalieri disponibili: [{giorno, creato}], più recenti prima."""
+    if not USE_DB:
+        # in locale: elenco i file nella cartella backup
+        try:
+            files = sorted(BACKUP_DIR.glob('crm_data_*.json'), reverse=True)
+            return [{'giorno': f.stem.replace('crm_data_', ''), 'creato': ''} for f in files]
+        except Exception:
+            return []
+    try:
+        conn = _get_pg()
+        with conn.cursor() as cur:
+            cur.execute("SELECT giorno, creato FROM crm_backup ORDER BY giorno DESC")
+            righe = cur.fetchall()
+        return [{'giorno': r[0], 'creato': str(r[1]) if r[1] else ''} for r in righe]
+    except Exception as e:
+        print(f"  (lista_backup: {e})")
+        return []
+
+def carica_backup(giorno):
+    """Ritorna i dati di un backup giornaliero specifico (dict), o None."""
+    if not USE_DB:
+        try:
+            f = BACKUP_DIR / f'crm_data_{giorno}.json'
+            if f.exists():
+                with open(f, 'r', encoding='utf-8') as fh:
+                    return json.load(fh)
+        except Exception:
+            return None
+        return None
+    try:
+        conn = _get_pg()
+        with conn.cursor() as cur:
+            cur.execute("SELECT data FROM crm_backup WHERE giorno = %s", (giorno,))
+            row = cur.fetchone()
+        if row and row[0]:
+            return _decomprimi(bytes(row[0]))
+    except Exception as e:
+        print(f"  (carica_backup: {e})")
+    return None
