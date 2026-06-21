@@ -30,6 +30,7 @@ MAX_UTENTI = 5
 # Se non impostata, vale la mappa predefinita qui sotto.
 ZONE_DEFAULT = {
     'centro': ['Lazio', 'Umbria', 'Marche', 'Sardegna'],
+    'nord': ['Piemonte', "Valle d'Aosta", 'Lombardia', 'Veneto', 'Trentino-Alto Adige', 'Friuli-Venezia Giulia', 'Liguria'],
 }
 def _parse_zone():
     raw = os.environ.get('CRM_ZONE', '').strip()

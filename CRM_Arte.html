@@ -595,7 +595,7 @@ body[data-ruolo="operatore"] .tab-soloadmin{display:none!important}
       <input class="pr-search" id="quickSearch" placeholder="Cerca cognome..." oninput="liveSearch(this.value)">
       <span class="pr-nav-info" id="prNav"></span>
       <button class="btn-u btn-blue-soft" id="btnAzzera" onclick="azzeraRicerca()" style="display:none" title="Torna a navigare tutto il database">&#10005; Azzera ricerca</button>
-<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 21/06/2026 11:16</span>
+<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 21/06/2026 16:19</span>
       <div style="flex:1"></div>
       <button class="btn-u btn-del-discreet" onclick="deleteContact()" title="Elimina questo contatto">&#128465;</button>
     </div>
@@ -2017,7 +2017,7 @@ function _topProvince(){
 }
 
 function _stampaLista(quale){
-  var titolo='', righe=[], oggi=new Date();
+  var titolo='', righe=[], oggi=new Date(), _stampaAnziani=false;
   function rigaBase(c,extra){return {nome:(c.Cognome||'')+' '+(c.Nome||''),luogo:(c.Citta||'')+(c.Provincia?' ('+c.Provincia+')':''),tel:(c.Cellulare||c.Telefono||''),extra:extra||''};}
   if(quale==='top'){
     titolo='Clienti top';
@@ -2036,7 +2036,13 @@ function _stampaLista(quale){
       if(rs2&&(x.c.Regione||'').trim()!==rs2)return false;
       if(ps2&&(x.c.Provincia||'').trim()!==ps2)return false;
       return true;
-    }).sort(function(a,b){return b.eta-a.eta;}).forEach(function(x){righe.push(rigaBase(x.c,x.eta+' anni'));});
+    }).sort(function(a,b){return b.eta-a.eta;}).forEach(function(x){
+      var c=x.c;
+      var indir=[(c.Via||''),((c.CAP||'')+' '+(c.Citta||'')).trim()+(c.Provincia?' ('+c.Provincia+')':'')].filter(Boolean).join(', ');
+      var dn=(typeof _dataNascitaFmt==='function'?_dataNascitaFmt(c):'')||c.Data_nascita||'';
+      righe.push({nome:(c.Cognome||'')+' '+(c.Nome||''),luogo:indir,tel:(c.Cellulare||c.Telefono||''),extra:x.eta+' anni',nascita:dn,cf:(c.Codice_fiscale||'')});
+    });
+    _stampaAnziani=true;
   } else if(quale==='compleanni'){
     titolo='Prossimi compleanni (30 giorni)';
     var rs3=(document.getElementById('complRegione')||{}).value, ps3=(document.getElementById('complProvincia')||{}).value;
@@ -2064,9 +2070,9 @@ function _stampaLista(quale){
     '</style></head><body>'+
     '<h1>'+titolo+'</h1>'+
     '<div class="meta">Stampato il '+oggiStr+' &middot; '+righe.length+' nominativi</div>'+
-    '<table><tr><th class="n">#</th><th>Nominativo</th><th>Localit&agrave;</th><th>Telefono</th><th></th></tr>';
+    '<table><tr><th class="n">#</th><th>Nominativo</th><th>Localit&agrave;</th><th>Telefono</th>'+(_stampaAnziani?'<th>Nato il</th><th>Codice fiscale</th>':'')+'<th></th></tr>';
   righe.forEach(function(r,i){
-    h+='<tr><td class="n">'+(i+1)+'</td><td><b>'+esc(r.nome)+'</b></td><td>'+esc(r.luogo)+'</td><td>'+esc(r.tel)+'</td><td>'+esc(r.extra)+'</td></tr>';
+    h+='<tr><td class="n">'+(i+1)+'</td><td><b>'+esc(r.nome)+'</b></td><td>'+esc(r.luogo)+'</td><td>'+esc(r.tel)+'</td>'+(_stampaAnziani?'<td>'+esc(r.nascita||'')+'</td><td style="font-family:monospace;font-size:11px">'+esc(r.cf||'')+'</td>':'')+'<td>'+esc(r.extra)+'</td></tr>';
   });
   h+='</table><div style="margin-top:20px;text-align:center"><button onclick="window.print()" style="padding:8px 18px;font-size:14px;cursor:pointer">Stampa</button></div></body></html>';
   var w=window.open('','_blank');
