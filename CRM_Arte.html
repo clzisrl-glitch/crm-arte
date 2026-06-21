@@ -595,7 +595,7 @@ body[data-ruolo="operatore"] .tab-soloadmin{display:none!important}
       <input class="pr-search" id="quickSearch" placeholder="Cerca cognome..." oninput="liveSearch(this.value)">
       <span class="pr-nav-info" id="prNav"></span>
       <button class="btn-u btn-blue-soft" id="btnAzzera" onclick="azzeraRicerca()" style="display:none" title="Torna a navigare tutto il database">&#10005; Azzera ricerca</button>
-<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 21/06/2026 05:24</span>
+<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 21/06/2026 05:33</span>
       <div style="flex:1"></div>
       <button class="btn-u btn-del-discreet" onclick="deleteContact()" title="Elimina questo contatto">&#128465;</button>
     </div>
@@ -1895,7 +1895,9 @@ function _categoriaOpera(o){
   }
   if(!cat)return {cat:'Altro / vari',oro:false};
   if(cat==='Numismatica'){
-    oro=['AUREA','ORO','ANNO SANTO','TITANIA'].some(function(x){return nome.indexOf(x)>=0;});
+    var serieOro=['STELLA 2000','CORPI-VOLTI','MILLENNIA','MED EUROPA','MED EU','TITANIA','AUREA','ANNO SANTO','GIUBILEO'];
+    var haArgBronzo=(nome.indexOf('ARGENTO')>=0||nome.indexOf('ARG')>=0||nome.indexOf('BRONZO')>=0||nome.indexOf('BRO-')>=0||nome.indexOf('BRO ')>=0);
+    oro=(nome.indexOf('ORO')>=0) || (!haArgBronzo && serieOro.some(function(x){return nome.indexOf(x)>=0;}));
   }
   return {cat:cat,oro:oro};
 }
