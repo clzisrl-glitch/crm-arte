@@ -595,7 +595,7 @@ body[data-ruolo="operatore"] .tab-soloadmin{display:none!important}
       <input class="pr-search" id="quickSearch" placeholder="Cerca cognome..." oninput="liveSearch(this.value)">
       <span class="pr-nav-info" id="prNav"></span>
       <button class="btn-u btn-blue-soft" id="btnAzzera" onclick="azzeraRicerca()" style="display:none" title="Torna a navigare tutto il database">&#10005; Azzera ricerca</button>
-<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 21/06/2026 05:33</span>
+<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 21/06/2026 11:16</span>
       <div style="flex:1"></div>
       <button class="btn-u btn-del-discreet" onclick="deleteContact()" title="Elimina questo contatto">&#128465;</button>
     </div>
@@ -773,9 +773,9 @@ body[data-ruolo="operatore"] .tab-soloadmin{display:none!important}
       <div id="welcome-giornata" style="background:linear-gradient(135deg,#1a3a6a,#2a5a9a);border-radius:14px;padding:18px 22px;margin:14px 0 22px;color:#fff"><div style="font-size:13px;opacity:.85;margin-bottom:2px" id="giornataData"></div><div style="font-size:17px;font-weight:700;margin-bottom:14px">La tua giornata</div><div id="giornataCards" style="display:flex;flex-wrap:wrap;gap:12px"></div></div>
       <div style="color:#777;margin-bottom:18px">Guida rapida. Le sezioni in alto sono i pulsanti della barra. Clicca un argomento per saltarci.</div>
       <div id="welcome-strumenti" style="background:#f4f6fa;border:1px solid #dfe5ee;border-radius:12px;padding:16px 18px;margin-bottom:22px"><div style="font-size:15px;font-weight:700;color:#1a3a6a;margin-bottom:4px">&#128295; Strumenti</div><div style="font-size:12.5px;color:#777;margin-bottom:12px">Backup, esportazioni e viste complete. <b>Backup, Excel e Completo sono riservati al titolare.</b></div><div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center"><button class="btn-u btn-green" onclick="backupCompleto()" title="Scarica una copia di sicurezza di tutti i dati (crm_data.json) sul tuo computer.">&#128190; Backup</button><button class="btn-u btn-blue" onclick="mostraBackupAuto()" title="Vedi e scarica le copie di sicurezza automatiche degli ultimi 60 giorni.">&#128338; Backup automatici</button><button class="btn-u pt-mail" onclick="exportExcel(false)" title="Esporta tutti i contatti in un file Excel.">&#128202; Excel</button><button class="btn-u pt-lista" onclick="vistaCompleto()" title="Mostra tutti i contatti, dal piu recente inserito al primo.">&#128203; Completo</button><button class="btn-u" onclick="showTab('deceduti')" title="Contatti segnati come deceduti: tenuti da parte ed esclusi dalle ricerche.">&#9904; Deceduti</button></div></div>
-      <div id="welcome-compleanni" style="background:#fff8ee;border:1px solid #f0e0c0;border-radius:12px;padding:16px 18px;margin-bottom:22px"><div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px"><div style="font-size:15px;font-weight:700;color:#9a6500">&#127874; Prossimi compleanni</div><select id="complRegione" onchange="renderCompleanni()" style="padding:6px 10px;border:1px solid #e0cba0;border-radius:7px;font-size:12.5px;color:#7a5500;background:#fff"><option value="">Tutte le regioni</option></select></div><div style="font-size:12px;color:#a08040;margin-bottom:10px">Clienti che compiono gli anni nei prossimi 30 giorni. Un'occasione per una telefonata di auguri.</div><div id="complLista" style="display:flex;flex-direction:column;gap:4px;max-height:320px;overflow-y:auto"></div></div>
-      <div id="welcome-anziani" style="background:#f3f0fa;border:1px solid #ddd0ee;border-radius:12px;padding:16px 18px;margin-bottom:22px"><div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px"><div style="font-size:15px;font-weight:700;color:#5b3a8a">&#128081; Clienti dai 90 anni in su</div><div style="display:flex;gap:6px;flex-wrap:wrap"><select id="anzRegione" onchange="_anzProvince();renderAnziani()" style="padding:6px 10px;border:1px solid #cdb8e6;border-radius:7px;font-size:12.5px;color:#5b3a8a;background:#fff"><option value="">Tutte le regioni</option></select><select id="anzProvincia" onchange="renderAnziani()" style="padding:6px 10px;border:1px solid #cdb8e6;border-radius:7px;font-size:12.5px;color:#5b3a8a;background:#fff"><option value="">Tutte le province</option></select></div></div><div style="font-size:12px;color:#8a72b0;margin-bottom:10px">Elenco aggiornato automaticamente in base all'et&agrave; (calcolata dal codice fiscale). <span id="anzConteggio" style="font-weight:600"></span></div><div id="anzLista" style="display:flex;flex-direction:column;gap:4px;max-height:360px;overflow-y:auto"></div></div>
-      <div id="welcome-top" style="background:#fdf6e9;border:1px solid #ecd9a8;border-radius:12px;padding:16px 18px;margin-bottom:22px"><div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px"><div style="font-size:15px;font-weight:700;color:#a07810">&#127942; Clienti top</div><select id="topRegione" onchange="renderTop()" style="padding:6px 10px;border:1px solid #e0c878;border-radius:7px;font-size:12.5px;color:#8a6810;background:#fff"><option value="">Tutte le regioni</option></select></div><div style="font-size:12px;color:#b09040;margin-bottom:10px">I clienti che hanno acquistato di pi&ugrave; (valori storici in lire convertiti in euro). <span id="topConteggio" style="font-weight:600"></span></div><div id="topLista" style="display:flex;flex-direction:column;gap:4px;max-height:360px;overflow-y:auto"></div></div>
+      <div id="welcome-compleanni" style="background:#fff8ee;border:1px solid #f0e0c0;border-radius:12px;padding:16px 18px;margin-bottom:22px"><div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px"><div style="font-size:15px;font-weight:700;color:#9a6500">&#127874; Prossimi compleanni</div><div style="display:flex;gap:6px;flex-wrap:wrap"><select id="complRegione" onchange="_complProvince();renderCompleanni()" style="padding:6px 10px;border:1px solid #e0cba0;border-radius:7px;font-size:12.5px;color:#7a5500;background:#fff"><option value="">Tutte le regioni</option></select><select id="complProvincia" onchange="renderCompleanni()" style="padding:6px 10px;border:1px solid #e0cba0;border-radius:7px;font-size:12.5px;color:#7a5500;background:#fff"><option value="">Tutte le province</option></select><button onclick="_stampaLista('compleanni')" title="Stampa la lista" style="padding:6px 10px;border:1px solid #e0cba0;border-radius:7px;font-size:12.5px;color:#7a5500;background:#fff;cursor:pointer">&#128424;</button></div></div><div style="font-size:12px;color:#a08040;margin-bottom:10px">Clienti che compiono gli anni nei prossimi 30 giorni. Un'occasione per una telefonata di auguri.</div><div id="complLista" style="display:flex;flex-direction:column;gap:4px;max-height:320px;overflow-y:auto"></div></div>
+      <div id="welcome-anziani" style="background:#f3f0fa;border:1px solid #ddd0ee;border-radius:12px;padding:16px 18px;margin-bottom:22px"><div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px"><div style="font-size:15px;font-weight:700;color:#5b3a8a">&#128081; Clienti dai 90 anni in su</div><div style="display:flex;gap:6px;flex-wrap:wrap"><select id="anzRegione" onchange="_anzProvince();renderAnziani()" style="padding:6px 10px;border:1px solid #cdb8e6;border-radius:7px;font-size:12.5px;color:#5b3a8a;background:#fff"><option value="">Tutte le regioni</option></select><select id="anzProvincia" onchange="renderAnziani()" style="padding:6px 10px;border:1px solid #cdb8e6;border-radius:7px;font-size:12.5px;color:#5b3a8a;background:#fff"><option value="">Tutte le province</option></select><button onclick="_stampaLista('anziani')" title="Stampa la lista" style="padding:6px 10px;border:1px solid #cdb8e6;border-radius:7px;font-size:12.5px;color:#5b3a8a;background:#fff;cursor:pointer">&#128424;</button></div></div><div style="font-size:12px;color:#8a72b0;margin-bottom:10px">Elenco aggiornato automaticamente in base all'et&agrave; (calcolata dal codice fiscale). <span id="anzConteggio" style="font-weight:600"></span></div><div id="anzLista" style="display:flex;flex-direction:column;gap:4px;max-height:360px;overflow-y:auto"></div></div>
+      <div id="welcome-top" style="background:#fdf6e9;border:1px solid #ecd9a8;border-radius:12px;padding:16px 18px;margin-bottom:22px"><div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px"><div style="font-size:15px;font-weight:700;color:#a07810">&#127942; Clienti top</div><div style="display:flex;gap:6px;flex-wrap:wrap"><select id="topRegione" onchange="_topProvince();renderTop()" style="padding:6px 10px;border:1px solid #e0c878;border-radius:7px;font-size:12.5px;color:#8a6810;background:#fff"><option value="">Tutte le regioni</option></select><select id="topProvincia" onchange="renderTop()" style="padding:6px 10px;border:1px solid #e0c878;border-radius:7px;font-size:12.5px;color:#8a6810;background:#fff"><option value="">Tutte le province</option></select><button onclick="_stampaLista('top')" title="Stampa la lista" style="padding:6px 10px;border:1px solid #e0c878;border-radius:7px;font-size:12.5px;color:#8a6810;background:#fff;cursor:pointer">&#128424;</button></div></div><div style="font-size:12px;color:#b09040;margin-bottom:10px">I clienti che hanno acquistato di pi&ugrave; (valori storici in lire convertiti in euro). <span id="topConteggio" style="font-weight:600"></span></div><div id="topLista" style="display:flex;flex-direction:column;gap:4px;max-height:360px;overflow-y:auto"></div></div>
       <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:22px">
         <a href="#w-barra" class="tb-btn" style="text-decoration:none">Le sezioni</a>
         <a href="#w-giorno" class="tb-btn" style="text-decoration:none">La giornata tipo</a>
@@ -1659,6 +1659,7 @@ function showOperaModal(cid,idx,o){
     fld('Opera (descrizione)','Opera',o.Opera)+
     fld('Valore','Valore',o.Valore)+
     fld('Tipo (libro / grafica / scultura / monete…)','Pagamento',o.Pagamento)+
+    '<div style="margin-bottom:8px"><label style="display:block;font-size:11px;color:#666;margin-bottom:2px">Categoria</label>'+'<select id="op_Categoria_manuale" style="width:100%;padding:5px;border:1px solid #ccc;border-radius:3px;box-sizing:border-box">'+[['','(automatica: '+_categoriaOpera(Object.assign({},o,{Categoria_manuale:''})).cat+')'],['Numismatica','Numismatica'],['Libri e volumi d\'arte','Libri e volumi d\'arte'],['Oro e gioielli','Oro e gioielli'],['Grafica e stampe','Grafica e stampe'],['Sculture','Sculture'],['Altro / vari','Altro / vari']].map(function(opt){return '<option value="'+opt[0]+'"'+((o.Categoria_manuale||'')===opt[0]?' selected':'')+'>'+opt[1]+'</option>';}).join('')+'</select></div>'+
     fld('Rate (solo il numero, se a rate)','Rate',o.Rate);
   m.style.display='flex';
   setTimeout(()=>document.getElementById('op_Data_acquisto')?.focus(),50);
@@ -1673,6 +1674,7 @@ function saveOpera(){
   o.Opera=document.getElementById('op_Opera').value.trim();
   o.Valore=document.getElementById('op_Valore').value.trim();
   o.Pagamento=document.getElementById('op_Pagamento').value.trim();
+  var _cm=document.getElementById('op_Categoria_manuale'); if(_cm){o.Categoria_manuale=_cm.value||'';}
   o.Rate=document.getElementById('op_Rate').value.trim();
   closeOperaModal();
   renderContact(contactMap[cid]);
@@ -1869,6 +1871,7 @@ function _fmtEuro(n){
 
 var _ED_LIBRI=['TRECCANI','UTET','FMR','UTET FMR','SAIE','SCRIPTA','ARS'];
 function _categoriaOpera(o){
+  if(o.Categoria_manuale){return {cat:o.Categoria_manuale,oro:!!o.Oro_manuale|| (String(o.Categoria_manuale).toLowerCase().indexOf('oro')>=0)};}
   var ed=String(o.Editore||'').trim().toUpperCase();
   var nome=String(o.Opera||'').toUpperCase().trim();
   var cat=null, oro=false;
@@ -2001,11 +2004,82 @@ function _topPopolaRegioni(){
   _listaTop().forEach(function(x){var r=(x.c.Regione||'').trim(); if(r)regs[r]=1;});
   Object.keys(regs).sort().forEach(function(r){var o=document.createElement('option');o.value=r;o.textContent=r;sel.appendChild(o);});
 }
+function _topProvince(){
+  var selP=document.getElementById('topProvincia'); if(!selP)return;
+  var regSel=(document.getElementById('topRegione')||{}).value||'';
+  selP.innerHTML='<option value="">Tutte le province</option>';
+  var provs={};
+  _listaTop().forEach(function(x){
+    if(regSel && (x.c.Regione||'').trim()!==regSel)return;
+    var pr=(x.c.Provincia||'').trim(); if(pr)provs[pr]=1;
+  });
+  Object.keys(provs).sort().forEach(function(pr){var o=document.createElement('option');o.value=pr;o.textContent=pr;selP.appendChild(o);});
+}
+
+function _stampaLista(quale){
+  var titolo='', righe=[], oggi=new Date();
+  function rigaBase(c,extra){return {nome:(c.Cognome||'')+' '+(c.Nome||''),luogo:(c.Citta||'')+(c.Provincia?' ('+c.Provincia+')':''),tel:(c.Cellulare||c.Telefono||''),extra:extra||''};}
+  if(quale==='top'){
+    titolo='Clienti top';
+    var rs=(document.getElementById('topRegione')||{}).value, ps=(document.getElementById('topProvincia')||{}).value;
+    if(rs)titolo+=' - '+rs; if(ps)titolo+=' ('+ps+')';
+    _listaTop().forEach(function(x){
+      if(rs&&(x.c.Regione||'').trim()!==rs)return;
+      if(ps&&(x.c.Provincia||'').trim()!==ps)return;
+      righe.push(rigaBase(x.c,_fmtEuro(x.spesa)));
+    });
+  } else if(quale==='anziani'){
+    titolo='Clienti dai 90 anni in su';
+    var rs2=(document.getElementById('anzRegione')||{}).value, ps2=(document.getElementById('anzProvincia')||{}).value;
+    if(rs2)titolo+=' - '+rs2; if(ps2)titolo+=' ('+ps2+')';
+    _listaAnziani().filter(function(x){
+      if(rs2&&(x.c.Regione||'').trim()!==rs2)return false;
+      if(ps2&&(x.c.Provincia||'').trim()!==ps2)return false;
+      return true;
+    }).sort(function(a,b){return b.eta-a.eta;}).forEach(function(x){righe.push(rigaBase(x.c,x.eta+' anni'));});
+  } else if(quale==='compleanni'){
+    titolo='Prossimi compleanni (30 giorni)';
+    var rs3=(document.getElementById('complRegione')||{}).value, ps3=(document.getElementById('complProvincia')||{}).value;
+    if(rs3)titolo+=' - '+rs3; if(ps3)titolo+=' ('+ps3+')';
+    var tmp=[];
+    allContacts.forEach(function(c){
+      if(rs3&&(c.Regione||'').trim()!==rs3)return;
+      if(ps3&&(c.Provincia||'').trim()!==ps3)return;
+      var pc=_prossimoCompleanno(c); if(!pc||pc.giorni>30)return;
+      tmp.push({c:c,pc:pc});
+    });
+    tmp.sort(function(a,b){return a.pc.giorni-b.pc.giorni;});
+    tmp.forEach(function(x){var d=('0'+x.pc.giorno).slice(-2)+'/'+('0'+x.pc.mese).slice(-2);righe.push(rigaBase(x.c,d+(x.pc.giorni===0?' (oggi)':'')));});
+  }
+  var oggiStr=oggi.toLocaleDateString('it-IT');
+  var h='<html><head><meta charset="utf-8"><title>'+titolo+'</title><style>'+
+    'body{font-family:Georgia,serif;color:#222;padding:30px;max-width:800px;margin:0 auto}'+
+    'h1{font-size:20px;color:#1a3a6a;border-bottom:2px solid #1a3a6a;padding-bottom:8px}'+
+    '.meta{color:#888;font-size:12px;margin-bottom:18px}'+
+    'table{width:100%;border-collapse:collapse;font-size:13px}'+
+    'th{text-align:left;background:#f0f3f8;padding:7px 9px;border-bottom:2px solid #ccd}'+
+    'td{padding:6px 9px;border-bottom:1px solid #eee}'+
+    '.n{width:32px;color:#999}'+
+    '@media print{button{display:none}}'+
+    '</style></head><body>'+
+    '<h1>'+titolo+'</h1>'+
+    '<div class="meta">Stampato il '+oggiStr+' &middot; '+righe.length+' nominativi</div>'+
+    '<table><tr><th class="n">#</th><th>Nominativo</th><th>Localit&agrave;</th><th>Telefono</th><th></th></tr>';
+  righe.forEach(function(r,i){
+    h+='<tr><td class="n">'+(i+1)+'</td><td><b>'+esc(r.nome)+'</b></td><td>'+esc(r.luogo)+'</td><td>'+esc(r.tel)+'</td><td>'+esc(r.extra)+'</td></tr>';
+  });
+  h+='</table><div style="margin-top:20px;text-align:center"><button onclick="window.print()" style="padding:8px 18px;font-size:14px;cursor:pointer">Stampa</button></div></body></html>';
+  var w=window.open('','_blank');
+  if(w){w.document.write(h);w.document.close();}
+  else alert('Abilita le finestre popup per stampare.');
+}
+
 function renderTop(){
   var box=document.getElementById('topLista'); if(!box)return;
   _topPopolaRegioni();
   var regSel=(document.getElementById('topRegione')||{}).value||'';
-  var lista=_listaTop().filter(function(x){return !regSel||(x.c.Regione||'').trim()===regSel;});
+  var provSel=(document.getElementById('topProvincia')||{}).value||'';
+  var lista=_listaTop().filter(function(x){if(regSel&&(x.c.Regione||'').trim()!==regSel)return false;if(provSel&&(x.c.Provincia||'').trim()!==provSel)return false;return true;});
   var cnt=document.getElementById('topConteggio'); if(cnt)cnt.textContent=lista.length+(lista.length===1?' cliente':' clienti');
   if(!lista.length){box.innerHTML='<div style="color:#b09040;font-size:13px;padding:8px">Nessun cliente top'+(regSel?' in '+regSel:'')+'.</div>';return;}
   box.innerHTML=lista.slice(0,200).map(function(x,i){
@@ -2073,6 +2147,19 @@ function renderAnziani(){
   }).join('');
 }
 
+function _complProvince(){
+  var selP=document.getElementById('complProvincia'); if(!selP)return;
+  var regSel=(document.getElementById('complRegione')||{}).value||'';
+  selP.innerHTML='<option value="">Tutte le province</option>';
+  var provs={};
+  allContacts.forEach(function(c){
+    if(regSel && (c.Regione||'').trim()!==regSel)return;
+    var pc=_prossimoCompleanno(c); if(!pc||pc.giorni>30)return;
+    var pr=(c.Provincia||'').trim(); if(pr)provs[pr]=1;
+  });
+  Object.keys(provs).sort().forEach(function(pr){var o=document.createElement('option');o.value=pr;o.textContent=pr;selP.appendChild(o);});
+}
+
 function renderCompleanni(){
   var box=document.getElementById("complLista"); if(!box)return;
   _popolaRegioniCompl();
@@ -2080,6 +2167,8 @@ function renderCompleanni(){
   var lista=[];
   allContacts.forEach(function(c){
     if(regSel && (c.Regione||"").trim()!==regSel)return;
+    var provSel=(document.getElementById('complProvincia')||{}).value||'';
+    if(provSel && (c.Provincia||"").trim()!==provSel)return;
     var pc=_prossimoCompleanno(c); if(!pc)return;
     if(pc.giorni<=30)lista.push({c:c,pc:pc});
   });
