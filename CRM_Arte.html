@@ -595,7 +595,7 @@ body[data-ruolo="operatore"] .tab-soloadmin{display:none!important}
       <input class="pr-search" id="quickSearch" placeholder="Cerca cognome..." oninput="liveSearch(this.value)">
       <span class="pr-nav-info" id="prNav"></span>
       <button class="btn-u btn-blue-soft" id="btnAzzera" onclick="azzeraRicerca()" style="display:none" title="Torna a navigare tutto il database">&#10005; Azzera ricerca</button>
-<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 20/06/2026 20:09</span>
+<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 21/06/2026 05:24</span>
       <div style="flex:1"></div>
       <button class="btn-u btn-del-discreet" onclick="deleteContact()" title="Elimina questo contatto">&#128465;</button>
     </div>
@@ -1867,6 +1867,46 @@ function _fmtEuro(n){
   return '€ '+Math.round(n).toLocaleString('it-IT');
 }
 
+var _ED_LIBRI=['TRECCANI','UTET','FMR','UTET FMR','SAIE','SCRIPTA','ARS'];
+function _categoriaOpera(o){
+  var ed=String(o.Editore||'').trim().toUpperCase();
+  var nome=String(o.Opera||'').toUpperCase().trim();
+  var cat=null, oro=false;
+  // ECCEZIONE volumi-libri: VOL/STORIA senza ARGENTO/ORO/COLL = Libro (es. "VOL LIRA" storia della lira)
+  if((nome.indexOf('VOL')>=0||nome.indexOf('STORIA')>=0) && !(nome.indexOf('ARGENTO')>=0||nome.indexOf('ORO')>=0||nome.indexOf('COLL')>=0)){
+    if(ed==='IPZS'||nome.indexOf('LIRA')>=0){return {cat:'Libri e volumi d\'arte',oro:false};}
+  }
+  if(ed==='IPZS'||ed==='SIP'){cat='Numismatica';}
+  else if(_ED_LIBRI.indexOf(ed)>=0){return {cat:'Libri e volumi d\'arte',oro:false};}
+  else{
+    if(/^MED[\s.]/.test(nome)||/\bMED\b/.test(nome)||/\d+\s*MM\b/.test(nome)||nome.indexOf('TITANIA')>=0){cat='Numismatica';}
+    else{
+      var KW=[
+        ['Numismatica',['BANCONOT','LIRA','LIRE','MONETA','MONETE','MEDAGLI','ONCIA','CONIO','100.000','100000','MILLENNIA','GIUBILEO','ANNO SANTO','AUREA']],
+        ['Oro e gioielli',['ORO','GIOIELLO','CIONDOLO','MONILE','ARGENTO']],
+        ['Grafica e stampe',['SERIGRAF','GRAFICA','LITOGRAF','INCISION','STAMPA','LITO ']],
+        ['Sculture',['SCULTURA','BRONZO','STATUA']],
+        ['Libri e volumi d\'arte',['VANGEL','BIBBIA','VOL ','VOLUME','FACSIMILE','CODICE','DIVINA','ODISSEA','ILIADE','ENEIDE','CHISCIOTTE','PINOCCHIO','LEOPARDI','DANTE','MESSALE','PROMESSI','SENECA','LEONARDO','CARAVAGGIO','MICHELANGELO','BOTTICELLI','GIOTTO','RAFFAELLO','CANOVA','TIZIANO','ROSSINI','VOC','DIZ','ENC ','ENC.','AGG','TRECC','MAGNUS','MIRABILIA','SAN ','SANTA','MARIA','ROMA','FIRENZE','VENETO','VENEZIA','MARCHE','APOCALISSE','GIOVANNI PAOLO','GREGORIO','FRANCESCO','ATLANTE','STORIA','GRAMMATICA','RINASCIMENTO','EUROPA','VITTORIALE','QUIRINALE','MATERNITA','ANNUNCIAZIONE','GESU','APPENDIC','INDICI','NEOLOGISMI','MUSICA E LETTER','LIBRO','FIOR DI VIRTU','RENATA DI FRANCIA']]
+      ];
+      for(var i=0;i<KW.length && !cat;i++){
+        for(var j=0;j<KW[i][1].length;j++){ if(nome.indexOf(KW[i][1][j])>=0){cat=KW[i][0];break;} }
+      }
+    }
+  }
+  if(!cat)return {cat:'Altro / vari',oro:false};
+  if(cat==='Numismatica'){
+    oro=['AUREA','ORO','ANNO SANTO','TITANIA'].some(function(x){return nome.indexOf(x)>=0;});
+  }
+  return {cat:cat,oro:oro};
+}
+function _catBadge(o){
+  var r=_categoriaOpera(o);
+  var colori={'Numismatica':'#b8860b','Libri e volumi d\'arte':'#2a5f93','Oro e gioielli':'#c0900a','Grafica e stampe':'#7a5aa8','Sculture':'#5a7a4a','Altro / vari':'#999'};
+  var col=colori[r.cat]||'#999';
+  var txt=r.cat.replace(' e volumi d\'arte','').replace(' e gioielli','').replace(' e stampe','');
+  return '<span style="font-size:10px;background:'+col+'22;color:'+col+';border:1px solid '+col+'55;border-radius:5px;padding:1px 6px;white-space:nowrap">'+txt+(r.oro?' \u00b7 oro':'')+'</span>';
+}
+
 function _calcolaEta(c){
   var d=_dataNascitaParsed(c); if(!d)return null;
   var oggi=new Date(); var eta=oggi.getFullYear()-d.anno;
@@ -2124,6 +2164,32 @@ function renderStatistiche(){
     });
     html+='</div>';
   }
+  // === vendite per categoria prodotto ===
+  try{
+    var catTot={}, catNum={};
+    (typeof opere!=='undefined'?opere:[]).forEach(function(o){
+      var r=_categoriaOpera(o);
+      var v=parseFloat(String(o.Valore||'').replace(/[^0-9.]/g,''))||0;
+      // conversione lire pre-2002
+      var a=(String(o.Data_acquisto||'').match(/(\d{4})\s*$/)||[])[1];
+      if(a && parseInt(a,10)<2002)v=v/1936.27;
+      catTot[r.cat]=(catTot[r.cat]||0)+v;
+      catNum[r.cat]=(catNum[r.cat]||0)+1;
+    });
+    var cats=Object.keys(catNum).sort(function(a,b){return catTot[b]-catTot[a];});
+    if(cats.length){
+      html+='<h3 style="color:#1a3a6a;border-bottom:2px solid #eee;padding-bottom:6px">Vendite per categoria</h3>';
+      var maxV=Math.max.apply(null,cats.map(function(c){return catTot[c];}))||1;
+      html+='<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:22px">';
+      cats.forEach(function(c){
+        var w=Math.round(catTot[c]/maxV*100);
+        html+='<div style="display:flex;align-items:center;gap:10px"><div style="width:150px;font-size:12.5px;color:#555">'+esc(c)+'</div>'+
+          '<div style="flex:1;background:#eef;border-radius:6px;height:22px;position:relative"><div style="width:'+w+'%;background:#7aa3d6;height:100%;border-radius:6px"></div></div>'+
+          '<div style="width:130px;text-align:right;font-size:12.5px;color:#888">'+_fmtEuro(catTot[c])+' <span style="color:#bbb">('+catNum[c]+')</span></div></div>';
+      });
+      html+='</div>';
+    }
+  }catch(e){}
   box.innerHTML=html;
 }
 
@@ -2205,8 +2271,8 @@ function renderContact(c){
   </div>
   <div class="tbl-section">
     <div class="tbl-hdr"><span>Opere Acquistate <button onclick="addOpera('${esc(c.ID_contatto)}')" style="margin-left:6px;padding:1px 7px;background:#1a7a30;color:#fff;border:none;border-radius:3px;font-size:11px;cursor:pointer" title="Aggiungi opera">+</button></span><span>${ops.length} opere</span></div>
-    <div class="tbl-scroll opere"><table class="dtbl"><thead><tr><th>Data acq.</th><th>Editore</th><th>Artista</th><th>Opera</th><th>Valore</th><th>Tipo</th><th style="width:46px">Rate</th><th style="width:30px"></th></tr></thead>
-    <tbody>${ops.map((o,oi)=>`<tr><td style="white-space:nowrap">${esc(fd(o.Data_acquisto))}</td><td style="color:#888">${esc(o.Editore||'')}</td><td>${esc(o.Artista||'')}</td><td>${esc(o.Opera||'')}</td><td style="text-align:right">${esc(o.Valore||'')}</td><td>${esc(o.Pagamento||'')}</td><td style="text-align:center">${esc(o.Rate||'')}</td><td style="text-align:center"><span onclick="editOpera('${esc(c.ID_contatto)}',${oi})" style="cursor:pointer;color:#1a5ab8" title="Modifica">&#9998;</span> <span onclick="delOpera('${esc(c.ID_contatto)}',${oi})" style="cursor:pointer;color:#c03030" title="Elimina">&#215;</span></td></tr>`).join('')}
+    <div class="tbl-scroll opere"><table class="dtbl"><thead><tr><th>Data acq.</th><th>Editore</th><th>Artista</th><th>Opera</th><th>Categoria</th><th>Valore</th><th>Tipo</th><th style="width:46px">Rate</th><th style="width:30px"></th></tr></thead>
+    <tbody>${ops.map((o,oi)=>`<tr><td style="white-space:nowrap">${esc(fd(o.Data_acquisto))}</td><td style="color:#888">${esc(o.Editore||'')}</td><td>${esc(o.Artista||'')}</td><td>${esc(o.Opera||'')}</td><td>${_catBadge(o)}</td><td style="text-align:right">${esc(o.Valore||'')}</td><td>${esc(o.Pagamento||'')}</td><td style="text-align:center">${esc(o.Rate||'')}</td><td style="text-align:center"><span onclick="editOpera('${esc(c.ID_contatto)}',${oi})" style="cursor:pointer;color:#1a5ab8" title="Modifica">&#9998;</span> <span onclick="delOpera('${esc(c.ID_contatto)}',${oi})" style="cursor:pointer;color:#c03030" title="Elimina">&#215;</span></td></tr>`).join('')}
     ${ops.length===0?'<tr><td colspan="7" style="text-align:center;color:#aaa;padding:8px">Nessuna opera</td></tr>':''}
     </tbody></table></div>
     <div class="tbl-footer"><span>${ops.length}</span><span>${totVal?fMoney(String(Math.round(totVal))):''}</span></div>
@@ -2314,8 +2380,8 @@ function renderEditForm(){
     </div>
     <div class="tbl-section">
       <div class="tbl-hdr"><span>Opere Acquistate</span><span>${ops.length} opere</span></div>
-      <table class="dtbl"><thead><tr><th>Data acq.</th><th>Editore</th><th>Artista</th><th>Opera</th><th>Valore</th><th>Tipo</th><th>Rate</th></tr></thead>
-      <tbody>${ops.map(o=>`<tr><td style="white-space:nowrap">${esc(fd(o.Data_acquisto))}</td><td style="color:#888">${esc(o.Editore||'')}</td><td>${esc(o.Artista||'')}</td><td>${esc(o.Opera||'')}</td><td style="text-align:right">${esc(o.Valore||'')}</td><td>${esc(o.Pagamento||'')}</td><td style="text-align:center">${esc(o.Rate||'')}</td></tr>`).join('')}
+      <table class="dtbl"><thead><tr><th>Data acq.</th><th>Editore</th><th>Artista</th><th>Opera</th><th>Categoria</th><th>Valore</th><th>Tipo</th><th>Rate</th></tr></thead>
+      <tbody>${ops.map(o=>`<tr><td style="white-space:nowrap">${esc(fd(o.Data_acquisto))}</td><td style="color:#888">${esc(o.Editore||'')}</td><td>${esc(o.Artista||'')}</td><td>${esc(o.Opera||'')}</td><td>${_catBadge(o)}</td><td style="text-align:right">${esc(o.Valore||'')}</td><td>${esc(o.Pagamento||'')}</td><td style="text-align:center">${esc(o.Rate||'')}</td></tr>`).join('')}
       ${ops.length===0?'<tr><td colspan="7" style="text-align:center;color:#aaa;padding:8px">Nessuna opera</td></tr>':''}
       </tbody></table>
       <div class="tbl-footer"><span>${ops.length}</span><span>${totVal?fMoney(String(Math.round(totVal))):''}</span></div>
