@@ -693,6 +693,101 @@ def api_segnala():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+
+# === IMPORT CONTATTI NUOVI (solo titolare) — processo permanente, anti-duplicati ===
+def _norm_imp(x):
+    import re as _re
+    x=str(x or '').upper().strip()
+    x=_re.sub(r'\b(ING|ARCH|DOTT|DR|PROF|AVV|GEOM|RAG|SIG|SIGRA|CAV|GEN|COMM|ON|NOT)\.?\b','',x)
+    x=_re.sub(r'[^A-Z0-9 ]','',x); x=_re.sub(r'\s+',' ',x).strip(); return x
+def _normcf_imp(x):
+    x=str(x or '').upper().replace(' ','').strip(); return x if len(x)==16 else ''
+def _normtel_imp(x):
+    import re as _re
+    t=_re.sub(r'[^0-9]','',str(x or ''))
+    if t.startswith('39') and len(t)>10: t=t[2:]
+    return t if len(t)>=6 else ''
+_PROV_REG_IMP={
+ 'TO':'Piemonte','VC':'Piemonte','NO':'Piemonte','CN':'Piemonte','AT':'Piemonte','AL':'Piemonte','BI':'Piemonte','VB':'Piemonte',
+ 'AO':"Valle d'Aosta",'GE':'Liguria','SP':'Liguria','SV':'Liguria','IM':'Liguria',
+ 'MI':'Lombardia','BG':'Lombardia','BS':'Lombardia','CO':'Lombardia','CR':'Lombardia','MN':'Lombardia','PV':'Lombardia','SO':'Lombardia','VA':'Lombardia','LC':'Lombardia','LO':'Lombardia','MB':'Lombardia',
+ 'VR':'Veneto','VI':'Veneto','PD':'Veneto','VE':'Veneto','TV':'Veneto','RO':'Veneto','BL':'Veneto',
+ 'UD':'Friuli-Venezia Giulia','PN':'Friuli-Venezia Giulia','GO':'Friuli-Venezia Giulia','TS':'Friuli-Venezia Giulia',
+ 'TN':'Trentino-Alto Adige','BZ':'Trentino-Alto Adige',
+ 'RM':'Lazio','VT':'Lazio','RI':'Lazio','LT':'Lazio','FR':'Lazio',
+ 'PG':'Umbria','TR':'Umbria','AN':'Marche','MC':'Marche','AP':'Marche','PU':'Marche','FM':'Marche',
+ 'CA':'Sardegna','SS':'Sardegna','NU':'Sardegna','OR':'Sardegna','SU':'Sardegna',
+}
+def _regione_da_prov_imp(p):
+    return _PROV_REG_IMP.get(str(p or '').upper().strip(),'')
+
+@app.route('/api/importa', methods=['POST'])
+@solo_titolare('importa')
+def api_importa():
+    """Importa contatti nuovi nel database, scartando i duplicati (CF o telefono).
+    Body: {contatti:[...], opere:[...], conferma:bool}. Se conferma=False ritorna solo l'anteprima."""
+    try:
+        payload = request.get_json(force=True)
+        nuovi = payload.get('contatti', [])
+        opere_in = payload.get('opere', [])
+        conferma = payload.get('conferma', False)
+        data = load_data() or {}
+        contacts = data.get('contacts', [])
+        opere = data.get('opere', [])
+        # indici anti-duplicati
+        cf_idx=set(); tel_idx=set()
+        maxid=0
+        for c in contacts:
+            cf=_normcf_imp(c.get('Codice_fiscale'))
+            if cf: cf_idx.add(cf)
+            for tf in [c.get('Telefono'),c.get('Telefono2'),c.get('Cellulare'),c.get('Cellulare2'),c.get('Tel_Ufficio')]:
+                t=_normtel_imp(tf)
+                if t: tel_idx.add(t)
+            try: maxid=max(maxid,int(c.get('ID_contatto') or 0))
+            except: pass
+        # filtro i nuovi
+        da_inserire=[]; scartati=0
+        mappa_id={}  # id provvisorio -> id reale
+        for c in nuovi:
+            cf=_normcf_imp(c.get('Codice_fiscale'))
+            tels=[_normtel_imp(c.get('Telefono')),_normtel_imp(c.get('Cellulare'))]
+            if cf and cf in cf_idx: scartati+=1; continue
+            if any(t and t in tel_idx for t in tels): scartati+=1; continue
+            da_inserire.append(c)
+            # aggiorno gli indici per evitare duplicati DENTRO lo stesso file
+            if cf: cf_idx.add(cf)
+            for t in tels:
+                if t: tel_idx.add(t)
+        # anteprima
+        if not conferma:
+            return jsonify({'anteprima':True,'nuovi':len(da_inserire),'duplicati':scartati,'totale':len(nuovi)})
+        # CONFERMA: inserisco davvero
+        nid=maxid+1
+        campi=set()
+        for c in contacts[:50]: campi.update(c.keys())
+        for c in da_inserire:
+            old=c.get('ID_contatto')
+            c['ID_contatto']=str(nid)
+            if old is not None: mappa_id[str(old)]=str(nid)
+            if not c.get('Regione'):
+                c['Regione']=_regione_da_prov_imp(c.get('Provincia'))
+            for k in campi:
+                if k not in c: c[k]=''
+            contacts.append(c); nid+=1
+        # opere collegate (rimappo gli ID)
+        n_op=0
+        for o in opere_in:
+            oid=str(o.get('ID_contatto'))
+            if oid in mappa_id:
+                o['ID_contatto']=mappa_id[oid]
+                opere.append(o); n_op+=1
+        data['contacts']=contacts; data['opere']=opere
+        save_data(data)
+        return jsonify({'ok':True,'inseriti':len(da_inserire),'scartati':scartati,'opere':n_op,'totale_db':len(contacts)})
+    except Exception as e:
+        import traceback; traceback.print_exc()
+        return jsonify({'error':str(e)}), 500
+
 if __name__ == '__main__':
     port = 8080
     # backup automatico all'avvio (copia di sicurezza dei dati attuali)

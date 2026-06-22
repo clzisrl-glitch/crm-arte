@@ -595,7 +595,7 @@ body[data-ruolo="operatore"] .tab-soloadmin{display:none!important}
       <input class="pr-search" id="quickSearch" placeholder="Cerca cognome..." oninput="liveSearch(this.value)">
       <span class="pr-nav-info" id="prNav"></span>
       <button class="btn-u btn-blue-soft" id="btnAzzera" onclick="azzeraRicerca()" style="display:none" title="Torna a navigare tutto il database">&#10005; Azzera ricerca</button>
-<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 21/06/2026 16:19</span>
+<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 22/06/2026 16:40</span>
       <div style="flex:1"></div>
       <button class="btn-u btn-del-discreet" onclick="deleteContact()" title="Elimina questo contatto">&#128465;</button>
     </div>
@@ -772,7 +772,8 @@ body[data-ruolo="operatore"] .tab-soloadmin{display:none!important}
       <h2 style="font-size:23px;color:#1f4a73;margin:0 0 2px;font-weight:600;letter-spacing:-.01em">&#127912; Arte Editoria Monete</h2>
       <div id="welcome-giornata" style="background:linear-gradient(135deg,#1a3a6a,#2a5a9a);border-radius:14px;padding:18px 22px;margin:14px 0 22px;color:#fff"><div style="font-size:13px;opacity:.85;margin-bottom:2px" id="giornataData"></div><div style="font-size:17px;font-weight:700;margin-bottom:14px">La tua giornata</div><div id="giornataCards" style="display:flex;flex-wrap:wrap;gap:12px"></div></div>
       <div style="color:#777;margin-bottom:18px">Guida rapida. Le sezioni in alto sono i pulsanti della barra. Clicca un argomento per saltarci.</div>
-      <div id="welcome-strumenti" style="background:#f4f6fa;border:1px solid #dfe5ee;border-radius:12px;padding:16px 18px;margin-bottom:22px"><div style="font-size:15px;font-weight:700;color:#1a3a6a;margin-bottom:4px">&#128295; Strumenti</div><div style="font-size:12.5px;color:#777;margin-bottom:12px">Backup, esportazioni e viste complete. <b>Backup, Excel e Completo sono riservati al titolare.</b></div><div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center"><button class="btn-u btn-green" onclick="backupCompleto()" title="Scarica una copia di sicurezza di tutti i dati (crm_data.json) sul tuo computer.">&#128190; Backup</button><button class="btn-u btn-blue" onclick="mostraBackupAuto()" title="Vedi e scarica le copie di sicurezza automatiche degli ultimi 60 giorni.">&#128338; Backup automatici</button><button class="btn-u pt-mail" onclick="exportExcel(false)" title="Esporta tutti i contatti in un file Excel.">&#128202; Excel</button><button class="btn-u pt-lista" onclick="vistaCompleto()" title="Mostra tutti i contatti, dal piu recente inserito al primo.">&#128203; Completo</button><button class="btn-u" onclick="showTab('deceduti')" title="Contatti segnati come deceduti: tenuti da parte ed esclusi dalle ricerche.">&#9904; Deceduti</button></div></div>
+      <div id="welcome-strumenti" style="background:#f4f6fa;border:1px solid #dfe5ee;border-radius:12px;padding:16px 18px;margin-bottom:22px"><div style="font-size:15px;font-weight:700;color:#1a3a6a;margin-bottom:4px">&#128295; Strumenti</div><div style="font-size:12.5px;color:#777;margin-bottom:12px">Backup, esportazioni e viste complete. <b>Backup, Excel e Completo sono riservati al titolare.</b></div><div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center"><button class="btn-u btn-green" onclick="backupCompleto()" title="Scarica una copia di sicurezza di tutti i dati (crm_data.json) sul tuo computer.">&#128190; Backup</button><button class="btn-u btn-blue" onclick="mostraBackupAuto()" title="Vedi e scarica le copie di sicurezza automatiche degli ultimi 60 giorni.">&#128338; Backup automatici</button>
+          <button onclick="mostraImportModal()" class="tool-btn _soloTitolare" style="background:#eef7ee;border:1px solid #cce5cc;color:#2a7a2a;padding:10px 14px;border-radius:9px;font-size:13px;cursor:pointer;font-weight:600">&#128229; Importa contatti</button><button class="btn-u pt-mail" onclick="exportExcel(false)" title="Esporta tutti i contatti in un file Excel.">&#128202; Excel</button><button class="btn-u pt-lista" onclick="vistaCompleto()" title="Mostra tutti i contatti, dal piu recente inserito al primo.">&#128203; Completo</button><button class="btn-u" onclick="showTab('deceduti')" title="Contatti segnati come deceduti: tenuti da parte ed esclusi dalle ricerche.">&#9904; Deceduti</button></div></div>
       <div id="welcome-compleanni" style="background:#fff8ee;border:1px solid #f0e0c0;border-radius:12px;padding:16px 18px;margin-bottom:22px"><div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px"><div style="font-size:15px;font-weight:700;color:#9a6500">&#127874; Prossimi compleanni</div><div style="display:flex;gap:6px;flex-wrap:wrap"><select id="complRegione" onchange="_complProvince();renderCompleanni()" style="padding:6px 10px;border:1px solid #e0cba0;border-radius:7px;font-size:12.5px;color:#7a5500;background:#fff"><option value="">Tutte le regioni</option></select><select id="complProvincia" onchange="renderCompleanni()" style="padding:6px 10px;border:1px solid #e0cba0;border-radius:7px;font-size:12.5px;color:#7a5500;background:#fff"><option value="">Tutte le province</option></select><button onclick="_stampaLista('compleanni')" title="Stampa la lista" style="padding:6px 10px;border:1px solid #e0cba0;border-radius:7px;font-size:12.5px;color:#7a5500;background:#fff;cursor:pointer">&#128424;</button></div></div><div style="font-size:12px;color:#a08040;margin-bottom:10px">Clienti che compiono gli anni nei prossimi 30 giorni. Un'occasione per una telefonata di auguri.</div><div id="complLista" style="display:flex;flex-direction:column;gap:4px;max-height:320px;overflow-y:auto"></div></div>
       <div id="welcome-anziani" style="background:#f3f0fa;border:1px solid #ddd0ee;border-radius:12px;padding:16px 18px;margin-bottom:22px"><div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px"><div style="font-size:15px;font-weight:700;color:#5b3a8a">&#128081; Clienti dai 90 anni in su</div><div style="display:flex;gap:6px;flex-wrap:wrap"><select id="anzRegione" onchange="_anzProvince();renderAnziani()" style="padding:6px 10px;border:1px solid #cdb8e6;border-radius:7px;font-size:12.5px;color:#5b3a8a;background:#fff"><option value="">Tutte le regioni</option></select><select id="anzProvincia" onchange="renderAnziani()" style="padding:6px 10px;border:1px solid #cdb8e6;border-radius:7px;font-size:12.5px;color:#5b3a8a;background:#fff"><option value="">Tutte le province</option></select><button onclick="_stampaLista('anziani')" title="Stampa la lista" style="padding:6px 10px;border:1px solid #cdb8e6;border-radius:7px;font-size:12.5px;color:#5b3a8a;background:#fff;cursor:pointer">&#128424;</button></div></div><div style="font-size:12px;color:#8a72b0;margin-bottom:10px">Elenco aggiornato automaticamente in base all'et&agrave; (calcolata dal codice fiscale). <span id="anzConteggio" style="font-weight:600"></span></div><div id="anzLista" style="display:flex;flex-direction:column;gap:4px;max-height:360px;overflow-y:auto"></div></div>
       <div id="welcome-top" style="background:#fdf6e9;border:1px solid #ecd9a8;border-radius:12px;padding:16px 18px;margin-bottom:22px"><div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px"><div style="font-size:15px;font-weight:700;color:#a07810">&#127942; Clienti top</div><div style="display:flex;gap:6px;flex-wrap:wrap"><select id="topRegione" onchange="_topProvince();renderTop()" style="padding:6px 10px;border:1px solid #e0c878;border-radius:7px;font-size:12.5px;color:#8a6810;background:#fff"><option value="">Tutte le regioni</option></select><select id="topProvincia" onchange="renderTop()" style="padding:6px 10px;border:1px solid #e0c878;border-radius:7px;font-size:12.5px;color:#8a6810;background:#fff"><option value="">Tutte le province</option></select><button onclick="_stampaLista('top')" title="Stampa la lista" style="padding:6px 10px;border:1px solid #e0c878;border-radius:7px;font-size:12.5px;color:#8a6810;background:#fff;cursor:pointer">&#128424;</button></div></div><div style="font-size:12px;color:#b09040;margin-bottom:10px">I clienti che hanno acquistato di pi&ugrave; (valori storici in lire convertiti in euro). <span id="topConteggio" style="font-weight:600"></span></div><div id="topLista" style="display:flex;flex-direction:column;gap:4px;max-height:360px;overflow-y:auto"></div></div>
@@ -3711,5 +3712,69 @@ const EMBEDDED_APPUNTAMENTI=``
 </div>
 
 <div id="backupAutoModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;align-items:center;justify-content:center"><div style="background:#fff;border-radius:14px;padding:22px;max-width:520px;width:90%;max-height:80vh;overflow-y:auto"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><div style="font-size:18px;font-weight:700;color:#1a3a6a">&#128338; Backup automatici</div><button onclick="document.getElementById('backupAutoModal').style.display='none'" style="background:none;border:none;font-size:22px;cursor:pointer;color:#999">&times;</button></div><div style="font-size:12.5px;color:#888;margin-bottom:14px">Copie di sicurezza automatiche giornaliere (ultimi 60 giorni). Clicca per scaricare quella che vuoi sul tuo computer.</div><div id="backupAutoLista" style="display:flex;flex-direction:column;gap:5px"></div></div></div>
+
+<div id="importModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;align-items:center;justify-content:center">
+  <div style="background:#fff;border-radius:14px;padding:24px;max-width:520px;width:90%;max-height:85vh;overflow-y:auto">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <h3 style="margin:0;color:#2a5f93">&#128229; Importa contatti</h3>
+      <button onclick="chiudiImport()" style="border:none;background:none;font-size:22px;cursor:pointer;color:#999">&times;</button>
+    </div>
+    <div style="font-size:13px;color:#666;line-height:1.6;margin-bottom:14px">
+      Carica un file <b>JSON</b> dei contatti gi&agrave; preparati. Il sistema controlla automaticamente i duplicati (codice fiscale e telefono) e aggiunge solo i nuovi, assegnando la zona dalla regione.
+    </div>
+    <input type="file" id="importFile" accept=".json" onchange="anteprimaImport()" style="margin-bottom:14px;font-size:13px">
+    <div id="importInfo" style="font-size:13px"></div>
+    <div id="importAzioni" style="margin-top:16px;display:none">
+      <button id="btnConfermaImport" onclick="confermaImport()" style="background:#2a7a2a;color:#fff;border:none;padding:10px 18px;border-radius:8px;font-size:14px;cursor:pointer;font-weight:600">Conferma e importa</button>
+      <button onclick="chiudiImport()" style="background:#eee;color:#555;border:none;padding:10px 18px;border-radius:8px;font-size:14px;cursor:pointer;margin-left:8px">Annulla</button>
+    </div>
+  </div>
+</div>
+<script>
+var _importData=null;
+function mostraImportModal(){document.getElementById('importModal').style.display='flex';document.getElementById('importInfo').innerHTML='';document.getElementById('importAzioni').style.display='none';document.getElementById('importFile').value='';_importData=null;}
+function chiudiImport(){document.getElementById('importModal').style.display='none';}
+function anteprimaImport(){
+  var f=document.getElementById('importFile').files[0]; if(!f)return;
+  var info=document.getElementById('importInfo'); info.innerHTML='Lettura file...';
+  var rd=new FileReader();
+  rd.onload=function(){
+    try{
+      var j=JSON.parse(rd.result);
+      var contatti=j.contatti||j.contacts||[];
+      var opere=j.opere||[];
+      if(!contatti.length){info.innerHTML='<span style="color:#c00">Nessun contatto trovato nel file.</span>';return;}
+      _importData={contatti:contatti,opere:opere};
+      // chiedo anteprima al server (conta duplicati)
+      info.innerHTML='Controllo duplicati in corso...';
+      fetch('/api/importa',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contatti:contatti,opere:opere,conferma:false})})
+        .then(function(r){return r.json();})
+        .then(function(res){
+          if(res.error){info.innerHTML='<span style="color:#c00">Errore: '+res.error+'</span>';return;}
+          info.innerHTML='<div style="background:#f4f8f4;border:1px solid #cce5cc;border-radius:8px;padding:12px">'+
+            '<div style="font-size:15px;font-weight:700;color:#2a7a2a;margin-bottom:6px">'+res.nuovi+' contatti nuovi da importare</div>'+
+            '<div style="color:#888;font-size:12.5px">'+res.duplicati+' gi&agrave; presenti (saltati) &middot; '+res.totale+' totali nel file</div>'+
+            (opere.length?'<div style="color:#888;font-size:12.5px;margin-top:4px">'+opere.length+' opere collegate</div>':'')+
+          '</div>';
+          document.getElementById('importAzioni').style.display=res.nuovi>0?'block':'none';
+        }).catch(function(e){info.innerHTML='<span style="color:#c00">Errore di rete: '+e+'</span>';});
+    }catch(e){info.innerHTML='<span style="color:#c00">File non valido (deve essere JSON): '+e+'</span>';}
+  };
+  rd.readAsText(f);
+}
+function confermaImport(){
+  if(!_importData)return;
+  var btn=document.getElementById('btnConfermaImport'); btn.disabled=true; btn.textContent='Importazione...';
+  fetch('/api/importa',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contatti:_importData.contatti,opere:_importData.opere,conferma:true})})
+    .then(function(r){return r.json();})
+    .then(function(res){
+      if(res.error){alert('Errore: '+res.error);btn.disabled=false;btn.textContent='Conferma e importa';return;}
+      document.getElementById('importInfo').innerHTML='<div style="background:#eef7ee;border:1px solid #cce5cc;border-radius:8px;padding:12px;color:#2a7a2a"><b>&#10004; Importati '+res.inseriti+' contatti'+(res.opere?' e '+res.opere+' opere':'')+'!</b><br><span style="font-size:12px;color:#888">Database ora: '+res.totale_db+' contatti. Ricarico la pagina...</span></div>';
+      document.getElementById('importAzioni').style.display='none';
+      setTimeout(function(){location.reload();},2000);
+    }).catch(function(e){alert('Errore di rete: '+e);btn.disabled=false;btn.textContent='Conferma e importa';});
+}
+</script>
+
 </body>
 </html>
