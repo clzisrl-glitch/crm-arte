@@ -595,7 +595,7 @@ body[data-ruolo="operatore"] .tab-soloadmin{display:none!important}
       <input class="pr-search" id="quickSearch" placeholder="Cerca cognome..." oninput="liveSearch(this.value)">
       <span class="pr-nav-info" id="prNav"></span>
       <button class="btn-u btn-blue-soft" id="btnAzzera" onclick="azzeraRicerca()" style="display:none" title="Torna a navigare tutto il database">&#10005; Azzera ricerca</button>
-<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 22/06/2026 16:40</span>
+<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 22/06/2026 17:02</span>
       <div style="flex:1"></div>
       <button class="btn-u btn-del-discreet" onclick="deleteContact()" title="Elimina questo contatto">&#128465;</button>
     </div>
@@ -952,6 +952,26 @@ async function faiLogin(){
 }
 async function faiLogout(){try{await fetch("/api/logout",{method:"POST"});location.reload();}catch(e){}}
 let allContacts=[],currentResults=[],currentIdx=0,searchActive=false;
+
+var _capItalia=null;
+function _caricaCapItalia(){
+  if(_capItalia!==null)return Promise.resolve();
+  return fetch('cap_italia.json').then(function(r){return r.json();}).then(function(j){_capItalia=j;}).catch(function(){_capItalia={};});
+}
+function _riempiCap(c){
+  if(!c)return;
+  if(String(c.CAP||'').trim())return; // ha già il CAP
+  var citta=String(c.Citta||'').toUpperCase().trim();
+  var prov=String(c.Provincia||'').toUpperCase().trim();
+  if(!citta||!prov||!_capItalia)return;
+  var cap=_capItalia[citta+'|'+prov];
+  if(cap){c.CAP=cap; c._cap_auto=true;}
+}
+function _riempiCapTutti(){
+  if(!_capItalia)return;
+  (contacts||[]).forEach(_riempiCap);
+}
+
 let currentWeek=null,lastTab='agenda';
 let agendaMods={};
 let calFilter='all',calView='cal';
@@ -1091,6 +1111,7 @@ async function loadFromDB(){
     const d=await r.json();
     if(!d.contacts||!d.contacts.length)return false;
     contacts=d.contacts;contacts.forEach(c=>contactMap[c.ID_contatto]=c);
+    _caricaCapItalia().then(function(){_riempiCapTutti();});
     telefonate=d.telefonate||[];
     telByContact={};
     for(const t of telefonate){
@@ -2093,7 +2114,8 @@ function renderTop(){
     var c=x.c;
     var nome=esc((c.Cognome||'')+' '+(c.Nome||''));
     var citta=esc(c.Citta||'')+(c.Provincia?' ('+esc(c.Provincia)+')':'');
-    return '<div onclick="apriContattoDaId(\''+esc(String(c.ID_contatto))+'\')" style="cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:7px 10px;background:#fff;border:1px solid #f0e4c8;border-radius:8px">'+
+    window._listaTopNav=lista.map(function(z){return z.c;});
+    return '<div onclick="apriContattoDaId(\''+esc(String(c.ID_contatto))+'\',window._listaTopNav)" style="cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:7px 10px;background:#fff;border:1px solid #f0e4c8;border-radius:8px">'+
       '<div style="display:flex;align-items:center;gap:8px"><span style="color:#c0a040;font-weight:700;font-size:12px;width:22px">'+(i+1)+'</span><div><b style="color:#8a6810">'+nome+'</b><div style="font-size:11px;color:#b09a6a">'+citta+'</div></div></div>'+
       '<div style="text-align:right;white-space:nowrap;font-weight:700;color:#a07810">'+_fmtEuro(x.spesa)+'</div>'+
     '</div>';
@@ -2147,7 +2169,8 @@ function renderAnziani(){
     var nome=esc((c.Cognome||'')+' '+(c.Nome||''));
     var citta=esc(c.Citta||'')+(c.Provincia?' ('+esc(c.Provincia)+')':'');
     var tel=esc(c.Cellulare||c.Telefono||'');
-    return '<div onclick="apriContattoDaId(\''+esc(String(c.ID_contatto))+'\')" style="cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:7px 10px;background:#fff;border:1px solid #e6dcf2;border-radius:8px">'+
+    window._listaAnzNav=lista.map(function(z){return z.c;});
+    return '<div onclick="apriContattoDaId(\''+esc(String(c.ID_contatto))+'\',window._listaAnzNav)" style="cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:7px 10px;background:#fff;border:1px solid #e6dcf2;border-radius:8px">'+
       '<div><b style="color:#5b3a8a">'+nome+'</b><div style="font-size:11px;color:#9b86bd">'+citta+(tel?' &middot; '+tel:'')+'</div></div>'+
       '<div style="text-align:right;white-space:nowrap"><div style="font-size:16px;font-weight:700;color:#7a5aa8">'+x.eta+'</div><div style="font-size:10px;color:#9b86bd">anni</div></div>'+
     '</div>';
@@ -2187,16 +2210,24 @@ function renderCompleanni(){
     var dataLbl=('0'+pc.giorno).slice(-2)+'/'+('0'+pc.mese).slice(-2);
     var nome=esc((c.Cognome||'')+' '+(c.Nome||''));
     var citta=esc(c.Citta||'')+(c.Provincia?' ('+esc(c.Provincia)+')':'');
-    return '<div onclick="apriContattoDaId(\''+esc(String(c.ID_contatto))+'\')" style="cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:7px 10px;background:#fff;border:1px solid #f0e4cc;border-radius:8px">'+
+    window._listaComplNav=lista.map(function(z){return z.c;});
+    return '<div onclick="apriContattoDaId(\''+esc(String(c.ID_contatto))+'\',window._listaComplNav)" style="cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:7px 10px;background:#fff;border:1px solid #f0e4cc;border-radius:8px">'+
       '<div><b style="color:#7a5500">'+nome+'</b>'+(eta!=null?' <span style="color:#a08040;font-size:12px">('+(eta+ (pc.giorni===0?0:0))+' &rarr; '+(eta+1)+' anni)</span>':'')+'<div style="font-size:11px;color:#b0966a">'+citta+'</div></div>'+
       '<div style="text-align:right;white-space:nowrap"><div style="font-size:13px;color:#9a6500">'+quando+'</div><div style="font-size:11px;color:#b0966a">'+dataLbl+'</div></div>'+
     '</div>';
   }).join('');
 }
-function apriContattoDaId(id){
+function apriContattoDaId(id, listaContesto){
   var c=contactMap[String(id)]; if(!c){alert("Contatto non trovato.");return;}
-  currentResults=[c]; currentIdx=0; searchActive=true;
-  renderContactAndMap(c); showTab('principale');
+  if(listaContesto && listaContesto.length){
+    currentResults=listaContesto.slice();
+    currentIdx=currentResults.findIndex(function(x){return String(x.ID_contatto)===String(id);});
+    if(currentIdx<0){currentResults=[c];currentIdx=0;}
+  } else {
+    currentResults=[c]; currentIdx=0;
+  }
+  searchActive=true;
+  renderContactAndMap(currentResults[currentIdx>=0?currentIdx:0]); showTab('principale');
 }
 function renderStatistiche(){
   var box=document.getElementById('statBody'); if(!box)return;
