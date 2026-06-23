@@ -595,7 +595,7 @@ body[data-ruolo="operatore"] .tab-soloadmin{display:none!important}
       <input class="pr-search" id="quickSearch" placeholder="Cerca cognome..." oninput="liveSearch(this.value)">
       <span class="pr-nav-info" id="prNav"></span>
       <button class="btn-u btn-blue-soft" id="btnAzzera" onclick="azzeraRicerca()" style="display:none" title="Torna a navigare tutto il database">&#10005; Azzera ricerca</button>
-<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 23/06/2026 17:19</span>
+<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 23/06/2026 20:06</span>
       <div style="flex:1"></div>
       <button class="btn-u btn-del-discreet" onclick="deleteContact()" title="Elimina questo contatto">&#128465;</button>
     </div>
@@ -773,6 +773,7 @@ body[data-ruolo="operatore"] .tab-soloadmin{display:none!important}
       <div id="welcome-giornata" style="background:linear-gradient(135deg,#1a3a6a,#2a5a9a);border-radius:14px;padding:18px 22px;margin:14px 0 22px;color:#fff"><div style="font-size:13px;opacity:.85;margin-bottom:2px" id="giornataData"></div><div style="font-size:17px;font-weight:700;margin-bottom:14px">La tua giornata</div><div id="giornataCards" style="display:flex;flex-wrap:wrap;gap:12px"></div></div>
       <div style="color:#777;margin-bottom:18px">Guida rapida. Le sezioni in alto sono i pulsanti della barra. Clicca un argomento per saltarci.</div>
       <div id="welcome-strumenti" style="background:#f4f6fa;border:1px solid #dfe5ee;border-radius:12px;padding:16px 18px;margin-bottom:22px"><div style="font-size:15px;font-weight:700;color:#1a3a6a;margin-bottom:4px">&#128295; Strumenti</div><div style="font-size:12.5px;color:#777;margin-bottom:12px">Backup, esportazioni e viste complete. <b>Backup, Excel e Completo sono riservati al titolare.</b></div><div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center"><button class="btn-u btn-green" onclick="backupCompleto()" title="Scarica una copia di sicurezza di tutti i dati (crm_data.json) sul tuo computer.">&#128190; Backup</button><button class="btn-u btn-blue" onclick="mostraBackupAuto()" title="Vedi e scarica le copie di sicurezza automatiche degli ultimi 60 giorni.">&#128338; Backup automatici</button>
+          <button onclick="mostraVicinoModal()" class="tool-btn" style="background:#eaf3fb;border:1px solid #c2dcf0;color:#1a5a93;padding:10px 14px;border-radius:9px;font-size:13px;cursor:pointer;font-weight:600">&#128205; Vicino a me</button>
           <button onclick="mostraImportModal()" class="tool-btn _soloTitolare" style="background:#eef7ee;border:1px solid #cce5cc;color:#2a7a2a;padding:10px 14px;border-radius:9px;font-size:13px;cursor:pointer;font-weight:600">&#128229; Importa contatti</button><button class="btn-u pt-mail" onclick="exportExcel(false)" title="Esporta tutti i contatti in un file Excel.">&#128202; Excel</button><button class="btn-u pt-lista" onclick="vistaCompleto()" title="Mostra tutti i contatti, dal piu recente inserito al primo.">&#128203; Completo</button><button class="btn-u" onclick="showTab('deceduti')" title="Contatti segnati come deceduti: tenuti da parte ed esclusi dalle ricerche.">&#9904; Deceduti</button></div></div>
       <div id="welcome-compleanni" style="background:#fff8ee;border:1px solid #f0e0c0;border-radius:12px;padding:16px 18px;margin-bottom:22px"><div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px"><div style="font-size:15px;font-weight:700;color:#9a6500">&#127874; Prossimi compleanni</div><div style="display:flex;gap:6px;flex-wrap:wrap"><select id="complRegione" onchange="_complProvince();renderCompleanni()" style="padding:6px 10px;border:1px solid #e0cba0;border-radius:7px;font-size:12.5px;color:#7a5500;background:#fff"><option value="">Tutte le regioni</option></select><select id="complProvincia" onchange="renderCompleanni()" style="padding:6px 10px;border:1px solid #e0cba0;border-radius:7px;font-size:12.5px;color:#7a5500;background:#fff"><option value="">Tutte le province</option></select><button onclick="_stampaLista('compleanni')" title="Stampa la lista" style="padding:6px 10px;border:1px solid #e0cba0;border-radius:7px;font-size:12.5px;color:#7a5500;background:#fff;cursor:pointer">&#128424;</button></div></div><div style="font-size:12px;color:#a08040;margin-bottom:10px">Clienti che compiono gli anni nei prossimi 30 giorni. Un'occasione per una telefonata di auguri.</div><div id="complLista" style="display:flex;flex-direction:column;gap:4px;max-height:320px;overflow-y:auto"></div></div>
       <div id="welcome-anziani" style="background:#f3f0fa;border:1px solid #ddd0ee;border-radius:12px;padding:16px 18px;margin-bottom:22px"><div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px"><div style="font-size:15px;font-weight:700;color:#5b3a8a">&#128081; Clienti dai 90 anni in su</div><div style="display:flex;gap:6px;flex-wrap:wrap"><select id="anzRegione" onchange="_anzProvince();renderAnziani()" style="padding:6px 10px;border:1px solid #cdb8e6;border-radius:7px;font-size:12.5px;color:#5b3a8a;background:#fff"><option value="">Tutte le regioni</option></select><select id="anzProvincia" onchange="renderAnziani()" style="padding:6px 10px;border:1px solid #cdb8e6;border-radius:7px;font-size:12.5px;color:#5b3a8a;background:#fff"><option value="">Tutte le province</option></select><button onclick="_stampaLista('anziani')" title="Stampa la lista" style="padding:6px 10px;border:1px solid #cdb8e6;border-radius:7px;font-size:12.5px;color:#5b3a8a;background:#fff;cursor:pointer">&#128424;</button></div></div><div style="font-size:12px;color:#8a72b0;margin-bottom:10px">Elenco aggiornato automaticamente in base all'et&agrave; (calcolata dal codice fiscale). <span id="anzConteggio" style="font-weight:600"></span></div><div id="anzLista" style="display:flex;flex-direction:column;gap:4px;max-height:360px;overflow-y:auto"></div></div>
@@ -953,6 +954,18 @@ async function faiLogin(){
 async function faiLogout(){try{await fetch("/api/logout",{method:"POST"});location.reload();}catch(e){}}
 let allContacts=[],currentResults=[],currentIdx=0,searchActive=false;
 
+var _coordContatti=null;
+function _caricaCoordinate(){
+  if(_coordContatti!==null)return Promise.resolve();
+  return fetch('coordinate.json').then(function(r){return r.json();}).then(function(j){_coordContatti=j;}).catch(function(){_coordContatti={};});
+}
+function _distanzaKm(lat1,lng1,lat2,lng2){
+  var R=6371, dLat=(lat2-lat1)*Math.PI/180, dLng=(lng2-lng1)*Math.PI/180;
+  var a=Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)*Math.sin(dLng/2);
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+
+
 var _capItalia=null;
 function _caricaCapItalia(){
   if(_capItalia!==null)return Promise.resolve();
@@ -1112,6 +1125,7 @@ async function loadFromDB(){
     if(!d.contacts||!d.contacts.length)return false;
     contacts=d.contacts;contacts.forEach(c=>contactMap[c.ID_contatto]=c);
     _caricaCapItalia().then(function(){_riempiCapTutti();});
+    _caricaCoordinate();
     telefonate=d.telefonate||[];
     telByContact={};
     for(const t of telefonate){
@@ -3929,6 +3943,79 @@ function confermaImport(){
       document.getElementById('importAzioni').style.display='none';
       setTimeout(function(){location.reload();},2000);
     }).catch(function(e){alert('Errore di rete: '+e);btn.disabled=false;btn.textContent='Conferma e importa';});
+}
+</script>
+
+
+<div id="vicinoModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;align-items:flex-start;justify-content:center;overflow-y:auto;padding:16px">
+  <div style="background:#fff;border-radius:14px;padding:20px;max-width:560px;width:100%;margin-top:20px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <h3 style="margin:0;color:#1a5a93">&#128205; Vicino a me</h3>
+      <button onclick="chiudiVicino()" style="border:none;background:none;font-size:24px;cursor:pointer;color:#999">&times;</button>
+    </div>
+    <div style="font-size:13px;color:#666;margin-bottom:14px">Trova i contatti pi&ugrave; vicini alla tua posizione attuale. Utile per organizzare il giro visite.</div>
+    <div style="margin-bottom:14px">
+      <div style="font-size:13px;color:#444;margin-bottom:8px;font-weight:600">Raggio di ricerca</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap" id="vicinoRaggi">
+        <button onclick="_setRaggio(5)" class="vraggio" data-r="5" style="flex:1;min-width:60px;padding:12px;border:1px solid #c2dcf0;background:#fff;border-radius:9px;font-size:15px;cursor:pointer;font-weight:600">5 km</button>
+        <button onclick="_setRaggio(10)" class="vraggio" data-r="10" style="flex:1;min-width:60px;padding:12px;border:1px solid #c2dcf0;background:#1a5a93;color:#fff;border-radius:9px;font-size:15px;cursor:pointer;font-weight:600">10 km</button>
+        <button onclick="_setRaggio(20)" class="vraggio" data-r="20" style="flex:1;min-width:60px;padding:12px;border:1px solid #c2dcf0;background:#fff;border-radius:9px;font-size:15px;cursor:pointer;font-weight:600">20 km</button>
+        <button onclick="_setRaggio(30)" class="vraggio" data-r="30" style="flex:1;min-width:60px;padding:12px;border:1px solid #c2dcf0;background:#fff;border-radius:9px;font-size:15px;cursor:pointer;font-weight:600">30 km</button>
+      </div>
+    </div>
+    <button id="btnTrovaVicini" onclick="trovaVicini()" style="width:100%;background:#1a5a93;color:#fff;border:none;padding:14px;border-radius:10px;font-size:16px;cursor:pointer;font-weight:700;margin-bottom:14px">&#128205; Usa la mia posizione</button>
+    <div id="vicinoStato" style="font-size:13px;color:#888;text-align:center;margin-bottom:10px"></div>
+    <div id="vicinoRisultati"></div>
+  </div>
+</div>
+<script>
+var _vRaggio=10, _vPos=null;
+function mostraVicinoModal(){document.getElementById('vicinoModal').style.display='flex';document.getElementById('vicinoRisultati').innerHTML='';document.getElementById('vicinoStato').innerHTML='';}
+function chiudiVicino(){document.getElementById('vicinoModal').style.display='none';}
+function _setRaggio(r){_vRaggio=r;document.querySelectorAll('.vraggio').forEach(function(b){var on=parseInt(b.getAttribute('data-r'))===r;b.style.background=on?'#1a5a93':'#fff';b.style.color=on?'#fff':'#1a5a93';});if(_vPos)_calcolaVicini();}
+function trovaVicini(){
+  var stato=document.getElementById('vicinoStato');
+  if(!navigator.geolocation){stato.innerHTML='<span style="color:#c00">Il dispositivo non supporta la geolocalizzazione.</span>';return;}
+  stato.innerHTML='Rilevamento posizione in corso...';
+  var btn=document.getElementById('btnTrovaVicini');btn.disabled=true;btn.textContent='Attendere...';
+  navigator.geolocation.getCurrentPosition(function(pos){
+    _vPos={lat:pos.coords.latitude,lng:pos.coords.longitude};
+    btn.disabled=false;btn.innerHTML='&#128205; Aggiorna posizione';
+    _calcolaVicini();
+  },function(err){
+    btn.disabled=false;btn.innerHTML='&#128205; Usa la mia posizione';
+    var msg='Impossibile rilevare la posizione.';
+    if(err.code===1)msg='Permesso negato. Abilita la posizione per questa pagina nelle impostazioni del browser.';
+    stato.innerHTML='<span style="color:#c00">'+msg+'</span>';
+  },{enableHighAccuracy:true,timeout:15000,maximumAge:60000});
+}
+function _calcolaVicini(){
+  var stato=document.getElementById('vicinoStato'), box=document.getElementById('vicinoRisultati');
+  if(!_vPos||!_coordContatti){stato.innerHTML='Coordinate non ancora caricate, riprova tra un istante.';return;}
+  var vicini=[];
+  (allContacts||[]).forEach(function(c){
+    var co=_coordContatti[String(c.ID_contatto)];
+    if(!co)return;
+    var d=_distanzaKm(_vPos.lat,_vPos.lng,co[0],co[1]);
+    if(d<=_vRaggio)vicini.push({c:c,d:d});
+  });
+  vicini.sort(function(a,b){return a.d-b.d;});
+  stato.innerHTML='<b style="color:#1a5a93">'+vicini.length+'</b> contatti entro '+_vRaggio+' km';
+  if(!vicini.length){box.innerHTML='<div style="text-align:center;color:#999;padding:20px">Nessun contatto in questo raggio. Prova ad allargare.</div>';return;}
+  var h='';
+  vicini.slice(0,200).forEach(function(x){
+    var c=x.c, nome=((c.Cognome||'')+' '+(c.Nome||'')).trim();
+    var tel=(c.Cellulare||c.Telefono||'').trim();
+    h+='<div style="border:1px solid #e6e6ea;border-radius:10px;padding:12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;gap:10px">';
+    h+='<div style="flex:1;min-width:0;cursor:pointer" onclick="chiudiVicino();apriContattoDaId(\''+esc(String(c.ID_contatto))+'\')">';
+    h+='<div style="font-weight:600;color:#1a3a6a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(nome)+'</div>';
+    h+='<div style="font-size:12px;color:#888">'+esc(c.Citta||'')+(c.Provincia?' ('+esc(c.Provincia)+')':'')+' &middot; <b style="color:#1a5a93">'+x.d.toFixed(1)+' km</b></div>';
+    h+='</div>';
+    if(tel)h+='<a href="tel:'+esc(tel)+'" onclick="event.stopPropagation()" style="background:#2a7a2a;color:#fff;text-decoration:none;padding:10px 14px;border-radius:9px;font-size:14px;white-space:nowrap">&#128222;</a>';
+    h+='</div>';
+  });
+  if(vicini.length>200)h+='<div style="text-align:center;color:#999;font-size:12px;padding:8px">...e altri '+(vicini.length-200)+'. Restringi il raggio per vederli tutti.</div>';
+  box.innerHTML=h;
 }
 </script>
 
