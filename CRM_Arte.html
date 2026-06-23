@@ -595,7 +595,7 @@ body[data-ruolo="operatore"] .tab-soloadmin{display:none!important}
       <input class="pr-search" id="quickSearch" placeholder="Cerca cognome..." oninput="liveSearch(this.value)">
       <span class="pr-nav-info" id="prNav"></span>
       <button class="btn-u btn-blue-soft" id="btnAzzera" onclick="azzeraRicerca()" style="display:none" title="Torna a navigare tutto il database">&#10005; Azzera ricerca</button>
-<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 23/06/2026 16:52</span>
+<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 23/06/2026 17:19</span>
       <div style="flex:1"></div>
       <button class="btn-u btn-del-discreet" onclick="deleteContact()" title="Elimina questo contatto">&#128465;</button>
     </div>
@@ -2259,7 +2259,7 @@ function _cruscottoZone(){
   var inizioSett=new Date(oggi);inizioSett.setDate(oggi.getDate()-7);
   var inizioMese=new Date(oggi);inizioMese.setDate(oggi.getDate()-30);
   // init contatori per zona
-  var Z={};['Nord','Centro','Toscana'].forEach(function(z){Z[z]={chiamate:0,chiamSett:0,chiamMese:0,appunt:0,positivi:0,negativi:0,contatti:0,lavorati:0,daLavorare:0};});
+  var Z={};['Nord','Centro','Toscana','Altre'].forEach(function(z){Z[z]={chiamate:0,chiamSett:0,chiamMese:0,appunt:0,positivi:0,negativi:0,contatti:0,lavorati:0,daLavorare:0};});
   // telefonate per zona
   (typeof telefonate!=='undefined'?telefonate:[]).forEach(function(tel){
     var z=idZona[String(tel.ID_contatto)]; if(!Z[z])return;
@@ -2281,11 +2281,22 @@ function _cruscottoZone(){
   });
   // disegno
   var col={Nord:'#2a5f93',Centro:'#1aa179',Toscana:'#c0760a'};
+  var _tot={contatti:0,chiamate:0,appunt:0,lavorati:0,daLavorare:0};
+  ['Nord','Centro','Toscana','Altre'].forEach(function(z){_tot.contatti+=Z[z].contatti;_tot.chiamate+=Z[z].chiamate;_tot.appunt+=Z[z].appunt;_tot.lavorati+=Z[z].lavorati;_tot.daLavorare+=Z[z].daLavorare;});
+  var _pTot=_tot.contatti?Math.round(_tot.lavorati/_tot.contatti*100):0;
   var h='<h3 style="color:#1a3a6a;border-bottom:2px solid #eee;padding-bottom:6px;margin-top:26px">&#128205; Monitoraggio zone</h3>';
+  h+='<div style="background:#1a3a6a;color:#fff;border-radius:12px;padding:16px;margin-bottom:16px;display:flex;flex-wrap:wrap;gap:18px;align-items:center">';
+  h+='<div style="font-size:16px;font-weight:700">&#127758; Tutto il territorio</div>';
+  h+='<div style="display:flex;gap:22px;flex-wrap:wrap;font-size:13px">';
+  h+='<div><b style="font-size:19px">'+_tot.contatti.toLocaleString("it")+'</b><br><span style="opacity:.8;font-size:11px">contatti</span></div>';
+  h+='<div><b style="font-size:19px">'+_tot.chiamate.toLocaleString("it")+'</b><br><span style="opacity:.8;font-size:11px">chiamate</span></div>';
+  h+='<div><b style="font-size:19px">'+_tot.appunt.toLocaleString("it")+'</b><br><span style="opacity:.8;font-size:11px">appuntamenti</span></div>';
+  h+='<div><b style="font-size:19px">'+_pTot+'%</b><br><span style="opacity:.8;font-size:11px">lavorato</span></div>';
+  h+='</div></div>';
   h+='<div style="color:#999;font-size:12px;margin-bottom:14px">Andamento per zona di lavoro. Le chiamate si contano da quando vengono registrate.</div>';
   h+='<div style="display:flex;flex-wrap:wrap;gap:14px;margin-bottom:24px">';
-  ['Nord','Centro','Toscana'].forEach(function(z){
-    var d=Z[z];var c=col[z];
+  ['Nord','Centro','Toscana','Altre'].forEach(function(z){
+    var d=Z[z];var c=col[z]||'#888';
     var perc=d.contatti?Math.round(d.lavorati/d.contatti*100):0;
     h+='<div style="flex:1;min-width:240px;background:#fff;border:1px solid #e6e6ea;border-left:5px solid '+c+';border-radius:12px;padding:16px">';
     h+='<div style="font-size:17px;font-weight:700;color:'+c+';margin-bottom:10px">'+z+'</div>';
@@ -2302,6 +2313,34 @@ function _cruscottoZone(){
     h+='</div>';
   });
   h+='</div>';
+  // === produttività operatori (per zona) ===
+  try{
+    var idZona2={};
+    (allContacts||[]).forEach(function(c){idZona2[String(c.ID_contatto)]=zonaDi(c.Regione);});
+    var ops={};
+    (typeof telefonate!=='undefined'?telefonate:[]).forEach(function(tel){
+      var op=(tel.Operatore||'').trim(); if(!op)return;
+      var z=idZona2[String(tel.ID_contatto)]||'Altre';
+      var d=parseD(tel.Data_da_fare)||parseD(tel.Data_appuntamento);
+      if(!ops[op])ops[op]={tot:0,sett:0,app:0,zone:{}};
+      ops[op].tot++;
+      if(d&&d>=inizioSett)ops[op].sett++;
+      if((tel.Esito||'').toLowerCase().indexOf('appunt')>=0)ops[op].app++;
+      ops[op].zone[z]=(ops[op].zone[z]||0)+1;
+    });
+    var opArr2=Object.keys(ops);
+    if(opArr2.length){
+      h+='<h3 style="color:#1a3a6a;border-bottom:2px solid #eee;padding-bottom:6px;margin-top:24px">&#128100; Produttività operatori</h3>';
+      h+='<div style="color:#999;font-size:12px;margin-bottom:10px">Chiamate registrate da ciascun operatore, con zona prevalente. Si popola man mano che lavorano.</div>';
+      h+='<table style="width:100%;border-collapse:collapse;margin-bottom:24px"><tr style="background:#f4f6fa"><th style="text-align:left;padding:8px;font-size:12px;color:#666">Operatore</th><th style="padding:8px;font-size:12px;color:#666">Chiamate 7gg</th><th style="padding:8px;font-size:12px;color:#666">Appuntamenti</th><th style="padding:8px;font-size:12px;color:#666">Totale</th><th style="padding:8px;font-size:12px;color:#666">Zona</th></tr>';
+      opArr2.sort(function(a,b){return ops[b].tot-ops[a].tot;}).forEach(function(op){
+        var o=ops[op];
+        var zMax='';var zN=-1;for(var z in o.zone){if(o.zone[z]>zN){zN=o.zone[z];zMax=z;}}
+        h+='<tr style="border-bottom:1px solid #eee"><td style="padding:8px;font-weight:600;color:#1a3a6a">'+esc(op)+'</td><td style="text-align:center;padding:8px">'+o.sett+'</td><td style="text-align:center;padding:8px;color:#2a7a2a">'+o.app+'</td><td style="text-align:center;padding:8px;color:#888">'+o.tot.toLocaleString("it")+'</td><td style="text-align:center;padding:8px;font-size:12px;color:#666">'+esc(zMax)+'</td></tr>';
+      });
+      h+='</table>';
+    }
+  }catch(e){}
   return h;
 }
 
@@ -3859,11 +3898,20 @@ function anteprimaImport(){
         .then(function(r){return r.json();})
         .then(function(res){
           if(res.error){info.innerHTML='<span style="color:#c00">Errore: '+res.error+'</span>';return;}
+          var avvisoDec='';
+          if(res.deceduti && res.deceduti>0){
+            var elenco=(res.deceduti_lista||[]).map(function(x){return '&bull; '+x;}).join('<br>');
+            avvisoDec='<div style="background:#f3eef8;border:1px solid #d6c7e6;border-radius:8px;padding:12px;margin-top:10px">'+
+              '<div style="font-size:14px;font-weight:700;color:#5b4a8a;margin-bottom:4px">&#9904; '+res.deceduti+' corrispondono a contatti DECEDUTI (esclusi)</div>'+
+              '<div style="color:#7a6aa0;font-size:12px;line-height:1.5;max-height:140px;overflow-y:auto">'+elenco+'</div>'+
+              '<div style="color:#999;font-size:11px;margin-top:6px">Non verranno reinseriti. Se qualcuno non &egrave; davvero deceduto, controlla la sua scheda nei Deceduti.</div>'+
+            '</div>';
+          }
           info.innerHTML='<div style="background:#f4f8f4;border:1px solid #cce5cc;border-radius:8px;padding:12px">'+
             '<div style="font-size:15px;font-weight:700;color:#2a7a2a;margin-bottom:6px">'+res.nuovi+' contatti nuovi da importare</div>'+
-            '<div style="color:#888;font-size:12.5px">'+res.duplicati+' gi&agrave; presenti (saltati) &middot; '+res.totale+' totali nel file</div>'+
+            '<div style="color:#888;font-size:12.5px">'+res.duplicati+' gi&agrave; presenti o esclusi &middot; '+res.totale+' totali nel file</div>'+
             (opere.length?'<div style="color:#888;font-size:12.5px;margin-top:4px">'+opere.length+' opere collegate</div>':'')+
-          '</div>';
+          '</div>'+avvisoDec;
           document.getElementById('importAzioni').style.display=res.nuovi>0?'block':'none';
         }).catch(function(e){info.innerHTML='<span style="color:#c00">Errore di rete: '+e+'</span>';});
     }catch(e){info.innerHTML='<span style="color:#c00">File non valido (deve essere JSON): '+e+'</span>';}

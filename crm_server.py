@@ -721,6 +721,25 @@ _PROV_REG_IMP={
 def _regione_da_prov_imp(p):
     return _PROV_REG_IMP.get(str(p or '').upper().strip(),'')
 
+
+def _is_deceduto_imp(c):
+    """Riconosce un contatto deceduto dalla parola DECEDUTO/A nelle note,
+    escludendo i casi in cui a essere deceduto e' un parente (moglie/marito/figlio...)."""
+    import re as _re
+    n=str(c.get('Note') or '').upper()
+    if 'DECEDUT' not in n: return False
+    for m in _re.finditer(r'DECEDUT[OA]', n):
+        pre=n[max(0,m.start()-32):m.start()]
+        if not _re.search(r"(MOGLIE|MARITO|FIGLI[OA]|MADRE|PADRE|SORELLA|FRATELLO|BABBO|MAMMA|SUOCER[AO]|COMPAGN[OA]|NONN[IOA]|ZI[OA])[\s,:.\']*$", pre):
+            return True
+    return False
+
+def _norm_nome_imp(c):
+    import re as _re
+    s=(str(c.get('Cognome') or '')+' '+str(c.get('Nome') or '')+' '+str(c.get('Citta') or '')).upper()
+    s=_re.sub(r'[^A-Z0-9 ]','',s); s=_re.sub(r'\s+',' ',s).strip()
+    return s
+
 @app.route('/api/importa', methods=['POST'])
 @solo_titolare('importa')
 def api_importa():
@@ -736,21 +755,35 @@ def api_importa():
         opere = data.get('opere', [])
         # indici anti-duplicati
         cf_idx=set(); tel_idx=set()
+        # indici DECEDUTI (per avvisare se un nome in arrivo e' un deceduto gia' noto)
+        dec_cf=set(); dec_tel=set(); dec_nome=set()
         maxid=0
         for c in contacts:
             cf=_normcf_imp(c.get('Codice_fiscale'))
             if cf: cf_idx.add(cf)
+            tels_c=[]
             for tf in [c.get('Telefono'),c.get('Telefono2'),c.get('Cellulare'),c.get('Cellulare2'),c.get('Tel_Ufficio')]:
                 t=_normtel_imp(tf)
-                if t: tel_idx.add(t)
+                if t: tel_idx.add(t); tels_c.append(t)
+            if _is_deceduto_imp(c):
+                if cf: dec_cf.add(cf)
+                for t in tels_c: dec_tel.add(t)
+                nn=_norm_nome_imp(c)
+                if nn: dec_nome.add(nn)
             try: maxid=max(maxid,int(c.get('ID_contatto') or 0))
             except: pass
         # filtro i nuovi
-        da_inserire=[]; scartati=0
+        da_inserire=[]; scartati=0; deceduti=[]
         mappa_id={}  # id provvisorio -> id reale
         for c in nuovi:
             cf=_normcf_imp(c.get('Codice_fiscale'))
             tels=[_normtel_imp(c.get('Telefono')),_normtel_imp(c.get('Cellulare'))]
+            nn=_norm_nome_imp(c)
+            # controllo DECEDUTO: per CF, telefono o cognome+citta
+            e_deceduto = (cf and cf in dec_cf) or any(t and t in dec_tel for t in tels) or (nn and nn in dec_nome)
+            if e_deceduto:
+                deceduti.append((str(c.get('Cognome') or '')+' '+str(c.get('Nome') or '')).strip()+' ('+str(c.get('Citta') or '')+')')
+                scartati+=1; continue
             if cf and cf in cf_idx: scartati+=1; continue
             if any(t and t in tel_idx for t in tels): scartati+=1; continue
             da_inserire.append(c)
@@ -760,7 +793,8 @@ def api_importa():
                 if t: tel_idx.add(t)
         # anteprima
         if not conferma:
-            return jsonify({'anteprima':True,'nuovi':len(da_inserire),'duplicati':scartati,'totale':len(nuovi)})
+            return jsonify({'anteprima':True,'nuovi':len(da_inserire),'duplicati':scartati,
+                            'deceduti':len(deceduti),'deceduti_lista':deceduti[:50],'totale':len(nuovi)})
         # CONFERMA: inserisco davvero
         nid=maxid+1
         campi=set()
@@ -783,7 +817,7 @@ def api_importa():
                 opere.append(o); n_op+=1
         data['contacts']=contacts; data['opere']=opere
         save_data(data)
-        return jsonify({'ok':True,'inseriti':len(da_inserire),'scartati':scartati,'opere':n_op,'totale_db':len(contacts)})
+        return jsonify({'ok':True,'inseriti':len(da_inserire),'scartati':scartati,'deceduti':len(deceduti),'opere':n_op,'totale_db':len(contacts)})
     except Exception as e:
         import traceback; traceback.print_exc()
         return jsonify({'error':str(e)}), 500
