@@ -595,7 +595,7 @@ body[data-ruolo="operatore"] .tab-soloadmin{display:none!important}
       <input class="pr-search" id="quickSearch" placeholder="Cerca cognome..." oninput="liveSearch(this.value)">
       <span class="pr-nav-info" id="prNav"></span>
       <button class="btn-u btn-blue-soft" id="btnAzzera" onclick="azzeraRicerca()" style="display:none" title="Torna a navigare tutto il database">&#10005; Azzera ricerca</button>
-<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 22/06/2026 17:02</span>
+<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 23/06/2026 16:52</span>
       <div style="flex:1"></div>
       <button class="btn-u btn-del-discreet" onclick="deleteContact()" title="Elimina questo contatto">&#128465;</button>
     </div>
@@ -1463,6 +1463,21 @@ async function stampaAppDelGiorno(){const iso=_agDayISO();const ids=_appDelGiorn
 async function inviaAppDelGiorno(){const iso=_agDayISO();const ids=_appDelGiorno(iso);if(!ids.length){alert('Nessun appuntamento per il '+_dataIT(iso)+'.');return;}const res=await _scaricaPDF(ids,'Appuntamenti_'+iso);if(!res)return;const w=window.open(res.url,'_blank');if(!w)alert('Per inviare via e-mail: consenti le finestre pop-up, poi dal PDF usa Condividi \u2192 Mail.');else alert('PDF degli appuntamenti del '+_dataIT(iso)+' pronto.\n\nDal PDF aperto usa Condividi \u2192 Mail per inviarlo come allegato.');setTimeout(()=>URL.revokeObjectURL(res.url),60000);}
 function renderAgenda(){
   if(!currentWeek)currentWeek=getMonday(new Date());
+  // lista di navigazione cronologica completa (richiami+appuntamenti a seguire) per le frecce
+  try{
+    var _navTmp=[];
+    var _oggiN=fISO(new Date());
+    Object.keys(telByDate||{}).sort().forEach(function(iso){
+      if(iso<_oggiN)return; // da oggi in avanti
+      (telByDate[iso]||[]).forEach(function(item){
+        if(item&&item.t)_navTmp.push(item.t);
+      });
+    });
+    // dedup per ID mantenendo l'ordine (il primo evento futuro del contatto)
+    var _vis={};var _navList=[];
+    _navTmp.forEach(function(c){var k=String(c.ID_contatto);if(!_vis[k]){_vis[k]=1;_navList.push(c);}});
+    window._agendaNavAll=_navList;
+  }catch(e){window._agendaNavAll=null;}
   const monday=currentWeek,todayISO=fISO(new Date()),sunday=addDays(monday,6);
   const ml=`${monday.getDate()} ${MESI[monday.getMonth()]}`,sl=`${sunday.getDate()} ${MESI[sunday.getMonth()]} ${sunday.getFullYear()}`;
   document.getElementById('weekLabel').textContent=`${ml} - ${sl}`;
@@ -1488,7 +1503,7 @@ function renderAgenda(){
   for(let i=0;i<7;i++){const iso=fISO(addDays(monday,i));const isToday=iso===todayISO;
     allday+=`<div class="cal-allday-cell${isToday?' today':''}">`;
     for(const{item,c}of byDayAll[i]){const name=`${c.Cognome||''} ${c.Nome||''}`.trim();const cls=item.type==='app'?'ev-app':'ev-call';
-      allday+=`<div class="ev ev-allday ${cls}" style="position:relative;padding-right:18px" onclick="openContact('${esc(c.ID_contatto)}')"><span onclick="event.stopPropagation();removeFromAgenda('${esc(c.ID_contatto)}','${iso}')" title="Togli dall'agenda" style="position:absolute;top:1px;right:2px;background:rgba(0,0,0,.3);color:#fff;width:13px;height:13px;border-radius:50%;font-size:9px;line-height:13px;text-align:center">&#215;</span>${esc(name)}</div>`;}
+      allday+=`<div class="ev ev-allday ${cls}" style="position:relative;padding-right:18px" onclick="openContact('${esc(c.ID_contatto)}',window._agendaNavAll)"><span onclick="event.stopPropagation();removeFromAgenda('${esc(c.ID_contatto)}','${iso}')" title="Togli dall'agenda" style="position:absolute;top:1px;right:2px;background:rgba(0,0,0,.3);color:#fff;width:13px;height:13px;border-radius:50%;font-size:9px;line-height:13px;text-align:center">&#215;</span>${esc(name)}</div>`;}
     allday+='</div>';}
   document.getElementById('calAlldayRow').innerHTML=allday;
   const H=24;let inner='<div class="cal-time-col">';
@@ -1539,7 +1554,7 @@ function renderAgenda(){
   draggable="true"
   ondragstart="evDragStart(event,'${esc(c.ID_contatto)}','${iso}',${item.h},${item.m})"
   ondragend="evDragEnd(event)"
-  onclick="openContact('${esc(c.ID_contatto)}')">
+  onclick="openContact('${esc(c.ID_contatto)}',window._agendaNavAll)">
   <span class="ev-del" onclick="event.stopPropagation();removeFromAgenda('${esc(c.ID_contatto)}','${iso}')" title="Togli dall'agenda" style="position:absolute;top:1px;right:2px;background:rgba(0,0,0,.3);color:#fff;width:14px;height:14px;border-radius:50%;font-size:10px;line-height:14px;text-align:center;cursor:pointer">&#215;</span>
   <span class="ev-time">${timeStr}</span>${esc(name)}${phones?` (${esc(phones)},`:''} ${city?`- ${esc(city)})`:phones?')':''}
 </div>`;}
@@ -2229,6 +2244,67 @@ function apriContattoDaId(id, listaContesto){
   searchActive=true;
   renderContactAndMap(currentResults[currentIdx>=0?currentIdx:0]); showTab('principale');
 }
+
+function _cruscottoZone(){
+  // regioni per zona (coerenti col server)
+  var ZN={Nord:['Piemonte',"Valle d'Aosta",'Lombardia','Veneto','Trentino-Alto Adige','Friuli-Venezia Giulia','Liguria'],
+          Centro:['Lazio','Umbria','Marche','Sardegna'],
+          Toscana:['Toscana']};
+  function zonaDi(reg){reg=(reg||'').trim();for(var z in ZN){if(ZN[z].indexOf(reg)>=0)return z;}return 'Altre';}
+  // mappa ID_contatto -> zona
+  var idZona={};
+  (allContacts||[]).forEach(function(c){idZona[String(c.ID_contatto)]=zonaDi(c.Regione);});
+  function parseD(s){if(!s)return null;var m=String(s).match(/(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{2,4})/);if(!m)return null;var a=parseInt(m[3],10);if(a<100)a=2000+a;return new Date(a,parseInt(m[2],10)-1,parseInt(m[1],10));}
+  var oggi=new Date();oggi.setHours(0,0,0,0);
+  var inizioSett=new Date(oggi);inizioSett.setDate(oggi.getDate()-7);
+  var inizioMese=new Date(oggi);inizioMese.setDate(oggi.getDate()-30);
+  // init contatori per zona
+  var Z={};['Nord','Centro','Toscana'].forEach(function(z){Z[z]={chiamate:0,chiamSett:0,chiamMese:0,appunt:0,positivi:0,negativi:0,contatti:0,lavorati:0,daLavorare:0};});
+  // telefonate per zona
+  (typeof telefonate!=='undefined'?telefonate:[]).forEach(function(tel){
+    var z=idZona[String(tel.ID_contatto)]; if(!Z[z])return;
+    var d=parseD(tel.Data_da_fare)||parseD(tel.Data_appuntamento);
+    var es=(tel.Esito||'').toLowerCase();
+    Z[z].chiamate++;
+    if(d&&d>=inizioSett)Z[z].chiamSett++;
+    if(d&&d>=inizioMese)Z[z].chiamMese++;
+    if(es.indexOf('appunt')>=0)Z[z].appunt++;
+    if(es.indexOf('positiv')>=0||es.indexOf('appunt')>=0)Z[z].positivi++;
+    if(es.indexOf('negativ')>=0)Z[z].negativi++;
+  });
+  // contatti per zona: lavorati (hanno un esito) vs da lavorare
+  (allContacts||[]).forEach(function(c){
+    var z=zonaDi(c.Regione); if(!Z[z])return;
+    Z[z].contatti++;
+    var es=(c.Esito_ultima_chiamata||'').trim();
+    if(es)Z[z].lavorati++; else Z[z].daLavorare++;
+  });
+  // disegno
+  var col={Nord:'#2a5f93',Centro:'#1aa179',Toscana:'#c0760a'};
+  var h='<h3 style="color:#1a3a6a;border-bottom:2px solid #eee;padding-bottom:6px;margin-top:26px">&#128205; Monitoraggio zone</h3>';
+  h+='<div style="color:#999;font-size:12px;margin-bottom:14px">Andamento per zona di lavoro. Le chiamate si contano da quando vengono registrate.</div>';
+  h+='<div style="display:flex;flex-wrap:wrap;gap:14px;margin-bottom:24px">';
+  ['Nord','Centro','Toscana'].forEach(function(z){
+    var d=Z[z];var c=col[z];
+    var perc=d.contatti?Math.round(d.lavorati/d.contatti*100):0;
+    h+='<div style="flex:1;min-width:240px;background:#fff;border:1px solid #e6e6ea;border-left:5px solid '+c+';border-radius:12px;padding:16px">';
+    h+='<div style="font-size:17px;font-weight:700;color:'+c+';margin-bottom:10px">'+z+'</div>';
+    h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 14px;font-size:13px">';
+    h+='<div><b style="font-size:18px;color:#333">'+d.contatti.toLocaleString('it')+'</b><br><span style="color:#999;font-size:11px">contatti totali</span></div>';
+    h+='<div><b style="font-size:18px;color:'+c+'">'+d.chiamate.toLocaleString('it')+'</b><br><span style="color:#999;font-size:11px">chiamate registrate</span></div>';
+    h+='<div><b style="font-size:18px;color:#2a7a2a">'+d.appunt.toLocaleString('it')+'</b><br><span style="color:#999;font-size:11px">appuntamenti</span></div>';
+    h+='<div><b style="font-size:18px;color:#888">'+d.chiamSett.toLocaleString('it')+'</b><br><span style="color:#999;font-size:11px">chiamate 7gg</span></div>';
+    h+='</div>';
+    // barra lavorati/da lavorare
+    h+='<div style="margin-top:12px"><div style="display:flex;justify-content:space-between;font-size:11px;color:#888;margin-bottom:3px"><span>Lavorati: '+d.lavorati.toLocaleString('it')+'</span><span>Da lavorare: '+d.daLavorare.toLocaleString('it')+'</span></div>';
+    h+='<div style="background:#eee;border-radius:6px;height:10px;overflow:hidden"><div style="width:'+perc+'%;background:'+c+';height:100%"></div></div>';
+    h+='<div style="text-align:center;font-size:11px;color:'+c+';margin-top:2px">'+perc+'% lavorato</div></div>';
+    h+='</div>';
+  });
+  h+='</div>';
+  return h;
+}
+
 function renderStatistiche(){
   var box=document.getElementById('statBody'); if(!box)return;
   if(window._ruolo && window._ruolo!=='titolare'){box.innerHTML='<div style="padding:30px;text-align:center;color:#888">Sezione riservata al titolare.</div>';return;}
@@ -2260,6 +2336,7 @@ function renderStatistiche(){
   function card(lbl,val,col){return '<div style="flex:1;min-width:130px;background:#fff;border:1px solid #e6e6ea;border-radius:12px;padding:14px 16px"><div style="font-size:26px;font-weight:700;color:'+(col||'#1a3a6a')+'">'+val+'</div><div style="font-size:12px;color:#888">'+lbl+'</div></div>';}
   var html='<h2 style="color:#1a3a6a;margin:0 0 4px">&#128202; Statistiche</h2><div style="color:#999;font-size:13px;margin-bottom:18px">Riservato al titolare. Le statistiche per telefonista si popolano dalle chiamate registrate da oggi in avanti.</div>';
   html+='<div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:22px">'+card('Chiamate oggi',oggiC)+card('Ultimi 7 giorni',sett)+card('Ultimi 30 giorni',mese)+card('Totale registrate',tot,'#666')+'</div>';
+  try{html+=_cruscottoZone();}catch(e){}
   // esiti
   var esitiArr=Object.keys(esiti).map(function(k){return [k,esiti[k]];}).sort(function(a,b){return b[1]-a[1];});
   html+='<h3 style="color:#1a3a6a;border-bottom:2px solid #eee;padding-bottom:6px">Esiti delle chiamate</h3><div style="display:flex;flex-direction:column;gap:5px;margin-bottom:22px">';
