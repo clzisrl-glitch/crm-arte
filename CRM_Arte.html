@@ -595,7 +595,7 @@ body[data-ruolo="operatore"] .tab-soloadmin{display:none!important}
       <input class="pr-search" id="quickSearch" placeholder="Cerca cognome..." oninput="liveSearch(this.value)">
       <span class="pr-nav-info" id="prNav"></span>
       <button class="btn-u btn-blue-soft" id="btnAzzera" onclick="azzeraRicerca()" style="display:none" title="Torna a navigare tutto il database">&#10005; Azzera ricerca</button>
-<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 23/06/2026 20:13</span>
+<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 24/06/2026 03:35</span>
       <div style="flex:1"></div>
       <button class="btn-u btn-del-discreet" onclick="deleteContact()" title="Elimina questo contatto">&#128465;</button>
     </div>
@@ -770,7 +770,7 @@ body[data-ruolo="operatore"] .tab-soloadmin{display:none!important}
   <div id="page-welcome" class="page"><!-- WELCOME-V2 -->
     <div class="list-scroll" style="padding:24px 32px;max-width:1080px;font-size:13.5px;line-height:1.6;color:#222">
       <h2 style="font-size:23px;color:#1f4a73;margin:0 0 2px;font-weight:600;letter-spacing:-.01em">&#127912; Arte Editoria Monete</h2>
-      <div id="welcome-giornata" style="background:linear-gradient(135deg,#1a3a6a,#2a5a9a);border-radius:14px;padding:18px 22px;margin:14px 0 22px;color:#fff"><div style="font-size:13px;opacity:.85;margin-bottom:2px" id="giornataData"></div><div style="font-size:17px;font-weight:700;margin-bottom:14px">La tua giornata</div><div id="giornataCards" style="display:flex;flex-wrap:wrap;gap:12px"></div></div>
+      <div id="welcome-giornata" style="background:linear-gradient(135deg,#1a3a6a,#2a5a9a);border-radius:14px;padding:18px 22px;margin:14px 0 22px;color:#fff"><div style="font-size:13px;opacity:.85;margin-bottom:2px" id="giornataData"></div><div style="font-size:17px;font-weight:700;margin-bottom:14px">La tua giornata</div><div id="giornataCards" style="display:flex;flex-wrap:wrap;gap:12px"></div><button onclick="mostraVicinoModal()" style="margin-top:14px;width:100%;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.35);color:#fff;padding:12px;border-radius:10px;font-size:15px;cursor:pointer;font-weight:600">&#128205; Vicino a me &mdash; chi ho qui intorno</button></div>
       <div style="color:#777;margin-bottom:18px">Guida rapida. Le sezioni in alto sono i pulsanti della barra. Clicca un argomento per saltarci.</div>
       <div id="welcome-strumenti" style="background:#f4f6fa;border:1px solid #dfe5ee;border-radius:12px;padding:16px 18px;margin-bottom:22px"><div style="font-size:15px;font-weight:700;color:#1a3a6a;margin-bottom:4px">&#128295; Strumenti</div><div style="font-size:12.5px;color:#777;margin-bottom:12px">Backup, esportazioni e viste complete. <b>Backup, Excel e Completo sono riservati al titolare.</b></div><div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center"><button class="btn-u btn-green" onclick="backupCompleto()" title="Scarica una copia di sicurezza di tutti i dati (crm_data.json) sul tuo computer.">&#128190; Backup</button><button class="btn-u btn-blue" onclick="mostraBackupAuto()" title="Vedi e scarica le copie di sicurezza automatiche degli ultimi 60 giorni.">&#128338; Backup automatici</button>
           <button onclick="mostraVicinoModal()" class="tool-btn" style="background:#eaf3fb;border:1px solid #c2dcf0;color:#1a5a93;padding:10px 14px;border-radius:9px;font-size:13px;cursor:pointer;font-weight:600">&#128205; Vicino a me</button>
@@ -2503,6 +2503,7 @@ function renderContact(c){
   <div class="addr-box">${c.Via?`<div class="addr-line">${esc(c.Via)}</div>`:''}<div class="addr-line" style="color:#111">${esc(c.CAP||'')} ${esc(c.Citta||'')}${c.Provincia?` (${esc(c.Provincia)})`:''}${c.Regione?` · ${esc(c.Regione)}`:''}</div></div>
   <div class="map-wrap">
     <iframe id="contactMapGmaps" frameborder="0" src="about:blank" allowfullscreen loading="lazy"></iframe>
+    <a class="map-open" onclick="mostraVicinoModal();return false;" href="#" style="cursor:pointer">&#128205; Vicino a me</a>
     <a class="map-open" id="mapOpenBtn" href="${mapsHref(c)}" target="_blank" rel="noopener">&#128205; Apri in Google Maps</a>
     <a class="map-open vai-nav" id="navVaiBtn" href="${navHref(c)}" target="_blank" rel="noopener" title="Apre il navigatore con le indicazioni stradali fino a questo indirizzo (su telefono parte Google Maps in modalità guida).">&#10148; VAI &middot; Navigatore</a>
   </div>
@@ -3955,12 +3956,16 @@ function confermaImport(){
     </div>
     <div style="font-size:13px;color:#666;margin-bottom:14px">Trova i contatti pi&ugrave; vicini alla tua posizione attuale. Utile per organizzare il giro visite.</div>
     <div style="margin-bottom:14px">
-      <div style="font-size:13px;color:#444;margin-bottom:8px;font-weight:600">Raggio di ricerca</div>
+      <div style="font-size:13px;color:#444;margin-bottom:8px;font-weight:600">Raggio di ricerca (km)</div>
       <div style="display:flex;gap:8px;flex-wrap:wrap" id="vicinoRaggi">
-        <button onclick="_setRaggio(5)" class="vraggio" data-r="5" style="flex:1;min-width:60px;padding:12px;border:1px solid #c2dcf0;background:#fff;border-radius:9px;font-size:15px;cursor:pointer;font-weight:600">5 km</button>
-        <button onclick="_setRaggio(10)" class="vraggio" data-r="10" style="flex:1;min-width:60px;padding:12px;border:1px solid #c2dcf0;background:#1a5a93;color:#fff;border-radius:9px;font-size:15px;cursor:pointer;font-weight:600">10 km</button>
-        <button onclick="_setRaggio(20)" class="vraggio" data-r="20" style="flex:1;min-width:60px;padding:12px;border:1px solid #c2dcf0;background:#fff;border-radius:9px;font-size:15px;cursor:pointer;font-weight:600">20 km</button>
-        <button onclick="_setRaggio(30)" class="vraggio" data-r="30" style="flex:1;min-width:60px;padding:12px;border:1px solid #c2dcf0;background:#fff;border-radius:9px;font-size:15px;cursor:pointer;font-weight:600">30 km</button>
+        <button onclick="_setRaggio(2)" class="vraggio" data-r="2" style="flex:1;min-width:48px;padding:11px 6px;border:1px solid #c2dcf0;background:#fff;color:#1a5a93;border-radius:9px;font-size:14px;cursor:pointer;font-weight:600">2</button>
+        <button onclick="_setRaggio(5)" class="vraggio" data-r="5" style="flex:1;min-width:48px;padding:11px 6px;border:1px solid #c2dcf0;background:#fff;color:#1a5a93;border-radius:9px;font-size:14px;cursor:pointer;font-weight:600">5</button>
+        <button onclick="_setRaggio(7)" class="vraggio" data-r="7" style="flex:1;min-width:48px;padding:11px 6px;border:1px solid #c2dcf0;background:#fff;color:#1a5a93;border-radius:9px;font-size:14px;cursor:pointer;font-weight:600">7</button>
+        <button onclick="_setRaggio(10)" class="vraggio" data-r="10" style="flex:1;min-width:48px;padding:11px 6px;border:1px solid #c2dcf0;background:#1a5a93;color:#fff;border-radius:9px;font-size:14px;cursor:pointer;font-weight:600">10</button>
+        <button onclick="_setRaggio(15)" class="vraggio" data-r="15" style="flex:1;min-width:48px;padding:11px 6px;border:1px solid #c2dcf0;background:#fff;color:#1a5a93;border-radius:9px;font-size:14px;cursor:pointer;font-weight:600">15</button>
+        <button onclick="_setRaggio(20)" class="vraggio" data-r="20" style="flex:1;min-width:48px;padding:11px 6px;border:1px solid #c2dcf0;background:#fff;color:#1a5a93;border-radius:9px;font-size:14px;cursor:pointer;font-weight:600">20</button>
+        <button onclick="_setRaggio(30)" class="vraggio" data-r="30" style="flex:1;min-width:48px;padding:11px 6px;border:1px solid #c2dcf0;background:#fff;color:#1a5a93;border-radius:9px;font-size:14px;cursor:pointer;font-weight:600">30</button>
+        <button onclick="_setRaggio(40)" class="vraggio" data-r="40" style="flex:1;min-width:48px;padding:11px 6px;border:1px solid #c2dcf0;background:#fff;color:#1a5a93;border-radius:9px;font-size:14px;cursor:pointer;font-weight:600">40</button>
       </div>
     </div>
     <button id="btnTrovaVicini" onclick="trovaVicini()" style="width:100%;background:#1a5a93;color:#fff;border:none;padding:14px;border-radius:10px;font-size:16px;cursor:pointer;font-weight:700;margin-bottom:14px">&#128205; Usa la mia posizione</button>
@@ -3999,7 +4004,12 @@ function _calcolaVicini(){
     var d=_distanzaKm(_vPos.lat,_vPos.lng,co[0],co[1]);
     if(d<=_vRaggio){var top=(typeof _isClienteTop==='function')&&_isClienteTop(c);if(top)nTop++;vicini.push({c:c,d:d,top:top});}
   });
-  vicini.sort(function(a,b){return a.d-b.d;});
+  // ordino: prima i clienti TOP (per distanza), poi gli altri (per distanza) -> i top sono sempre visibili in cima
+  vicini.sort(function(a,b){
+    if(a.top&&!b.top)return -1;
+    if(!a.top&&b.top)return 1;
+    return a.d-b.d;
+  });
   var avvisoTop='';
   if(nTop>0){
     avvisoTop='<div style="background:#fff6e0;border:1px solid #f0d488;border-radius:10px;padding:12px;margin-bottom:12px;font-size:14px;color:#9a6a00;font-weight:600;text-align:center">&#127942; Hai '+nTop+' client'+(nTop===1?'e TOP':'i TOP')+' entro '+_vRaggio+' km!</div>';
@@ -4007,19 +4017,20 @@ function _calcolaVicini(){
   stato.innerHTML='<b style="color:#1a5a93">'+vicini.length+'</b> contatti entro '+_vRaggio+' km'+(nTop>0?' &middot; <b style="color:#9a6a00">'+nTop+' top &#127942;</b>':'');
   if(!vicini.length){box.innerHTML='<div style="text-align:center;color:#999;padding:20px">Nessun contatto in questo raggio. Prova ad allargare.</div>';return;}
   var h=avvisoTop;
-  vicini.slice(0,200).forEach(function(x){
+  window._listaViciniNav=vicini.map(function(x){return x.c;});
+  vicini.slice(0,500).forEach(function(x){
     var c=x.c, nome=((c.Cognome||'')+' '+(c.Nome||'')).trim();
     var tel=(c.Cellulare||c.Telefono||'').trim();
     var _bordo=x.top?'2px solid #e0a800':'1px solid #e6e6ea', _bg=x.top?'#fffdf5':'#fff';
     h+='<div style="border:'+_bordo+';background:'+_bg+';border-radius:10px;padding:12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;gap:10px">';
-    h+='<div style="flex:1;min-width:0;cursor:pointer" onclick="chiudiVicino();apriContattoDaId(\''+esc(String(c.ID_contatto))+'\')">';
+    h+='<div style="flex:1;min-width:0;cursor:pointer" onclick="chiudiVicino();apriContattoDaId(\''+esc(String(c.ID_contatto))+'\',window._listaViciniNav)">';
     h+='<div style="font-weight:600;color:#1a3a6a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+(x.top?'<span title="cliente top">&#127942; </span>':'')+esc(nome)+'</div>';
     h+='<div style="font-size:12px;color:#888">'+esc(c.Citta||'')+(c.Provincia?' ('+esc(c.Provincia)+')':'')+' &middot; <b style="color:#1a5a93">'+x.d.toFixed(1)+' km</b></div>';
     h+='</div>';
     if(tel)h+='<a href="tel:'+esc(tel)+'" onclick="event.stopPropagation()" style="background:#2a7a2a;color:#fff;text-decoration:none;padding:10px 14px;border-radius:9px;font-size:14px;white-space:nowrap">&#128222;</a>';
     h+='</div>';
   });
-  if(vicini.length>200)h+='<div style="text-align:center;color:#999;font-size:12px;padding:8px">...e altri '+(vicini.length-200)+'. Restringi il raggio per vederli tutti.</div>';
+  if(vicini.length>500)h+='<div style="text-align:center;color:#999;font-size:12px;padding:8px">...e altri '+(vicini.length-500)+'. Restringi il raggio per vederli tutti.</div>';
   box.innerHTML=h;
 }
 </script>
