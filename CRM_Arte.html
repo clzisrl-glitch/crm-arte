@@ -595,7 +595,7 @@ body[data-ruolo="operatore"] .tab-soloadmin{display:none!important}
       <input class="pr-search" id="quickSearch" placeholder="Cerca cognome..." oninput="liveSearch(this.value)">
       <span class="pr-nav-info" id="prNav"></span>
       <button class="btn-u btn-blue-soft" id="btnAzzera" onclick="azzeraRicerca()" style="display:none" title="Torna a navigare tutto il database">&#10005; Azzera ricerca</button>
-<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 24/06/2026 03:35</span>
+<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 25/06/2026 05:45</span>
       <div style="flex:1"></div>
       <button class="btn-u btn-del-discreet" onclick="deleteContact()" title="Elimina questo contatto">&#128465;</button>
     </div>
@@ -1489,7 +1489,7 @@ function renderAgenda(){
     });
     // dedup per ID mantenendo l'ordine (il primo evento futuro del contatto)
     var _vis={};var _navList=[];
-    _navTmp.forEach(function(c){var k=String(c.ID_contatto);if(!_vis[k]){_vis[k]=1;_navList.push(c);}});
+    _navTmp.forEach(function(c){var k=String(c.ID_contatto);if(!_vis[k]){_vis[k]=1;var _full=(typeof contactMap!=='undefined')?contactMap[k]:null;_navList.push(_full||c);}});
     window._agendaNavAll=_navList;
   }catch(e){window._agendaNavAll=null;}
   const monday=currentWeek,todayISO=fISO(new Date()),sunday=addDays(monday,6);
@@ -2472,6 +2472,13 @@ function nextContact(){if(!currentResults.length)return;currentIdx=(currentIdx+1
 
 function renderContact(c){
   if(!c)return;
+  // FIX: se arriva un oggetto parziale (es. voce d'agenda con solo ID), recupera il contatto COMPLETO
+  try{
+    if(c && c.ID_contatto!=null && (c.Cognome===undefined && c.Nome===undefined && c.Via===undefined)){
+      var _full=(typeof contactMap!=='undefined')?contactMap[String(c.ID_contatto)]:null;
+      if(_full)c=_full;
+    }
+  }catch(e){}
   document.getElementById('prNav').textContent=searchActive?`${currentIdx+1} / ${currentResults.length} risultati · su ${allContacts.length.toLocaleString('it')}`:`${currentIdx+1} / ${allContacts.length.toLocaleString('it')}`;
   const tels=telByContact[c.ID_contatto]||[];
   const ops=opereByContact[c.ID_contatto]||[];
