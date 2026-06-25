@@ -595,7 +595,7 @@ body[data-ruolo="operatore"] .tab-soloadmin{display:none!important}
       <input class="pr-search" id="quickSearch" placeholder="Cerca cognome..." oninput="liveSearch(this.value)">
       <span class="pr-nav-info" id="prNav"></span>
       <button class="btn-u btn-blue-soft" id="btnAzzera" onclick="azzeraRicerca()" style="display:none" title="Torna a navigare tutto il database">&#10005; Azzera ricerca</button>
-<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 25/06/2026 05:45</span>
+<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 25/06/2026 15:49</span>
       <div style="flex:1"></div>
       <button class="btn-u btn-del-discreet" onclick="deleteContact()" title="Elimina questo contatto">&#128465;</button>
     </div>
@@ -1815,18 +1815,28 @@ function sqColor(e){const el=(e||'').toLowerCase();
   if(el.includes('negativo')||el.includes('ines'))return'sq-r';return'sq-gray';}
 
 function openContact(id, resultList){
-  // Se viene passata una lista (da Zona/Provincia/ricerca), diventa la lista di navigazione
+  // FIX: confronto ID sempre come STRINGA (l'id dal clic e' stringa, nella lista puo' essere numero)
+  var _sid=String(id);
+  // recupero il contatto COMPLETO dalla mappa, cosi' apro sempre la persona giusta
+  var _target=(typeof contactMap!=='undefined')?contactMap[_sid]:null;
   if(Array.isArray(resultList) && resultList.length){
     currentResults=resultList;
     searchActive=true;
-    const i=currentResults.findIndex(r=>r.ID_contatto===id);
-    currentIdx=i>=0?i:0;
+    var i=currentResults.findIndex(function(r){return String(r.ID_contatto)===_sid;});
+    if(i>=0){currentIdx=i;}
+    else{
+      // l'id non e' nella lista: lo aggiungo in testa col contatto completo, cosi' apre quello giusto
+      if(_target){currentResults=[_target].concat(resultList);currentIdx=0;}
+      else{currentIdx=0;}
+    }
   }else{
-    const idx=currentResults.findIndex(r=>r.ID_contatto===id);
-    if(idx>=0)currentIdx=idx;
-    else{currentResults=allContacts;searchActive=false;currentIdx=allContacts.findIndex(r=>r.ID_contatto===id)||0;}
+    var idx=currentResults.findIndex(function(r){return String(r.ID_contatto)===_sid;});
+    if(idx>=0){currentIdx=idx;}
+    else{currentResults=allContacts;searchActive=false;currentIdx=Math.max(0,allContacts.findIndex(function(r){return String(r.ID_contatto)===_sid;}));}
   }
-  renderContactAndMap(currentResults[currentIdx]);showTab('principale');
+  var _c=currentResults[currentIdx];
+  if((!_c||_c.Cognome===undefined)&&_target)_c=_target;
+  renderContactAndMap(_c);showTab('principale');
 }
 function azzeraRicerca(){
   const cur=currentResults[currentIdx];
