@@ -582,20 +582,20 @@ body[data-ruolo="operatore"] .tab-soloadmin{display:none!important}
       <button class="btn-u pt-pdf" id="btnStampaRicerca" onclick="stampaRicerca()" title="Scarica un PDF con TUTTI i contatti usciti dalla ricerca, una scheda per pagina.">&#128196; PDF ricerca</button>
       <button class="btn-u pt-mail" onclick="inviaMail()" title="Apre il PDF (record o tutta la ricerca) in una nuova scheda: da lì usa Condividi -> Mail.">&#9993; Apri per e-mail</button>
       <button class="btn-u pt-lista" onclick="showTab('list')" title="Mostra in elenco i risultati della ricerca attiva">Lista</button>
+      <div class="pr-sep"></div>
+      <button class="btn-u btn-blue" onclick="openSearch()" title="Cerca chi ti sta chiamando, senza perdere il lavoro">&#128222; Chi chiama?</button>
+      <button class="btn-u btn-amber" id="btnTornaLavoro" onclick="tornaAlLavoro()" style="display:none" title="Torna al contatto/lista su cui stavi lavorando prima">&#8617; Torna al lavoro</button>
+      <button class="btn-u btn-orange" onclick="showTab('agenda')">AGENDA</button>
       <button class="btn-u btn-blue" id="btnTrova" onclick="enterFindMode()" title="TROVA: ricerca per campi (nome, citta, telefono, codice fiscale...). Compila e premi Esegui; i risultati compaiono in Elenco.">Trova</button>
       <button class="btn-u btn-red-soft" id="btnAnnullaRic" style="display:none" onclick="exitFindMode()">Annulla ricerca</button>
       <button class="btn-u btn-blue" id="btnNuovo" onclick="enterNewMode()" title="Crea una nuova scheda contatto da zero.">&#43; Nuovo</button>
       <button class="btn-u btn-amber" id="btnModifica" onclick="enterEditMode()" title="Modifica i dati della scheda. Al termine premi Salva.">&#9998; Modifica</button>
       <button class="btn-u btn-green" id="btnSalva" style="display:none" onclick="saveEdit()" title="Salva le modifiche fatte alla scheda.">&#128190; Salva</button>
       <button class="btn-u btn-red-soft" id="btnAnnullaMod" style="display:none" onclick="exitEditMode()" title="Annulla le modifiche senza salvare.">&#215; Annulla</button>
-      <button class="btn-u btn-orange" onclick="showTab('agenda')">AGENDA</button>
-      <div class="pr-sep"></div>
-      <button class="btn-u btn-blue" onclick="openSearch()" title="Cerca chi ti sta chiamando, senza perdere il lavoro">&#128222; Chi chiama?</button>
-      <button class="btn-u btn-amber" id="btnTornaLavoro" onclick="tornaAlLavoro()" style="display:none" title="Torna al contatto/lista su cui stavi lavorando prima">&#8617; Torna al lavoro</button>
       <input class="pr-search" id="quickSearch" placeholder="Cerca cognome..." oninput="liveSearch(this.value)">
       <span class="pr-nav-info" id="prNav"></span>
       <button class="btn-u btn-blue-soft" id="btnAzzera" onclick="azzeraRicerca()" style="display:none" title="Torna a navigare tutto il database">&#10005; Azzera ricerca</button>
-<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 26/06/2026 14:33</span>
+<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 26/06/2026 19:12</span>
       <div style="flex:1"></div>
       <button class="btn-u btn-del-discreet" onclick="deleteContact()" title="Elimina questo contatto">&#128465;</button>
     </div>
