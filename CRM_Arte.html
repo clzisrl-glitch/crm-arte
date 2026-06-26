@@ -524,21 +524,21 @@ body[data-ruolo="operatore"] .tab-soloadmin{display:none!important}
   </div>
   <div id="page-agenda" class="page active">
     <div class="cal-toolbar">
-      <button class="tb-btn filter-btn active" id="fAll" onclick="setFilter('all')">Tutti</button>
-      <button class="tb-btn filter-btn" id="fCall" onclick="setFilter('call')">&#128308; Richiami</button>
-      <button class="tb-btn filter-btn" id="fApp" onclick="setFilter('app')">&#128994; Appuntamenti</button>
+      <span id="weekLabel">&#8212;</span>
+      <button class="tb-btn" onclick="prevWeek()" style="color:#2a8fd0;border-color:#9fd0ee;font-size:15px">&#9664;</button>
+      <button class="tb-btn" onclick="nextWeek()" style="color:#2a8fd0;border-color:#9fd0ee;font-size:15px">&#9654;</button>
+      <button class="tb-btn" onclick="goToday()">Oggi</button>
       <span style="width:1px;height:18px;background:#b0a898;margin:0 2px;display:inline-block"></span>
-      <button class="tb-btn view-btn active" id="vCal" onclick="setView('cal')">&#128197; Calendario</button>
       <button class="tb-btn view-btn" id="vList" onclick="setView('list')">&#128203; Lista</button>
+      <button class="tb-btn view-btn active" id="vCal" onclick="setView('cal')">&#128197; Calendario</button>
       <span style="width:1px;height:18px;background:#b0a898;margin:0 2px;display:inline-block"></span>
       <label style="font-size:11px;color:#5a5246;display:inline-flex;align-items:center;gap:4px">&#128197; Appuntamenti del giorno:<input type="date" id="agDayPick" style="font-size:12px;padding:2px 5px;border:1px solid #b0a898;border-radius:4px"></label>
       <button class="tb-btn" style="background:#1a3a6a;color:#fff;border-color:#1a3a6a" onclick="stampaAppDelGiorno()" title="Stampa (o salva in PDF) tutti gli appuntamenti del giorno scelto.">&#128424; Stampa PDF</button>
       <button class="tb-btn" style="background:#1a7a30;color:#fff;border-color:#1a7a30" onclick="inviaAppDelGiorno()" title="Apri una email con il riepilogo degli appuntamenti del giorno (il PDF va allegato a mano dopo averlo salvato).">&#9993; Invia email</button>
-      <span style="flex:1"></span>
-      <button class="tb-btn" onclick="goToday()">Oggi</button>
-      <button class="tb-btn" onclick="prevWeek()" style="color:#2a8fd0;border-color:#9fd0ee;font-size:15px">&#9664;</button>
-      <button class="tb-btn" onclick="nextWeek()" style="color:#2a8fd0;border-color:#9fd0ee;font-size:15px">&#9654;</button>
-      <span id="weekLabel">&#8212;</span>
+      <span style="width:1px;height:18px;background:#b0a898;margin:0 2px;display:inline-block"></span>
+      <button class="tb-btn filter-btn active" id="fAll" onclick="setFilter('all')">Tutti</button>
+      <button class="tb-btn filter-btn" id="fApp" onclick="setFilter('app')">&#128994; Appuntamenti</button>
+      <button class="tb-btn filter-btn" id="fCall" onclick="setFilter('call')">&#128308; Richiami</button>
       <div class="cal-legend">
         <span><span class="leg-sq" style="background:#ffd6de;border:1px solid #f3b3c1"></span>Richiami</span>
         <span><span class="leg-sq" style="background:#d9f5de;border:1px solid #abe2b8"></span>Appuntamenti</span>
@@ -583,19 +583,19 @@ body[data-ruolo="operatore"] .tab-soloadmin{display:none!important}
       <button class="btn-u pt-mail" onclick="inviaMail()" title="Apre il PDF (record o tutta la ricerca) in una nuova scheda: da lì usa Condividi -> Mail.">&#9993; Apri per e-mail</button>
       <button class="btn-u pt-lista" onclick="showTab('list')" title="Mostra in elenco i risultati della ricerca attiva">Lista</button>
       <div class="pr-sep"></div>
-      <button class="btn-u btn-blue" onclick="openSearch()" title="Cerca chi ti sta chiamando, senza perdere il lavoro">&#128222; Chi chiama?</button>
-      <button class="btn-u btn-amber" id="btnTornaLavoro" onclick="tornaAlLavoro()" style="display:none" title="Torna al contatto/lista su cui stavi lavorando prima">&#8617; Torna al lavoro</button>
-      <button class="btn-u btn-orange" onclick="showTab('agenda')">AGENDA</button>
-      <button class="btn-u btn-blue" id="btnTrova" onclick="enterFindMode()" title="TROVA: ricerca per campi (nome, citta, telefono, codice fiscale...). Compila e premi Esegui; i risultati compaiono in Elenco.">Trova</button>
-      <button class="btn-u btn-red-soft" id="btnAnnullaRic" style="display:none" onclick="exitFindMode()">Annulla ricerca</button>
-      <button class="btn-u btn-blue" id="btnNuovo" onclick="enterNewMode()" title="Crea una nuova scheda contatto da zero.">&#43; Nuovo</button>
+      <span class="pr-nav-info" id="prNav"></span>
       <button class="btn-u btn-amber" id="btnModifica" onclick="enterEditMode()" title="Modifica i dati della scheda. Al termine premi Salva.">&#9998; Modifica</button>
       <button class="btn-u btn-green" id="btnSalva" style="display:none" onclick="saveEdit()" title="Salva le modifiche fatte alla scheda.">&#128190; Salva</button>
       <button class="btn-u btn-red-soft" id="btnAnnullaMod" style="display:none" onclick="exitEditMode()" title="Annulla le modifiche senza salvare.">&#215; Annulla</button>
+      <button class="btn-u btn-blue" id="btnNuovo" onclick="enterNewMode()" title="Crea una nuova scheda contatto da zero.">&#43; Nuovo</button>
+      <button class="btn-u btn-blue" id="btnTrova" onclick="enterFindMode()" title="TROVA: ricerca per campi (nome, citta, telefono, codice fiscale...). Compila e premi Esegui; i risultati compaiono in Elenco.">Trova</button>
+      <button class="btn-u btn-red-soft" id="btnAnnullaRic" style="display:none" onclick="exitFindMode()">Annulla ricerca</button>
+      <button class="btn-u btn-orange" onclick="showTab('agenda')">AGENDA</button>
+      <button class="btn-u btn-blue" onclick="openSearch()" title="Cerca chi ti sta chiamando, senza perdere il lavoro">&#128222; Chi chiama?</button>
+      <button class="btn-u btn-amber" id="btnTornaLavoro" onclick="tornaAlLavoro()" style="display:none" title="Torna al contatto/lista su cui stavi lavorando prima">&#8617; Torna al lavoro</button>
       <input class="pr-search" id="quickSearch" placeholder="Cerca cognome..." oninput="liveSearch(this.value)">
-      <span class="pr-nav-info" id="prNav"></span>
       <button class="btn-u btn-blue-soft" id="btnAzzera" onclick="azzeraRicerca()" style="display:none" title="Torna a navigare tutto il database">&#10005; Azzera ricerca</button>
-<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 26/06/2026 19:12</span>
+<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 26/06/2026 19:32</span>
       <div style="flex:1"></div>
       <button class="btn-u btn-del-discreet" onclick="deleteContact()" title="Elimina questo contatto">&#128465;</button>
     </div>
