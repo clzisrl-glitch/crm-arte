@@ -524,21 +524,21 @@ body[data-ruolo="operatore"] .tab-soloadmin{display:none!important}
   </div>
   <div id="page-agenda" class="page active">
     <div class="cal-toolbar">
-      <button class="tb-btn" onclick="prevWeek()">&#9664;</button>
-      <button class="tb-btn" onclick="nextWeek()">&#9654;</button>
-      <span id="weekLabel">&#8212;</span>
-      <button class="tb-btn" onclick="goToday()">Oggi</button>
-      <span style="width:1px;height:18px;background:#b0a898;margin:0 2px;display:inline-block"></span>
-      <label style="font-size:11px;color:#5a5246;display:inline-flex;align-items:center;gap:4px">&#128197; Appuntamenti del giorno:<input type="date" id="agDayPick" style="font-size:12px;padding:2px 5px;border:1px solid #b0a898;border-radius:4px"></label>
-      <button class="tb-btn" style="background:#1a3a6a;color:#fff;border-color:#1a3a6a" onclick="stampaAppDelGiorno()" title="Stampa (o salva in PDF) tutti gli appuntamenti del giorno scelto.">&#128424; Stampa PDF</button>
-      <button class="tb-btn" style="background:#1a7a30;color:#fff;border-color:#1a7a30" onclick="inviaAppDelGiorno()" title="Apri una email con il riepilogo degli appuntamenti del giorno (il PDF va allegato a mano dopo averlo salvato).">&#9993; Invia email</button>
-      <span style="width:1px;height:18px;background:#b0a898;margin:0 2px;display:inline-block"></span>
       <button class="tb-btn filter-btn active" id="fAll" onclick="setFilter('all')">Tutti</button>
       <button class="tb-btn filter-btn" id="fCall" onclick="setFilter('call')">&#128308; Richiami</button>
       <button class="tb-btn filter-btn" id="fApp" onclick="setFilter('app')">&#128994; Appuntamenti</button>
       <span style="width:1px;height:18px;background:#b0a898;margin:0 2px;display:inline-block"></span>
       <button class="tb-btn view-btn active" id="vCal" onclick="setView('cal')">&#128197; Calendario</button>
       <button class="tb-btn view-btn" id="vList" onclick="setView('list')">&#128203; Lista</button>
+      <span style="width:1px;height:18px;background:#b0a898;margin:0 2px;display:inline-block"></span>
+      <label style="font-size:11px;color:#5a5246;display:inline-flex;align-items:center;gap:4px">&#128197; Appuntamenti del giorno:<input type="date" id="agDayPick" style="font-size:12px;padding:2px 5px;border:1px solid #b0a898;border-radius:4px"></label>
+      <button class="tb-btn" style="background:#1a3a6a;color:#fff;border-color:#1a3a6a" onclick="stampaAppDelGiorno()" title="Stampa (o salva in PDF) tutti gli appuntamenti del giorno scelto.">&#128424; Stampa PDF</button>
+      <button class="tb-btn" style="background:#1a7a30;color:#fff;border-color:#1a7a30" onclick="inviaAppDelGiorno()" title="Apri una email con il riepilogo degli appuntamenti del giorno (il PDF va allegato a mano dopo averlo salvato).">&#9993; Invia email</button>
+      <span style="flex:1"></span>
+      <button class="tb-btn" onclick="goToday()">Oggi</button>
+      <button class="tb-btn" onclick="prevWeek()" style="color:#2a8fd0;border-color:#9fd0ee;font-size:15px">&#9664;</button>
+      <button class="tb-btn" onclick="nextWeek()" style="color:#2a8fd0;border-color:#9fd0ee;font-size:15px">&#9654;</button>
+      <span id="weekLabel">&#8212;</span>
       <div class="cal-legend">
         <span><span class="leg-sq" style="background:#ffd6de;border:1px solid #f3b3c1"></span>Richiami</span>
         <span><span class="leg-sq" style="background:#d9f5de;border:1px solid #abe2b8"></span>Appuntamenti</span>
@@ -595,7 +595,7 @@ body[data-ruolo="operatore"] .tab-soloadmin{display:none!important}
       <input class="pr-search" id="quickSearch" placeholder="Cerca cognome..." oninput="liveSearch(this.value)">
       <span class="pr-nav-info" id="prNav"></span>
       <button class="btn-u btn-blue-soft" id="btnAzzera" onclick="azzeraRicerca()" style="display:none" title="Torna a navigare tutto il database">&#10005; Azzera ricerca</button>
-<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 25/06/2026 15:49</span>
+<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 26/06/2026 14:33</span>
       <div style="flex:1"></div>
       <button class="btn-u btn-del-discreet" onclick="deleteContact()" title="Elimina questo contatto">&#128465;</button>
     </div>
@@ -1646,6 +1646,8 @@ function deleteContact(){
   delete telByContact[id];
   delete opereByContact[id];
   delete agendaMods[id];
+  // elimina anche la geolocalizzazione del contatto (niente coordinate orfane)
+  try{ if(_coordContatti){ delete _coordContatti[String(id)]; } }catch(e){}
   // Move to next contact
   if(currentIdx>=currentResults.length)currentIdx=Math.max(0,currentResults.length-1);
   buildAgendaIndex();
@@ -2914,21 +2916,36 @@ async function runZonaLibera(){
   scroll.innerHTML='<div class="zona-loading">Cerco i contatti entro '+_zlRadius+' km da <b>'+esc(place)+'</b>…<br><span style="font-size:11px;color:#999">la prima volta in una zona pu\u00f2 metterci qualche minuto</span></div>';
   cnt.textContent='';
   try{
-    const resp=await fetch('/api/zona_libera',{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({place,radius:_zlRadius,prov})});
-    const data=await resp.json();
-    if(data.error){scroll.innerHTML='<div class="zona-loading">'+esc(data.error)+'</div>';return;}
-    _zlResults=(data.results||[]).map(r=>contactMap[r.ID_contatto]).filter(Boolean);
-    const rows=(data.results||[]).map(x=>`
-      <div class="prov-row" onclick="openContact('${esc(x.ID_contatto)}',_zlResults)">
-        <span class="zona-km">${x.km} km</span>
-        <span class="prov-name"><b>${esc(x.Cognome||'')}</b> ${esc(x.Nome||'')}<span style="color:#aaa;font-size:11px"> · ${esc(x.Citta||'')}${x.Provincia?' ('+esc(x.Provincia)+')':''}</span></span>
-        <span class="prov-tel">${esc(x.Cellulare||x.Telefono||'')}</span>
-        <span class="sq ${sqColor(x.Esito_ultima_chiamata)}"></span>
-      </div>`).join('');
-    cnt.textContent=`${data.count} entro ${_zlRadius} km`+(!data.hint&&data.count===0?' · suggerimento: indica la provincia':'');
-    scroll.innerHTML=rows||`<div class="zona-loading">Nessun contatto entro ${_zlRadius} km.${!data.hint?' Prova a indicare la <b>provincia</b> (es. LU) per cercare meglio.':' Prova ad allargare il raggio.'}</div>`;
-  }catch(e){scroll.innerHTML='<div class="zona-loading">Errore di collegamento: '+esc(e.message)+'<br><span style="font-size:11px">verifica che il server sia avviato</span></div>';}
+    await _caricaCoordinate();
+    // trovo le coordinate del LUOGO cercato: prendo un contatto di quel comune (e provincia se indicata)
+    const placeU=place.toUpperCase().trim(), provU=prov.toUpperCase().trim();
+    let centro=null;
+    for(const c of (allContacts||[])){
+      if((c.Citta||'').toUpperCase().trim()===placeU && (!provU || (c.Provincia||'').toUpperCase().trim()===provU)){
+        const co=_coordContatti[String(c.ID_contatto)];
+        if(co){centro=co;break;}
+      }
+    }
+    if(!centro){scroll.innerHTML='<div class="zona-loading">Non trovo le coordinate di <b>'+esc(place)+'</b>. Prova a scrivere il nome esatto del comune'+(provU?'':' e la provincia (es. LU)')+'.</div>';cnt.textContent='';return;}
+    const vicini=[];
+    (allContacts||[]).forEach(function(c){
+      const co=_coordContatti[String(c.ID_contatto)];
+      if(!co)return;
+      const d=_distanzaKm(centro[0],centro[1],co[0],co[1]);
+      if(d<=_zlRadius)vicini.push({c:c,d:d});
+    });
+    vicini.sort(function(a,b){return a.d-b.d;});
+    _zlResults=vicini.map(function(x){return x.c;});
+    const rows=vicini.slice(0,500).map(function(x){var c=x.c;return `
+      <div class="prov-row" onclick="openContact('${esc(String(c.ID_contatto))}',_zlResults)">
+        <span class="zona-km">${x.d.toFixed(1)} km</span>
+        <span class="prov-name"><b>${esc(c.Cognome||'')}</b> ${esc(c.Nome||'')}<span style="color:#aaa;font-size:11px"> · ${esc(c.Citta||'')}${c.Provincia?' ('+esc(c.Provincia)+')':''}</span></span>
+        <span class="prov-tel">${esc(c.Cellulare||c.Telefono||'')}</span>
+        <span class="sq ${sqColor(c.Esito_ultima_chiamata)}"></span>
+      </div>`;}).join('');
+    cnt.textContent=`${vicini.length} entro ${_zlRadius} km`;
+    scroll.innerHTML=rows||`<div class="zona-loading">Nessun contatto entro ${_zlRadius} km da ${esc(place)}.</div>`;
+  }catch(e){scroll.innerHTML='<div class="zona-loading">Errore nel calcolo: '+esc(e.message)+'</div>';}
 }
 
 // ── ZONA DI LAVORO: contatti vicini all'appuntamento ──
@@ -2958,22 +2975,30 @@ function renderZonaPanel(rowsHtml, subText, loading){
 async function loadZona(){
   renderZonaPanel(null, null, true);
   try{
-    const resp=await fetch('/api/zona',{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({id:_zonaId, radius:_zonaRadius})});
-    const data=await resp.json();
-    if(data.error){ renderZonaPanel(`<div class="zona-loading">${esc(data.error)}</div>`, null, false); return; }
-    _zonaResults=(data.results||[]).map(r=>contactMap[r.ID_contatto]).filter(Boolean);
-    const rows=(data.results||[]).map(x=>`
-      <div class="prov-row" onclick="closeZona();openContact('${esc(x.ID_contatto)}',_zonaResults)">
-        <span class="zona-km">${x.km} km</span>
-        <span class="prov-name"><b>${esc(x.Cognome||'')}</b> ${esc(x.Nome||'')}<span style="color:#aaa;font-size:11px"> · ${esc(x.Citta||'')}</span></span>
-        <span class="prov-tel">${esc(x.Cellulare||x.Telefono||'')}</span>
-        <span class="sq ${sqColor(x.Esito_ultima_chiamata)}" title="${esc(x.Esito_ultima_chiamata||'')}"></span>
-      </div>`).join('');
-    const sub=`${data.count} contatti entro ${_zonaRadius} km`+(data.geocoded_now?` · ${data.geocoded_now} comuni localizzati ora`:'');
+    await _caricaCoordinate();
+    const centro=_coordContatti?_coordContatti[String(_zonaId)]:null;
+    if(!centro){ renderZonaPanel('<div class="zona-loading">Questo contatto non ha una posizione geografica nota, quindi non posso calcolare i vicini.</div>', null, false); return; }
+    const vicini=[];
+    (allContacts||[]).forEach(function(c){
+      if(String(c.ID_contatto)===String(_zonaId))return;
+      const co=_coordContatti[String(c.ID_contatto)];
+      if(!co)return;
+      const d=_distanzaKm(centro[0],centro[1],co[0],co[1]);
+      if(d<=_zonaRadius)vicini.push({c:c,d:d});
+    });
+    vicini.sort(function(a,b){return a.d-b.d;});
+    _zonaResults=vicini.map(function(x){return x.c;});
+    const rows=vicini.slice(0,500).map(function(x){var c=x.c;return `
+      <div class="prov-row" onclick="closeZona();openContact('${esc(String(c.ID_contatto))}',_zonaResults)">
+        <span class="zona-km">${x.d.toFixed(1)} km</span>
+        <span class="prov-name"><b>${esc(c.Cognome||'')}</b> ${esc(c.Nome||'')}<span style="color:#aaa;font-size:11px"> · ${esc(c.Citta||'')}</span></span>
+        <span class="prov-tel">${esc(c.Cellulare||c.Telefono||'')}</span>
+        <span class="sq ${sqColor(c.Esito_ultima_chiamata)}" title="${esc(c.Esito_ultima_chiamata||'')}"></span>
+      </div>`;}).join('');
+    const sub=`${vicini.length} contatti entro ${_zonaRadius} km`;
     renderZonaPanel(rows||'<div class="zona-loading">Nessun contatto entro questo raggio. Prova ad allargarlo.</div>', sub, false);
   }catch(e){
-    renderZonaPanel(`<div class="zona-loading">Errore di collegamento: ${esc(e.message)}<br><span style="font-size:11px">verifica che il server sia avviato</span></div>`, null, false);
+    renderZonaPanel(`<div class="zona-loading">Errore nel calcolo: ${esc(e.message)}</div>`, null, false);
   }
 }
 
