@@ -183,6 +183,35 @@ body{background:var(--bg);color:var(--ink);font-size:13px;-webkit-font-smoothing
 .btn-u.btn-blue-soft:hover{background:#cfe4f5}
 .btn-u.btn-del-discreet{background:#f2e3e3;border-color:#dcc0c0;color:#8a4a4a}
 .btn-u.btn-del-discreet:hover{background:#ebd4d4}
+/* PALETTE PASTELLO - ogni funzione un colore unico */
+.btn-u.btn-nav{background:#eef0f3;border-color:#d2d7de;color:#3a4250;font-size:13px;padding:8px 11px}
+.btn-u.btn-nav:hover{background:#e2e6ec}
+.btn-u.btn-createl{background:#d6ebfb;border-color:#a9d2f0;color:#175a86}
+.btn-u.btn-createl:hover{background:#c3e1f7}
+.btn-u.pt-deceduto{background:#e7e3f3;border-color:#c7bce6;color:#5b4a8a}
+.btn-u.pt-deceduto:hover{background:#dcd5ee}
+.btn-u.pt-controllare{background:#fdeccb;border-color:#f0d49a;color:#946000}
+.btn-u.pt-controllare:hover{background:#fbe2b3}
+.btn-u.pt-pdf{background:#e3e8ee;border-color:#c4cdd8;color:#41566b}
+.btn-u.pt-pdf:hover{background:#d6dde6}
+.btn-u.pt-mail{background:#d9f0ee;border-color:#aaddd8;color:#1d6f68}
+.btn-u.pt-mail:hover{background:#c7e8e5}
+.btn-u.pt-lista{background:#eae6f7;border-color:#cfc4ec;color:#5645a0}
+.btn-u.pt-lista:hover{background:#ded7f1}
+.btn-u.btn-blue{background:#cfe0f7;border-color:#a3c3ec;color:#1d4f99}
+.btn-u.btn-blue:hover{background:#bcd3f2}
+.btn-u.btn-amber{background:#fdf3d6;border-color:#eedba0;color:#8a6d00}
+.btn-u.btn-amber:hover{background:#fbe9b8}
+.btn-u.btn-green{background:#d4eecd;border-color:#a8d99c;color:#2f6e23}
+.btn-u.btn-green:hover{background:#c4e8ba}
+.btn-u.btn-orange{background:#ffe0c7;border-color:#f5bd92;color:#9a5413}
+.btn-u.btn-orange:hover{background:#ffd2af}
+.btn-u.btn-red-soft{background:#f7dada;border-color:#ecadad;color:#9a3030}
+.btn-u.btn-red-soft:hover{background:#f2c8c8}
+.btn-u.btn-blue-soft{background:#e0eef9;border-color:#bcd9f0;color:#2a6099}
+.btn-u.btn-blue-soft:hover{background:#cfe4f5}
+.btn-u.btn-del-discreet{background:#f2e3e3;border-color:#dcc0c0;color:#8a4a4a}
+.btn-u.btn-del-discreet:hover{background:#ebd4d4}
 .btn-u.btn-nav{font-size:13px;padding:8px 11px}
 .btn-u.btn-red-soft{background:#fff;border-color:#f0c9c5;color:#c0392b}
 .btn-u.btn-blue-soft{background:#eef4fb;border-color:#cfe0f5;color:#1a5fb4}
@@ -516,7 +545,7 @@ body[data-ruolo="operatore"] .tab-soloadmin{display:none!important}
       <button class="tab" data-tab="zonalibera" onclick="showTab('zonalibera')" title="ZONA: trova i contatti vicini a un punto entro un raggio in km, utile per riempire i buchi tra un appuntamento e l'altro.">Zona</button>
       <button class="tab" data-tab="recupero" onclick="showTab('recupero')" style="color:#c06010;font-weight:700" title="DA RECUPERARE: i contatti da richiamare (telefonata mancata, da risentire) in base alla data di prossimo richiamo.">&#9203; Da Recuperare</button>
       <button class="tab" data-tab="controllare" onclick="showTab('controllare')" style="color:#7a3ea0;font-weight:700" title="DA CONTROLLARE: la coda dei casi dubbi (doppioni, numeri sospetti, import UTET da confermare). Si risolvono uno a uno e lo stato si salva.">&#128270; Da controllare</button>
-      <button class="tab" data-tab="potenziali" onclick="showTab('potenziali')" style="color:#a06a00;font-weight:700" title="Nominativi da una vecchia lista nazionale (CANI): non sono ancora tuoi clienti. Tenuti da parte, fuori dalle ricerche normali, da contattare quando vuoi.">&#9742; Potenziali</button>
+<button class="tab" data-tab="potenziali" onclick="showTab('potenziali')" style="color:#a06a00;font-weight:700" title="Nominativi da una vecchia lista nazionale (CANI): non sono ancora tuoi clienti. Tenuti da parte, fuori dalle ricerche normali, da contattare quando vuoi.">&#9742; Potenziali</button>
       <button class="tab" data-tab="nocell" onclick="showTab('nocell')" style="color:#1a6a8a;font-weight:700" title="Clienti attivi SENZA numero di cellulare. Scegli la regione e stampa l'elenco con indirizzo, data di nascita e codice fiscale per cercare i cellulari mancanti.">&#128241; Da controllare cellulare</button>
 <button class="tab" data-tab="welcome" onclick="showTab('welcome')" title="WELCOME: la pagina iniziale con riepilogo e scorciatoie.">Welcome</button>
 <button class="tab tab-soloadmin" data-tab="statistiche" onclick="showTab('statistiche')" title="STATISTICHE (solo titolare): andamento chiamate, esiti, telefoniste.">&#128202; Statistiche</button>
@@ -593,7 +622,7 @@ body[data-ruolo="operatore"] .tab-soloadmin{display:none!important}
       <button class="btn-u pt-controllare" title="Manda questa scheda in Da controllare (per ricontrollarla: numero errato, indirizzo vecchio, ecc.)." onclick="segnalaContatto(currentResults[currentIdx]?.ID_contatto)">&#9888; Da controllare</button>
       <button class="btn-u pt-deceduto" title="Segna questo contatto come DECEDUTO: lo esclude da elenco, ricerca e agenda e lo sposta nella scheda Deceduti." onclick="segnaDeceduto()">&#9904; Segna deceduto</button>
       <button class="btn-u btn-blue-soft" id="btnAzzera" onclick="azzeraRicerca()" style="display:none" title="Torna a navigare tutto il database">&#10005; Azzera ricerca</button>
-<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 27/06/2026 06:55</span>
+<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 30/06/2026 18:34</span>
       <div style="flex:1"></div>
       <button class="btn-u btn-del-discreet" onclick="deleteContact()" title="Elimina questo contatto">&#128465;</button>
     </div>
@@ -983,6 +1012,38 @@ function _riempiCapTutti(){
   (contacts||[]).forEach(_riempiCap);
 }
 
+
+var _coordContatti=null;
+function _caricaCoordinate(){
+  if(_coordContatti!==null)return Promise.resolve();
+  return fetch('coordinate.json').then(function(r){return r.json();}).then(function(j){_coordContatti=j;}).catch(function(){_coordContatti={};});
+}
+function _distanzaKm(lat1,lng1,lat2,lng2){
+  var R=6371, dLat=(lat2-lat1)*Math.PI/180, dLng=(lng2-lng1)*Math.PI/180;
+  var a=Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)*Math.sin(dLng/2);
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+
+
+var _capItalia=null;
+function _caricaCapItalia(){
+  if(_capItalia!==null)return Promise.resolve();
+  return fetch('cap_italia.json').then(function(r){return r.json();}).then(function(j){_capItalia=j;}).catch(function(){_capItalia={};});
+}
+function _riempiCap(c){
+  if(!c)return;
+  if(String(c.CAP||'').trim())return; // ha già il CAP
+  var citta=String(c.Citta||'').toUpperCase().trim();
+  var prov=String(c.Provincia||'').toUpperCase().trim();
+  if(!citta||!prov||!_capItalia)return;
+  var cap=_capItalia[citta+'|'+prov];
+  if(cap){c.CAP=cap; c._cap_auto=true;}
+}
+function _riempiCapTutti(){
+  if(!_capItalia)return;
+  (contacts||[]).forEach(_riempiCap);
+}
+
 let currentWeek=null,lastTab='agenda';
 let agendaMods={};
 let calFilter='all',calView='cal';
@@ -1122,6 +1183,7 @@ async function loadFromDB(){
     const d=await r.json();
     if(!d.contacts||!d.contacts.length)return false;
     contacts=d.contacts;contacts.forEach(c=>contactMap[c.ID_contatto]=c);
+    _caricaCapItalia().then(function(){_riempiCapTutti();});
     _caricaCapItalia().then(function(){_riempiCapTutti();});
     _caricaCoordinate();
     telefonate=d.telefonate||[];
@@ -1646,6 +1708,8 @@ function deleteContact(){
   delete agendaMods[id];
   // elimina anche la geolocalizzazione del contatto (niente coordinate orfane)
   try{ if(_coordContatti){ delete _coordContatti[String(id)]; } }catch(e){}
+  // elimina anche la geolocalizzazione del contatto (niente coordinate orfane)
+  try{ if(_coordContatti){ delete _coordContatti[String(id)]; } }catch(e){}
   // Move to next contact
   if(currentIdx>=currentResults.length)currentIdx=Math.max(0,currentResults.length-1);
   buildAgendaIndex();
@@ -1711,6 +1775,7 @@ function showOperaModal(cid,idx,o){
     fld('Valore','Valore',o.Valore)+
     fld('Tipo (libro / grafica / scultura / monete…)','Pagamento',o.Pagamento)+
     '<div style="margin-bottom:8px"><label style="display:block;font-size:11px;color:#666;margin-bottom:2px">Categoria</label>'+'<select id="op_Categoria_manuale" style="width:100%;padding:5px;border:1px solid #ccc;border-radius:3px;box-sizing:border-box">'+[['','(automatica: '+_categoriaOpera(Object.assign({},o,{Categoria_manuale:''})).cat+')'],['Numismatica','Numismatica'],['Libri e volumi d\'arte','Libri e volumi d\'arte'],['Oro e gioielli','Oro e gioielli'],['Grafica e stampe','Grafica e stampe'],['Sculture','Sculture'],['Altro / vari','Altro / vari']].map(function(opt){return '<option value="'+opt[0]+'"'+((o.Categoria_manuale||'')===opt[0]?' selected':'')+'>'+opt[1]+'</option>';}).join('')+'</select></div>'+
+    '<div style="margin-bottom:8px"><label style="display:block;font-size:11px;color:#666;margin-bottom:2px">Categoria</label>'+'<select id="op_Categoria_manuale" style="width:100%;padding:5px;border:1px solid #ccc;border-radius:3px;box-sizing:border-box">'+[['','(automatica: '+_categoriaOpera(Object.assign({},o,{Categoria_manuale:''})).cat+')'],['Numismatica','Numismatica'],['Libri e volumi d\'arte','Libri e volumi d\'arte'],['Oro e gioielli','Oro e gioielli'],['Grafica e stampe','Grafica e stampe'],['Sculture','Sculture'],['Altro / vari','Altro / vari']].map(function(opt){return '<option value="'+opt[0]+'"'+((o.Categoria_manuale||'')===opt[0]?' selected':'')+'>'+opt[1]+'</option>';}).join('')+'</select></div>'+
     fld('Rate (solo il numero, se a rate)','Rate',o.Rate);
   m.style.display='flex';
   setTimeout(()=>document.getElementById('op_Data_acquisto')?.focus(),50);
@@ -1725,6 +1790,7 @@ function saveOpera(){
   o.Opera=document.getElementById('op_Opera').value.trim();
   o.Valore=document.getElementById('op_Valore').value.trim();
   o.Pagamento=document.getElementById('op_Pagamento').value.trim();
+  var _cm=document.getElementById('op_Categoria_manuale'); if(_cm){o.Categoria_manuale=_cm.value||'';}
   var _cm=document.getElementById('op_Categoria_manuale'); if(_cm){o.Categoria_manuale=_cm.value||'';}
   o.Rate=document.getElementById('op_Rate').value.trim();
   closeOperaModal();
@@ -2308,7 +2374,18 @@ function _cruscottoZone(){
   var _tot={contatti:0,chiamate:0,appunt:0,lavorati:0,daLavorare:0};
   ['Nord','Centro','Toscana','Altre'].forEach(function(z){_tot.contatti+=Z[z].contatti;_tot.chiamate+=Z[z].chiamate;_tot.appunt+=Z[z].appunt;_tot.lavorati+=Z[z].lavorati;_tot.daLavorare+=Z[z].daLavorare;});
   var _pTot=_tot.contatti?Math.round(_tot.lavorati/_tot.contatti*100):0;
+  var _tot={contatti:0,chiamate:0,appunt:0,lavorati:0,daLavorare:0};
+  ['Nord','Centro','Toscana','Altre'].forEach(function(z){_tot.contatti+=Z[z].contatti;_tot.chiamate+=Z[z].chiamate;_tot.appunt+=Z[z].appunt;_tot.lavorati+=Z[z].lavorati;_tot.daLavorare+=Z[z].daLavorare;});
+  var _pTot=_tot.contatti?Math.round(_tot.lavorati/_tot.contatti*100):0;
   var h='<h3 style="color:#1a3a6a;border-bottom:2px solid #eee;padding-bottom:6px;margin-top:26px">&#128205; Monitoraggio zone</h3>';
+  h+='<div style="background:#1a3a6a;color:#fff;border-radius:12px;padding:16px;margin-bottom:16px;display:flex;flex-wrap:wrap;gap:18px;align-items:center">';
+  h+='<div style="font-size:16px;font-weight:700">&#127758; Tutto il territorio</div>';
+  h+='<div style="display:flex;gap:22px;flex-wrap:wrap;font-size:13px">';
+  h+='<div><b style="font-size:19px">'+_tot.contatti.toLocaleString("it")+'</b><br><span style="opacity:.8;font-size:11px">contatti</span></div>';
+  h+='<div><b style="font-size:19px">'+_tot.chiamate.toLocaleString("it")+'</b><br><span style="opacity:.8;font-size:11px">chiamate</span></div>';
+  h+='<div><b style="font-size:19px">'+_tot.appunt.toLocaleString("it")+'</b><br><span style="opacity:.8;font-size:11px">appuntamenti</span></div>';
+  h+='<div><b style="font-size:19px">'+_pTot+'%</b><br><span style="opacity:.8;font-size:11px">lavorato</span></div>';
+  h+='</div></div>';
   h+='<div style="background:#1a3a6a;color:#fff;border-radius:12px;padding:16px;margin-bottom:16px;display:flex;flex-wrap:wrap;gap:18px;align-items:center">';
   h+='<div style="font-size:16px;font-weight:700">&#127758; Tutto il territorio</div>';
   h+='<div style="display:flex;gap:22px;flex-wrap:wrap;font-size:13px">';
@@ -2368,6 +2445,52 @@ function _cruscottoZone(){
   return h;
 }
 
+
+async function _sezioneAccessi(){
+  // solo titolare
+  if((window._ruolo||'')!=='titolare')return '';
+  try{
+    const r=await fetch('/api/accessi');
+    const j=await r.json();
+    const acc=(j&&j.accessi)||[];
+    if(!acc.length)return '<h3 style="color:#1a3a6a;border-bottom:2px solid #eee;padding-bottom:6px;margin-top:26px">&#128273; Accessi</h3><div style="color:#999;font-size:13px">Ancora nessun accesso registrato. Da ora in avanti vedrai qui chi si collega.</div>';
+    const oggi=new Date(); oggi.setHours(0,0,0,0);
+    const inizioSett=new Date(oggi); inizioSett.setDate(oggi.getDate()-7);
+    // conteggi per utente
+    const perUtente={};
+    acc.forEach(function(a){
+      const n=a.nome||'?';
+      if(!perUtente[n])perUtente[n]={tot:0,oggi:0,sett:0,ultimo:'',ruolo:a.ruolo||'',zona:a.zona||''};
+      perUtente[n].tot++;
+      const d=new Date(a.ts);
+      if(!isNaN(d)){
+        if(d>=oggi)perUtente[n].oggi++;
+        if(d>=inizioSett)perUtente[n].sett++;
+        if(!perUtente[n].ultimo)perUtente[n].ultimo=a.ts;
+      }
+    });
+    function fmtTs(s){const d=new Date(s);if(isNaN(d))return s||'';
+      return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+d.getFullYear()+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');}
+    var h='<h3 style="color:#1a3a6a;border-bottom:2px solid #eee;padding-bottom:6px;margin-top:26px">&#128273; Accessi degli operatori</h3>';
+    h+='<div style="color:#999;font-size:12px;margin-bottom:12px">Chi si collega al CRM. Registrato da quando \u00e8 stata attivata la funzione.</div>';
+    // tabella riepilogo per utente
+    h+='<table style="width:100%;border-collapse:collapse;margin-bottom:20px"><tr style="background:#f4f6fa"><th style="text-align:left;padding:8px;font-size:12px;color:#666">Operatore</th><th style="padding:8px;font-size:12px;color:#666">Oggi</th><th style="padding:8px;font-size:12px;color:#666">Ultimi 7gg</th><th style="padding:8px;font-size:12px;color:#666">Totale</th><th style="padding:8px;font-size:12px;color:#666">Ultimo accesso</th></tr>';
+    Object.keys(perUtente).sort(function(a,b){return perUtente[b].tot-perUtente[a].tot;}).forEach(function(n){
+      const u=perUtente[n];
+      h+='<tr style="border-bottom:1px solid #eee"><td style="padding:8px;font-weight:600;color:#1a3a6a">'+esc(n)+(u.zona?' <span style="color:#aaa;font-size:11px">('+esc(u.zona)+')</span>':'')+'</td><td style="text-align:center;padding:8px;color:#2a7a2a;font-weight:600">'+u.oggi+'</td><td style="text-align:center;padding:8px">'+u.sett+'</td><td style="text-align:center;padding:8px;color:#888">'+u.tot+'</td><td style="text-align:center;padding:8px;font-size:12px;color:#666">'+esc(fmtTs(u.ultimo))+'</td></tr>';
+    });
+    h+='</table>';
+    // ultimi 30 accessi in dettaglio
+    h+='<div style="font-size:13px;color:#444;font-weight:600;margin-bottom:8px">Ultimi accessi</div>';
+    h+='<div style="max-height:300px;overflow-y:auto;border:1px solid #eee;border-radius:8px">';
+    acc.slice(0,40).forEach(function(a){
+      h+='<div style="display:flex;justify-content:space-between;padding:7px 12px;border-bottom:1px solid #f2f2f2;font-size:13px"><span style="font-weight:600;color:#1a3a6a">'+esc(a.nome||'?')+'</span><span style="color:#888">'+esc(fmtTs(a.ts))+'</span></div>';
+    });
+    h+='</div>';
+    return h;
+  }catch(e){ return '<div style="color:#c00;font-size:12px">Impossibile caricare gli accessi.</div>'; }
+}
+
 function renderStatistiche(){
   var box=document.getElementById('statBody'); if(!box)return;
   if(window._ruolo && window._ruolo!=='titolare'){box.innerHTML='<div style="padding:30px;text-align:center;color:#888">Sezione riservata al titolare.</div>';return;}
@@ -2400,6 +2523,10 @@ function renderStatistiche(){
   var html='<h2 style="color:#1a3a6a;margin:0 0 4px">&#128202; Statistiche</h2><div style="color:#999;font-size:13px;margin-bottom:18px">Riservato al titolare. Le statistiche per telefonista si popolano dalle chiamate registrate da oggi in avanti.</div>';
   html+='<div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:22px">'+card('Chiamate oggi',oggiC)+card('Ultimi 7 giorni',sett)+card('Ultimi 30 giorni',mese)+card('Totale registrate',tot,'#666')+'</div>';
   try{html+=_cruscottoZone();}catch(e){}
+  // sezione accessi (async, solo titolare) - aggiunta dopo il render
+  try{ _sezioneAccessi().then(function(htmlAcc){ if(htmlAcc){ var cont=document.getElementById('statBody'); if(cont){ var dv=document.createElement('div'); dv.innerHTML=htmlAcc; cont.appendChild(dv);} } }); }catch(e){}
+  // sezione accessi (async, solo titolare) - aggiunta dopo il render
+  try{ _sezioneAccessi().then(function(htmlAcc){ if(htmlAcc){ var cont=document.getElementById('statBody'); if(cont){ var dv=document.createElement('div'); dv.innerHTML=htmlAcc; cont.appendChild(dv);} } }); }catch(e){}
   // esiti
   var esitiArr=Object.keys(esiti).map(function(k){return [k,esiti[k]];}).sort(function(a,b){return b[1]-a[1];});
   html+='<h3 style="color:#1a3a6a;border-bottom:2px solid #eee;padding-bottom:6px">Esiti delle chiamate</h3><div style="display:flex;flex-direction:column;gap:5px;margin-bottom:22px">';
@@ -2462,6 +2589,47 @@ function renderStatistiche(){
   box.innerHTML=html;
 }
 
+// ── calcolo età e compleanno ──
+var _CF_MESI={A:1,B:2,C:3,D:4,E:5,H:6,L:7,M:8,P:9,R:10,S:11,T:12};
+function _dataDaCF(cf){
+  cf=String(cf||'').toUpperCase().replace(/\s/g,'');
+  if(cf.length<11)return null;
+  var aa=cf.substring(6,8), mc=cf.charAt(8), gg=cf.substring(9,11);
+  var mese=_CF_MESI[mc]; if(!mese)return null;
+  var giorno=parseInt(gg,10); if(isNaN(giorno))return null;
+  if(giorno>40)giorno-=40;            // le donne hanno +40 sul giorno
+  var anno=parseInt(aa,10); if(isNaN(anno))return null;
+  var ora=new Date().getFullYear()%100;
+  anno = anno<=ora ? 2000+anno : 1900+anno;   // 00-anno corrente -> 2000+, resto 1900+
+  return {giorno:giorno, mese:mese, anno:anno};
+}
+function _dataNascitaParsed(c){
+  // prima provo dalla Data_nascita (gg/mm/aaaa), poi dal codice fiscale
+  var s=String(c.Data_nascita||'').trim();
+  var m=s.match(/(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{2,4})/);
+  if(m){var a=parseInt(m[3],10); if(a<100)a=a<=(new Date().getFullYear()%100)?2000+a:1900+a; return {giorno:parseInt(m[1],10),mese:parseInt(m[2],10),anno:a};}
+  return _dataDaCF(c.Codice_fiscale);
+}
+function _calcolaEta(c){
+  var d=_dataNascitaParsed(c); if(!d)return null;
+  var oggi=new Date(); var eta=oggi.getFullYear()-d.anno;
+  var meseOggi=oggi.getMonth()+1, giornoOggi=oggi.getDate();
+  if(meseOggi<d.mese || (meseOggi===d.mese && giornoOggi<d.giorno))eta--;
+  if(eta<0||eta>120)return null;
+  return eta;
+}
+function _infoCompleanno(c){
+  // ritorna {oggi:true} o {giorni:N} se il compleanno e' entro 7 giorni, altrimenti null
+  var d=_dataNascitaParsed(c); if(!d)return null;
+  var oggi=new Date(); oggi.setHours(0,0,0,0);
+  var anno=oggi.getFullYear();
+  var prossimo=new Date(anno, d.mese-1, d.giorno); prossimo.setHours(0,0,0,0);
+  if(prossimo<oggi)prossimo=new Date(anno+1, d.mese-1, d.giorno);
+  var giorni=Math.round((prossimo-oggi)/86400000);
+  if(giorni===0)return {oggi:true};
+  if(giorni<=7)return {giorni:giorni};
+  return null;
+}
 function renderContactAndMap(c){
   if(editMode)exitEditMode();
   renderContact(c);setTimeout(()=>initContactMap(c),80);
@@ -2520,6 +2688,7 @@ function renderContact(c){
   <div class="addr-box">${c.Via?`<div class="addr-line">${esc(c.Via)}</div>`:''}<div class="addr-line" style="color:#111">${esc(c.CAP||'')} ${esc(c.Citta||'')}${c.Provincia?` (${esc(c.Provincia)})`:''}${c.Regione?` · ${esc(c.Regione)}`:''}</div></div>
   <div class="map-wrap">
     <iframe id="contactMapGmaps" frameborder="0" src="about:blank" allowfullscreen loading="lazy"></iframe>
+    <a class="map-open" onclick="mostraVicinoModal();return false;" href="#" style="cursor:pointer">&#128205; Vicino a me</a>
     <a class="map-open" onclick="mostraVicinoModal();return false;" href="#" style="cursor:pointer">&#128205; Vicino a me</a>
     <a class="map-open" id="mapOpenBtn" href="${mapsHref(c)}" target="_blank" rel="noopener">&#128205; Apri in Google Maps</a>
     <a class="map-open vai-nav" id="navVaiBtn" href="${navHref(c)}" target="_blank" rel="noopener" title="Apre il navigatore con le indicazioni stradali fino a questo indirizzo (su telefono parte Google Maps in modalità guida).">&#10148; VAI &middot; Navigatore</a>
@@ -3321,11 +3490,28 @@ function saveRegTel(){
   buildAgendaIndex();
   closeRegTel();
   renderContactAndMap(c);
-  saveAllToDB();
-  // Flash confirmation
-  const nav=document.getElementById('prNav');
-  const orig=nav.textContent;nav.textContent='✓ Telefonata salvata!';nav.style.color='#1a7a30';
-  setTimeout(()=>{nav.textContent=orig;nav.style.color='';},2500);
+  // SALVATAGGIO INCREMENTALE: invio solo il nuovo dato (affidabile su cellulare)
+  _salvaTelefonataIncrementale(t, c);
+}
+async function _salvaTelefonataIncrementale(tel, c){
+  showSaveToast('saving');
+  const upd={Esito_ultima_chiamata:c.Esito_ultima_chiamata, Prossima_telefonata:c.Prossima_telefonata||'', Ora_appuntamento:c.Ora_appuntamento||''};
+  try{
+    const r=await fetch('/api/aggiungi_telefonata',{method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({ID_contatto:c.ID_contatto, telefonata:tel, contatto_update:upd})});
+    const j=await r.json();
+    if(j && j.ok){
+      showSaveToast('ok');
+      const nav=document.getElementById('prNav');
+      if(nav){const orig=nav.textContent;nav.textContent='✓ Appuntamento salvato!';nav.style.color='#1a7a30';
+        setTimeout(()=>{nav.textContent=orig;nav.style.color='';},2500);}
+    }else{ throw new Error((j&&j.error)||'salvataggio non riuscito'); }
+  }catch(e){
+    showSaveToast('err');
+    // avviso BLOCCANTE: cosi non perdi mai un appuntamento senza accorgertene
+    alert('⚠️ ATTENZIONE: l\'appuntamento NON è stato salvato sul server (connessione assente o instabile).\n\nControlla la connessione e riprova a registrarlo. Finché non vedi "Appuntamento salvato", non è stato memorizzato.');
+  }
 }
 
 // ═══════════════════════════════════════════════════
@@ -3716,8 +3902,8 @@ document.getElementById('nuovoModal').addEventListener('click',function(e){if(e.
 // ═══════════════════════════════════════════════════
 // DA CONTROLLARE (coda verifiche)
 // ═══════════════════════════════════════════════════
-const CTRL_LABEL={cellulare_famiglia:'Cell. famiglia',cellulare_verificare:'Cell. da verificare',fisso_condiviso:'Fisso condiviso',anomalia_cf:'Cod.fiscale anomalo',anomalia_cap:'CAP anomalo',omonimo:'Omonimo',prefisso_incoerente:'Prefisso incoerente',segnalato:'Segnalato',numero_in_nota:'Numero nelle note',recupero_filemaker:'Recupero FileMaker'};
-const CTRL_COL={cellulare_famiglia:'#1a5fb4',cellulare_verificare:'#b35900',fisso_condiviso:'#666',anomalia_cf:'#c0392b',anomalia_cap:'#c0392b',omonimo:'#7a3ea0',prefisso_incoerente:'#0a7d6b',segnalato:'#9c27b0',numero_in_nota:'#9a6800',recupero_filemaker:'#1a7a30'};
+const CTRL_LABEL={cellulare_famiglia:'Cell. famiglia',cellulare_verificare:'Cell. da verificare',fisso_condiviso:'Fisso condiviso',anomalia_cf:'Cod.fiscale anomalo',anomalia_cap:'CAP anomalo',omonimo:'Omonimo',prefisso_incoerente:'Prefisso incoerente',segnalato:'Segnalato',numero_in_nota:'Numero nelle note',recupero_filemaker:'Recupero FileMaker',possibile_deceduto:'Possibile deceduto'};
+const CTRL_COL={cellulare_famiglia:'#1a5fb4',cellulare_verificare:'#b35900',fisso_condiviso:'#666',anomalia_cf:'#c0392b',anomalia_cap:'#c0392b',omonimo:'#7a3ea0',prefisso_incoerente:'#0a7d6b',segnalato:'#9c27b0',numero_in_nota:'#9a6800',recupero_filemaker:'#1a7a30',possibile_deceduto:'#777777'};
 const ESITI=['ok','non risponde','numero errato','trasferito','non interessato'];
 const CTRL_HELP={
  cellulare_verificare:"Questo cellulare compare su più schede di persone diverse: chiama o controlla per capire a chi appartiene davvero, poi correggi le schede sbagliate.",
@@ -3728,7 +3914,7 @@ const CTRL_HELP={
  omonimo:"Due schede con stesso nome e stessa data di nascita: quasi certamente la stessa persona. Controlla e usa Unisci qui sulla scheda da tenere.",
  prefisso_incoerente:"Il prefisso del numero fisso non corrisponde alla provincia della scheda: persona trasferita o numero vecchio. Verifica al telefono quale dato è giusto.",
  numero_in_nota:"Nelle Note di questa scheda c'è scritto un numero di telefono: aprila e spostalo nel campo giusto (Cellulare o Telefono), così diventa cliccabile.",
- segnalato:"Contatto che hai segnalato tu come da ricontrollare.",recupero_filemaker:"Questo contatto era in FileMaker (vecchio gestionale) ma non risulta nel CRM: forse l'avevi eliminato apposta, oppure si è perso in una migrazione. Controlla i dati e le opere: se è valido premi Conferma per tenerlo, altrimenti Elimina."};
+ segnalato:"Contatto che hai segnalato tu come da ricontrollare.",recupero_filemaker:"Questo contatto era in FileMaker (vecchio gestionale) ma non risulta nel CRM: forse l'avevi eliminato apposta, oppure si è perso in una migrazione. Controlla i dati e le opere: se è valido premi Conferma per tenerlo, altrimenti Elimina.",possibile_deceduto:"Nelle note di questo contatto compare una parola come MORTO o DEFUNTO, ma non e' chiaro se si riferisce al contatto o ad altro. Apri la scheda e leggi la nota: se il contatto e' davvero deceduto usa il bottone Segna deceduto sulla scheda, poi chiudi il caso con Conferma. Se invece e' vivo (es. modo di dire, o e' morto un parente) premi solo Conferma."};
 
 let ctrlGeo=false;
 let ctrlProvFiltro='';let ctrlRegFiltro='';
@@ -3736,7 +3922,7 @@ function vProv(v){const id=(v.schede||[]).find(x=>contactMap[x]);return id?((con
 function ctrlSetProvincia(){ctrlProvFiltro=document.getElementById('ctrlProvincia')?.value||'';renderControllare();}
 function ctrlPopolaProvince(open){const sel=document.getElementById('ctrlProvincia');if(!sel)return;let base=open;if(ctrlRegFiltro)base=base.filter(v=>vReg(v)===ctrlRegFiltro);const provs=[...new Set(base.map(vProv).filter(p=>p&&p!=='—'))].sort();const sig=ctrlRegFiltro+'::'+provs.join('|');if(sel.dataset.sig===sig)return;sel.dataset.sig=sig;let cur=ctrlProvFiltro;if(cur&&!provs.includes(cur)){cur='';ctrlProvFiltro='';}sel.innerHTML='<option value="">Tutte le province</option>'+provs.map(pp=>`<option value="${esc(pp)}">${esc(pp)}</option>`).join('');sel.value=cur;}
 function vReg(v){const id=(v.schede||[]).find(x=>contactMap[x]);return id?((contactMap[id].Regione||'').trim()||'—'):'—';}
-function ctrlSetRegione(){ctrlProvFiltro='';const e=document.getElementById('ctrlRegione');ctrlRegFiltro=e?e.value:'';renderControllare();}
+function ctrlSetRegione(){ctrlProvFiltro='';ctrlProvFiltro='';const e=document.getElementById('ctrlRegione');ctrlRegFiltro=e?e.value:'';renderControllare();}
 function ctrlPopolaRegioni(open){
   const sel=document.getElementById('ctrlRegione');if(!sel)return;
   const regs=[...new Set(open.map(vReg).filter(r=>r&&r!=='—'))].sort((a,b)=>a.localeCompare(b,'it'));

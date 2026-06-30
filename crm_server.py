@@ -114,6 +114,28 @@ def api_login():
     u=crm_auth.controlla_login(body.get("utente",""), body.get("password",""))
     if not u:
         return jsonify({"error":"Utente o password errati."}), 401
+    # registro l'accesso (chi, quando) - non deve mai bloccare il login
+    try:
+        from datetime import datetime as _dt
+        _d = load_data() or {}
+        _d.setdefault('accessi', [])
+        _d['accessi'].insert(0, {'nome': u['nome'], 'ruolo': u['ruolo'], 'zona': u.get('zona',''), 'ts': _dt.now().isoformat(timespec='seconds')})
+        if len(_d['accessi']) > 3000:
+            _d['accessi'] = _d['accessi'][:3000]
+        save_data(_d)
+    except Exception as _e:
+        pass
+    # registro l'accesso (chi, quando) - non deve mai bloccare il login
+    try:
+        from datetime import datetime as _dt
+        _d = load_data() or {}
+        _d.setdefault('accessi', [])
+        _d['accessi'].insert(0, {'nome': u['nome'], 'ruolo': u['ruolo'], 'zona': u.get('zona',''), 'ts': _dt.now().isoformat(timespec='seconds')})
+        if len(_d['accessi']) > 3000:
+            _d['accessi'] = _d['accessi'][:3000]
+        save_data(_d)
+    except Exception as _e:
+        pass
     from flask import make_response
     resp=make_response(jsonify({"ok":True,"ruolo":u["ruolo"],"nome":u["nome"],"zona":u.get("zona","")}))
     resp.set_cookie("crm_token", crm_auth.crea_token(u["nome"],u["ruolo"],zona=u.get("zona","")), httponly=True, samesite="Lax", max_age=12*3600)
@@ -268,6 +290,50 @@ def api_save_full():
         # ogni altra chiave già su disco resta invariata
         save_data(existing)
         return jsonify({'ok': True})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/aggiungi_telefonata', methods=['POST'])
+@richiede_login
+def api_aggiungi_telefonata():
+    """Salvataggio INCREMENTALE di una singola telefonata/appuntamento.
+    Il cellulare invia solo il nuovo dato (payload minimo) invece di tutto
+    l'archivio: molto piu' affidabile su connessioni mobili. Il server carica
+    i dati, aggiunge la telefonata e aggiorna i campi esito del contatto."""
+    try:
+        body = request.get_json(force=True)
+        tel = body.get('telefonata')
+        cid = str(body.get('ID_contatto', '')).strip()
+        upd = body.get('contatto_update', {}) or {}
+        if not tel or not cid:
+            return jsonify({'error': 'dati mancanti'}), 400
+        data = load_data() or {}
+        data.setdefault('telefonate', [])
+        data.setdefault('contacts', [])
+        # aggiungo la telefonata in testa
+        data['telefonate'].insert(0, tel)
+        # aggiorno i campi esito del contatto (solo questi, niente altro)
+        campi_ok = {'Esito_ultima_chiamata', 'Prossima_telefonata', 'Ora_appuntamento'}
+        for c in data['contacts']:
+            if str(c.get('ID_contatto')) == cid:
+                for k, v in upd.items():
+                    if k in campi_ok:
+                        c[k] = v
+                break
+        save_data(data)
+        return jsonify({'ok': True})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/accessi')
+@solo_titolare('accessi')
+def api_accessi():
+    """Restituisce lo storico accessi (solo titolare)."""
+    try:
+        d = load_data() or {}
+        return jsonify({'accessi': d.get('accessi', [])})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
