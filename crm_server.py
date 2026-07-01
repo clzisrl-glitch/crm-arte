@@ -125,17 +125,6 @@ def api_login():
         save_data(_d)
     except Exception as _e:
         pass
-    # registro l'accesso (chi, quando) - non deve mai bloccare il login
-    try:
-        from datetime import datetime as _dt
-        _d = load_data() or {}
-        _d.setdefault('accessi', [])
-        _d['accessi'].insert(0, {'nome': u['nome'], 'ruolo': u['ruolo'], 'zona': u.get('zona',''), 'ts': _dt.now().isoformat(timespec='seconds')})
-        if len(_d['accessi']) > 3000:
-            _d['accessi'] = _d['accessi'][:3000]
-        save_data(_d)
-    except Exception as _e:
-        pass
     from flask import make_response
     resp=make_response(jsonify({"ok":True,"ruolo":u["ruolo"],"nome":u["nome"],"zona":u.get("zona","")}))
     resp.set_cookie("crm_token", crm_auth.crea_token(u["nome"],u["ruolo"],zona=u.get("zona","")), httponly=True, samesite="Lax", max_age=12*3600)
