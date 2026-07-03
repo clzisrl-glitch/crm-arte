@@ -90,7 +90,12 @@ except Exception as _e:
 @app.route('/')
 def index():
     if HTML_FILE.exists():
-        return send_file(str(HTML_FILE))
+        from flask import make_response
+        resp = make_response(send_file(str(HTML_FILE)))
+        resp.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+        resp.headers['Pragma'] = 'no-cache'
+        resp.headers['Expires'] = '0'
+        return resp
     return "CRM_Arte.html non trovato nella stessa cartella di crm_server.py", 404
 
 @app.route('/manifest.json')
@@ -98,7 +103,10 @@ def _pwa_manifest():
     return send_from_directory(str(BASE_DIR), 'manifest.json', mimetype='application/json')
 @app.route('/sw.js')
 def _pwa_sw():
-    return send_from_directory(str(BASE_DIR), 'sw.js', mimetype='application/javascript')
+    from flask import make_response
+    resp = make_response(send_from_directory(str(BASE_DIR), 'sw.js', mimetype='application/javascript'))
+    resp.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    return resp
 @app.route('/<path:_fname>')
 def _pwa_static(_fname):
     import os as _os  # STATIC_PWA: servo icone e simili
