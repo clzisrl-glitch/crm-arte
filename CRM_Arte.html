@@ -967,7 +967,7 @@ let allContacts=[],currentResults=[],currentIdx=0,searchActive=false;
 var _coordContatti=null;
 function _caricaCoordinate(){
   if(_coordContatti!==null)return Promise.resolve();
-  return fetch('coordinate.json?v=20260703a').then(function(r){return r.json();}).then(function(j){_coordContatti=j;}).catch(function(){_coordContatti={};});
+  return fetch('coordinate.json?v=20260704a').then(function(r){return r.json();}).then(function(j){_coordContatti=j;}).catch(function(){_coordContatti={};});
 }
 function _distanzaKm(lat1,lng1,lat2,lng2){
   var R=6371, dLat=(lat2-lat1)*Math.PI/180, dLng=(lng2-lng1)*Math.PI/180;
@@ -4215,8 +4215,8 @@ function _ensureLeaflet(){
 }
 /* caricamento in sottofondo di vie e comuni (per la cascata) */
 function _caricaVieComuni(){
-  var p1=_coordVie?Promise.resolve():fetch('coordinate_vie.json?v=20260703a').then(function(r){return r.json();}).then(function(j){_coordVie=j;}).catch(function(){_coordVie={};});
-  var p2=_coordComuni?Promise.resolve():fetch('coordinate_comuni.json?v=20260703a').then(function(r){return r.json();}).then(function(j){_coordComuni=j;}).catch(function(){_coordComuni={};});
+  var p1=_coordVie?Promise.resolve():fetch('coordinate_vie.json?v=20260704a').then(function(r){return r.json();}).then(function(j){_coordVie=j;}).catch(function(){_coordVie={};});
+  var p2=_coordComuni?Promise.resolve():fetch('coordinate_comuni.json?v=20260704a').then(function(r){return r.json();}).then(function(j){_coordComuni=j;}).catch(function(){_coordComuni={};});
   return Promise.all([p1,p2]);
 }
 var _DUG={VIA:1,V:1,VLE:1,VIALE:1,PIAZZA:1,P:1,PZA:1,PZZA:1,PIAZZALE:1,PLE:1,CORSO:1,CSO:1,VICOLO:1,VIC:1,VICO:1,STRADA:1,STR:1,LOCALITA:1,LOC:1,BORGO:1,SALITA:1,TRAVERSA:1,CONTRADA:1,CDA:1,LARGO:1,LGO:1,VILLA:1};
@@ -4270,7 +4270,7 @@ function apriMappaContatti(contacts,titolo){
 function _initMappa(){
   try{if(_mapMap){_mapMap.remove();_mapMap=null;}}catch(e){}
   _mapCluster=null;_mapPosMarker=null;
-  _mapMap=L.map('mapCanvas').setView([42.0,12.5],5);
+  _mapMap=L.map('mapCanvas',{minZoom:5}).setView([42.0,12.5],5);setTimeout(function(){try{if(_mapMap)_mapMap.invalidateSize();}catch(e){}},250);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap'}).addTo(_mapMap);
   _renderMarkers();
 }
@@ -4285,7 +4285,7 @@ function _renderMarkers(){
     var c=_mapBase[i];
     if(_mapZona!=='tutte'&&isTit&&_zonaContatto(c)!==_mapZona)continue;
     var co=_coordDi(c);
-    if(!co){senza++;continue;}
+    if(!co){senza++;continue;}if(!(co[0]>=35&&co[0]<=47.6&&co[1]>=6&&co[1]<=19.6)){senza++;continue;}
     if(_mapPos&&_mapRaggio>0&&_distanzaKm(_mapPos.lat,_mapPos.lng,co[0],co[1])>_mapRaggio)continue;
     var top=(typeof _isClienteTop==='function')&&_isClienteTop(c);
     var m=L.circleMarker([co[0],co[1]],{radius:6,weight:1,color:'#fff',fillColor:top?'#e0a800':'#1a5a93',fillOpacity:.9});
