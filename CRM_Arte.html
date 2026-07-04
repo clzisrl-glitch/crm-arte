@@ -969,7 +969,7 @@ let allContacts=[],currentResults=[],currentIdx=0,searchActive=false;
 var _coordContatti=null;
 function _caricaCoordinate(){
   if(_coordContatti!==null)return Promise.resolve();
-  return fetch('coordinate.json?v=20260704a').then(function(r){return r.json();}).then(function(j){_coordContatti=j;}).catch(function(){_coordContatti={};});
+  return fetch('coordinate.json?v=20260704c').then(function(r){return r.json();}).then(function(j){_coordContatti=j;}).catch(function(){_coordContatti={};});
 }
 function _distanzaKm(lat1,lng1,lat2,lng2){
   var R=6371, dLat=(lat2-lat1)*Math.PI/180, dLng=(lng2-lng1)*Math.PI/180;
