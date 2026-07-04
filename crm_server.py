@@ -202,6 +202,30 @@ def api_diag_utenti():
     info['dettaglio'] = {k: {'ruolo': v.get('ruolo'), 'zona': v.get('zona','')} for k,v in crm_auth.UTENTI.items()}
     return jsonify(info)
 
+@app.route("/api/correggi_dati", methods=["POST"])
+def api_correggi_dati():
+    if not _solo_titolare_api():
+        return jsonify({"error":"riservato al titolare"}),403
+    import os as _os, json as _json
+    p=_os.path.join(_os.path.dirname(_os.path.abspath(__file__)),"correzioni.json")
+    try:
+        corr=_json.load(open(p,encoding="utf-8"))
+    except Exception as e:
+        return jsonify({"error":"correzioni.json: "+str(e)}),500
+    data=load_data() or {}
+    idx={str(c.get("ID_contatto")):c for c in data.get("contacts",[])}
+    np=ne=0
+    for i,v in (corr.get("province") or {}).items():
+        c=idx.get(i)
+        if c and v.get("Provincia") and c.get("Provincia")!=v["Provincia"]:
+            c["Provincia"]=v["Provincia"]; np+=1
+    for i,v in (corr.get("estero") or {}).items():
+        c=idx.get(i)
+        if c and c.get("Regione")!="Estero":
+            c["Regione"]="Estero"; ne+=1
+    if np or ne: save_data(data)
+    return jsonify({"ok":True,"province_corrette":np,"esteri":ne})
+
 @app.route('/api/status')
 def status():
     data = load_data()
