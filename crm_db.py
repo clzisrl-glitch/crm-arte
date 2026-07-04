@@ -17,7 +17,7 @@ from pathlib import Path
 BASE_DIR = Path(__file__).parent
 DATA_FILE = BASE_DIR / 'crm_data.json'
 BACKUP_DIR = BASE_DIR / 'backup'
-MAX_BACKUPS = 60
+MAX_BACKUPS = 30
 
 DATABASE_URL = os.environ.get('DATABASE_URL', '').strip()
 USE_DB = bool(DATABASE_URL)

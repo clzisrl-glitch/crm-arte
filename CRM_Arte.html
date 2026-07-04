@@ -4216,11 +4216,12 @@ function _ensureLeaflet(){
   })();
   return _leafletReady;
 }
+function _caricaComuni(){return _coordComuni?Promise.resolve():fetch('coordinate_comuni.json?v=20260704a').then(function(r){return r.json();}).then(function(j){_coordComuni=j;}).catch(function(){_coordComuni={};});}
 function _caricaVieComuni(){
-  var p1=_coordVie?Promise.resolve():fetch('coordinate_vie.json?v=20260704a').then(function(r){return r.json();}).then(function(j){_coordVie=j;}).catch(function(){_coordVie={};});
-  var p2=_coordComuni?Promise.resolve():fetch('coordinate_comuni.json?v=20260704a').then(function(r){return r.json();}).then(function(j){_coordComuni=j;}).catch(function(){_coordComuni={};});
-  return Promise.all([p1,p2]);
+  var p1=_coordVie?Promise.resolve():fetch('coordinate_vie.json?v=20260704a').then(function(r){return r.json();}).then(function(j){_coordVie=j;if(_mapMap)_renderMarkers(false);}).catch(function(){_coordVie={};});
+  return Promise.all([p1,_caricaComuni()]);
 }
+function _forseVie(){if(_coordVie)return;var m=0;for(var i=0;i<_mapBase.length&&m<25;i++){if(!(_coordContatti&&_coordContatti[String(_mapBase[i].ID_contatto)]))m++;}if(m>=25)_caricaVieComuni();}
 var _DUG={VIA:1,V:1,VLE:1,VIALE:1,PIAZZA:1,P:1,PZA:1,PZZA:1,PIAZZALE:1,PLE:1,CORSO:1,CSO:1,VICOLO:1,VIC:1,VICO:1,STRADA:1,STR:1,LOCALITA:1,LOC:1,BORGO:1,SALITA:1,TRAVERSA:1,CONTRADA:1,CDA:1,LARGO:1,LGO:1,VILLA:1};
 function _normVia(s){
   s=(s||'').toString().toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
@@ -4276,7 +4277,7 @@ function apriMappaContatti(contacts,titolo){
   if(!ov){ov=document.createElement('div');ov.id='mappaOverlay';document.body.appendChild(ov);}
   ov.innerHTML=_mappaBarra();ov.style.display='flex';
   var stato=document.getElementById('mapStato');if(stato)stato.textContent='Carico la mappa…';
-  Promise.all([_ensureLeaflet(),_caricaCoordinate()]).then(function(){_initMappa();_caricaVieComuni();})
+  Promise.all([_ensureLeaflet(),_caricaCoordinate()]).then(function(){_initMappa();_caricaComuni();_forseVie();})
     .catch(function(e){if(stato)stato.textContent='Errore mappa: '+((e&&e.message)||e);});
 }
 function _initMappa(){
@@ -4354,7 +4355,7 @@ function _correggiDati(){
     location.reload();
   }).catch(function(e){alert('Errore rete: '+e);});
 }
-try{setTimeout(function(){try{if(typeof _caricaVieComuni==='function')_caricaVieComuni();}catch(e){}},4000);}catch(e){}
+
 
 </script>
 </body>
