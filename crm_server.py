@@ -214,17 +214,16 @@ def api_correggi_dati():
         return jsonify({"error":"correzioni.json: "+str(e)}),500
     data=load_data() or {}
     idx={str(c.get("ID_contatto")):c for c in data.get("contacts",[])}
-    np=ne=0
-    for i,v in (corr.get("province") or {}).items():
+    npv=nrg=0
+    for i,v in (corr.get("aggiorna") or {}).items():
         c=idx.get(i)
-        if c and v.get("Provincia") and c.get("Provincia")!=v["Provincia"]:
-            c["Provincia"]=v["Provincia"]; np+=1
-    for i,v in (corr.get("estero") or {}).items():
-        c=idx.get(i)
-        if c and c.get("Regione")!="Estero":
-            c["Regione"]="Estero"; ne+=1
-    if np or ne: save_data(data)
-    return jsonify({"ok":True,"province_corrette":np,"esteri":ne})
+        if not c: continue
+        if v.get("Provincia") and c.get("Provincia")!=v["Provincia"]:
+            c["Provincia"]=v["Provincia"]; npv+=1
+        if v.get("Regione") and c.get("Regione")!=v["Regione"]:
+            c["Regione"]=v["Regione"]; nrg+=1
+    if npv or nrg: save_data(data)
+    return jsonify({"ok":True,"province":npv,"regioni":nrg})
 
 @app.route('/api/status')
 def status():

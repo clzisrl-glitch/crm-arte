@@ -4350,7 +4350,7 @@ function _correggiDati(){
   if(!confirm('Applico le correzioni di Provincia ed Estero (tocco solo Provincia/Regione dei contatti). Hai fatto il backup? Procedo?'))return;
   fetch('/api/correggi_dati',{method:'POST'}).then(function(r){return r.json();}).then(function(j){
     if(j.error){alert('Errore: '+j.error);return;}
-    alert('Fatto: '+j.province_corrette+' province corrette, '+j.esteri+' contatti messi in Estero.');
+    alert('Fatto: '+j.province+' province corrette, '+j.regioni+' regioni aggiornate/riempite (esteri e San Marino inclusi).');
     location.reload();
   }).catch(function(e){alert('Errore rete: '+e);});
 }
