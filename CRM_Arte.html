@@ -474,6 +474,17 @@ body[data-ruolo="operatore"] [onclick^="backupCompleto"],
 body[data-ruolo="operatore"] [onclick^="exportExcel"],
 body[data-ruolo="operatore"] [onclick^="deleteContact"]{display:none !important;}
 body[data-ruolo="operatore"] .tab-soloadmin{display:none!important}
+#mappaOverlay{display:none;position:fixed;inset:0;z-index:4000;background:#fff;flex-direction:column}
+#mappaOverlay .maptop{background:#1a3a6a;color:#fff;padding:8px 12px;display:flex;flex-direction:column;gap:6px}
+#mappaOverlay .maphdr{display:flex;align-items:center;gap:10px;font-size:16px}
+#mappaOverlay .mapstato{font-size:12px;opacity:.9;font-weight:400;flex:1}
+#mappaOverlay .mapclose{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.4);color:#fff;width:32px;height:32px;border-radius:8px;font-size:16px;cursor:pointer;flex:none}
+#mappaOverlay .maprow{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+#mappaOverlay .maplab{font-size:12px;opacity:.85}
+#mappaOverlay .mapz,#mappaOverlay .mapr{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.35);color:#fff;padding:5px 10px;border-radius:7px;font-size:12px;cursor:pointer}
+#mappaOverlay .mapz.on,#mappaOverlay .mapr.on{background:#fff;color:#1a3a6a;font-weight:700}
+#mappaOverlay .mapme{background:#e0a800;border:none;color:#3a2a00;padding:6px 12px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer}
+#mapCanvas{flex:1;width:100%}
 </style>
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#1a3a6a">
@@ -616,7 +627,7 @@ body[data-ruolo="operatore"] .tab-soloadmin{display:none!important}
       <span class="list-count" id="listCount"></span>
       <button onclick="exportExcel(true)" style="padding:3px 10px;background:#1a7a30;color:#fff;border:1px solid #0a5a20;border-radius:3px;font-size:11px;cursor:pointer" title="Esporta lista filtrata in Excel">&#128202; Excel</button>
       <button onclick="stampaElenco()" style="padding:3px 10px;background:#1a3a6a;color:#fff;border:1px solid #122a4e;border-radius:3px;font-size:11px;cursor:pointer" title="Stampa la lista così come la vedi: con ricerca, filtri e ordinamento attivi (anche 'Senza numero').">&#128424; Stampa</button>
-      <button id="btnSenzaNum" onclick="toggleSenzaNumero()" style="padding:3px 10px;background:#fff;color:#c0392b;border:1px solid #d8a7a0;border-radius:3px;font-size:11px;cursor:pointer" title="Mostra solo i contatti attivi SENZA alcun numero di telefono: schede da completare (trovare il numero) o da archiviare. Premi di nuovo per togliere il filtro.">&#128683; Senza numero</button>
+      <button id="btnSenzaNum" onclick="toggleSenzaNumero()" style="padding:3px 10px;background:#fff;color:#c0392b;border:1px solid #d8a7a0;border-radius:3px;font-size:11px;cursor:pointer" title="Mostra solo i contatti attivi SENZA alcun numero di telefono: schede da completare (trovare il numero) o da archiviare. Premi di nuovo per togliere il filtro.">&#128683; Senza numero</button><button onclick="mappaRisultati()" style="padding:3px 10px;background:#0a7a6a;color:#fff;border:1px solid #065a4e;border-radius:3px;font-size:11px;cursor:pointer" title="Mostra su mappa i contatti di questa lista (filtri e ricerca attivi).">&#128506; Vedi su mappa</button>
     </div>
     <div class="list-scroll">
       <table class="ltbl">
@@ -641,7 +652,7 @@ body[data-ruolo="operatore"] .tab-soloadmin{display:none!important}
       <datalist id="provDatalist"></datalist>
       <input class="list-search" id="provComune" placeholder="Filtra comune..." style="max-width:200px" oninput="renderProvincia()">
       <span class="list-count" id="provCount"></span>
-      <button onclick="stampaProvincia()" style="padding:3px 10px;background:#1a3a6a;color:#fff;border:1px solid #122a4e;border-radius:3px;font-size:11px;cursor:pointer" title="Stampa l'elenco della provincia (con eventuale filtro comune).">&#128424; Stampa</button>
+      <button onclick="stampaProvincia()" style="padding:3px 10px;background:#1a3a6a;color:#fff;border:1px solid #122a4e;border-radius:3px;font-size:11px;cursor:pointer" title="Stampa l'elenco della provincia (con eventuale filtro comune).">&#128424; Stampa</button><button onclick="apriMappaContatti(_provResults,'Provincia')" style="padding:3px 10px;background:#0a7a6a;color:#fff;border:1px solid #065a4e;border-radius:3px;font-size:11px;cursor:pointer" title="Mostra su mappa i contatti di questa provincia/comune.">&#128506; Vedi su mappa</button>
     </div>
     <div class="list-scroll" id="provScroll"></div>
   </div>
@@ -769,7 +780,7 @@ body[data-ruolo="operatore"] .tab-soloadmin{display:none!important}
   <div id="page-welcome" class="page"><!-- WELCOME-V2 -->
     <div class="list-scroll" style="padding:24px 32px;max-width:1080px;font-size:13.5px;line-height:1.6;color:#222">
       <h2 style="font-size:23px;color:#1f4a73;margin:0 0 2px;font-weight:600;letter-spacing:-.01em">&#127912; Arte Editoria Monete</h2>
-      <div id="welcome-giornata" style="background:linear-gradient(135deg,#1a3a6a,#2a5a9a);border-radius:14px;padding:18px 22px;margin:14px 0 22px;color:#fff"><div style="font-size:13px;opacity:.85;margin-bottom:2px" id="giornataData"></div><div style="font-size:17px;font-weight:700;margin-bottom:14px">La tua giornata</div><div id="giornataCards" style="display:flex;flex-wrap:wrap;gap:12px"></div><button onclick="mostraVicinoModal()" style="margin-top:14px;width:100%;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.35);color:#fff;padding:12px;border-radius:10px;font-size:15px;cursor:pointer;font-weight:600">&#128205; Vicino a me &mdash; chi ho qui intorno</button></div>
+      <div id="welcome-giornata" style="background:linear-gradient(135deg,#1a3a6a,#2a5a9a);border-radius:14px;padding:18px 22px;margin:14px 0 22px;color:#fff"><div style="font-size:13px;opacity:.85;margin-bottom:2px" id="giornataData"></div><div style="font-size:17px;font-weight:700;margin-bottom:14px">La tua giornata</div><div id="giornataCards" style="display:flex;flex-wrap:wrap;gap:12px"></div><button onclick="mostraVicinoModal()" style="margin-top:14px;width:100%;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.35);color:#fff;padding:12px;border-radius:10px;font-size:15px;cursor:pointer;font-weight:600">&#128205; Vicino a me &mdash; chi ho qui intorno</button><button onclick="mostraMappaItalia()" style="margin-top:8px;width:100%;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.35);color:#fff;padding:12px;border-radius:10px;font-size:15px;cursor:pointer;font-weight:600">&#128506; Mappa Italia &mdash; tutti i contatti sulla mappa</button></div>
       <div style="color:#777;margin-bottom:18px">Guida rapida. Le sezioni in alto sono i pulsanti della barra. Clicca un argomento per saltarci.</div>
       <div id="welcome-strumenti" style="background:#f4f6fa;border:1px solid #dfe5ee;border-radius:12px;padding:16px 18px;margin-bottom:22px"><div style="font-size:15px;font-weight:700;color:#1a3a6a;margin-bottom:4px">&#128295; Strumenti</div><div style="font-size:12.5px;color:#777;margin-bottom:12px">Backup, esportazioni e viste complete. <b>Backup, Excel e Completo sono riservati al titolare.</b></div><div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center"><button class="btn-u btn-green" onclick="backupCompleto()" title="Scarica una copia di sicurezza di tutti i dati (crm_data.json) sul tuo computer.">&#128190; Backup</button><button class="btn-u btn-blue" onclick="mostraBackupAuto()" title="Vedi e scarica le copie di sicurezza automatiche degli ultimi 60 giorni.">&#128338; Backup automatici</button>
           <button onclick="mostraVicinoModal()" class="tool-btn" style="background:#eaf3fb;border:1px solid #c2dcf0;color:#1a5a93;padding:10px 14px;border-radius:9px;font-size:13px;cursor:pointer;font-weight:600">&#128205; Vicino a me</button>
@@ -4183,5 +4194,130 @@ function _calcolaVicini(){
 }
 </script>
 
+<script>
+/* ===== MAPPE CONTATTI (Leaflet + markercluster) — aggiunto 2026-07 ===== */
+var _leafletReady=null,_coordVie=null,_coordComuni=null;
+var _mapMap=null,_mapCluster=null,_mapZona='tutte',_mapPos=null,_mapRaggio=0,_mapBase=[],_mapTitolo='',_mapPosMarker=null;
+
+function _loadCss(h){return new Promise(function(r){var l=document.createElement('link');l.rel='stylesheet';l.href=h;l.onload=r;l.onerror=r;document.head.appendChild(l);});}
+function _loadJs(s){return new Promise(function(res,rej){var e=document.createElement('script');e.src=s;e.onload=res;e.onerror=function(){rej(new Error('load '+s));};document.head.appendChild(e);});}
+function _ensureLeaflet(){
+  if(_leafletReady)return _leafletReady;
+  _leafletReady=(async function(){
+    if(typeof L!=='undefined'&&L.markerClusterGroup)return;
+    await _loadCss('https://unpkg.com/leaflet@1.9.4/dist/leaflet.css');
+    await _loadCss('https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css');
+    await _loadCss('https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css');
+    await _loadJs('https://unpkg.com/leaflet@1.9.4/dist/leaflet.js');
+    await _loadJs('https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js');
+  })();
+  return _leafletReady;
+}
+/* caricamento in sottofondo di vie e comuni (per la cascata) */
+function _caricaVieComuni(){
+  var p1=_coordVie?Promise.resolve():fetch('coordinate_vie.json?v=20260703a').then(function(r){return r.json();}).then(function(j){_coordVie=j;}).catch(function(){_coordVie={};});
+  var p2=_coordComuni?Promise.resolve():fetch('coordinate_comuni.json?v=20260703a').then(function(r){return r.json();}).then(function(j){_coordComuni=j;}).catch(function(){_coordComuni={};});
+  return Promise.all([p1,p2]);
+}
+var _DUG={VIA:1,V:1,VLE:1,VIALE:1,PIAZZA:1,P:1,PZA:1,PZZA:1,PIAZZALE:1,PLE:1,CORSO:1,CSO:1,VICOLO:1,VIC:1,VICO:1,STRADA:1,STR:1,LOCALITA:1,LOC:1,BORGO:1,SALITA:1,TRAVERSA:1,CONTRADA:1,CDA:1,LARGO:1,LGO:1,VILLA:1};
+function _normVia(s){
+  s=(s||'').toString().toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  s=s.replace(/'/g,' ').replace(/[^A-Z0-9 ]/g,' ');
+  var t=s.split(/\s+/).filter(Boolean);
+  while(t.length&&_DUG[t[0]])t.shift();
+  return t.join(' ');
+}
+function _normCom(s){return (s||'').toString().toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();}
+/* cascata: precisa per ID -> via nota -> centro comune -> null */
+function _coordDi(c){
+  if(!c)return null;
+  var id=String(c.ID_contatto);
+  if(_coordContatti&&_coordContatti[id])return _coordContatti[id];
+  var com=_normCom(c.Citta);
+  if(_coordVie&&c.Via){var k=com+'|'+_normVia(c.Via);if(_coordVie[k])return _coordVie[k];}
+  if(_coordComuni){if(_coordComuni[com])return _coordComuni[com];if(_coordComuni[(c.Citta||'').toUpperCase().trim()])return _coordComuni[(c.Citta||'').toUpperCase().trim()];}
+  return null;
+}
+/* ---- UI ---- */
+function _mappaBarra(){
+  var isTit=(!window._ruolo||window._ruolo==='titolare');
+  var zbtn='';
+  if(isTit){
+    ['tutte','Nord','Centro','Toscana','Altre'].forEach(function(z){
+      var on=(_mapZona===z);var lab=(z==='tutte'?'Tutte':z);
+      zbtn+='<button class="mapz'+(on?' on':'')+'" onclick="_mapSetZona(\''+z+'\')">'+lab+'</button>';
+    });
+    zbtn='<div class="maprow"><span class="maplab">Zona:</span>'+zbtn+'</div>';
+  }
+  var rad='';[5,10,15,20,25,30].forEach(function(r){rad+='<button class="mapr'+(_mapRaggio===r?' on':'')+'" onclick="_mapSetRaggio('+r+')">'+r+'</button>';});
+  return '<div class="maptop">'+
+    '<div class="maphdr"><b>&#128506; '+esc(_mapTitolo)+'</b><span id="mapStato" class="mapstato"></span>'+
+    '<button class="mapclose" onclick="_chiudiMappa()">&#10005;</button></div>'+
+    zbtn+
+    '<div class="maprow"><button class="mapme" onclick="_mapTrovaMe()">&#128205; Vicino a me</button>'+
+    '<span class="maplab">raggio km:</span>'+rad+'</div>'+
+    '</div><div id="mapCanvas"></div>';
+}
+function apriMappaContatti(contacts,titolo){
+  _mapBase=(contacts||[]).slice();_mapTitolo=titolo||'Mappa';_mapZona='tutte';_mapPos=null;_mapRaggio=0;
+  var ov=document.getElementById('mappaOverlay');
+  if(!ov){ov=document.createElement('div');ov.id='mappaOverlay';document.body.appendChild(ov);}
+  ov.innerHTML=_mappaBarra();ov.style.display='flex';
+  var stato=document.getElementById('mapStato');if(stato)stato.textContent='Carico la mappa…';
+  Promise.all([_ensureLeaflet(),_caricaCoordinate()]).then(function(){_initMappa();_caricaVieComuni();})
+    .catch(function(e){if(stato)stato.textContent='Errore mappa: '+((e&&e.message)||e);});
+}
+function _initMappa(){
+  try{if(_mapMap){_mapMap.remove();_mapMap=null;}}catch(e){}
+  _mapCluster=null;_mapPosMarker=null;
+  _mapMap=L.map('mapCanvas').setView([42.0,12.5],5);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap'}).addTo(_mapMap);
+  _renderMarkers();
+}
+function _renderMarkers(){
+  if(!_mapMap)return;
+  var stato=document.getElementById('mapStato');
+  if(_mapCluster){try{_mapMap.removeLayer(_mapCluster);}catch(e){}_mapCluster=null;}
+  _mapCluster=L.markerClusterGroup({chunkedLoading:true,chunkedDelay:20,showCoverageOnHover:false,maxClusterRadius:50});
+  var markers=[],pts=[],senza=0;
+  var isTit=(!window._ruolo||window._ruolo==='titolare');
+  for(var i=0;i<_mapBase.length;i++){
+    var c=_mapBase[i];
+    if(_mapZona!=='tutte'&&isTit&&_zonaContatto(c)!==_mapZona)continue;
+    var co=_coordDi(c);
+    if(!co){senza++;continue;}
+    if(_mapPos&&_mapRaggio>0&&_distanzaKm(_mapPos.lat,_mapPos.lng,co[0],co[1])>_mapRaggio)continue;
+    var top=(typeof _isClienteTop==='function')&&_isClienteTop(c);
+    var m=L.circleMarker([co[0],co[1]],{radius:6,weight:1,color:'#fff',fillColor:top?'#e0a800':'#1a5a93',fillOpacity:.9});
+    m._cid=String(c.ID_contatto);
+    markers.push(m);pts.push([co[0],co[1]]);
+  }
+  _mapCluster.on('click',function(ev){var id=ev.layer&&ev.layer._cid;if(id)_apriDaMappa(id);});
+  _mapCluster.addLayers(markers);
+  _mapMap.addLayer(_mapCluster);
+  if(pts.length){try{_mapMap.fitBounds(pts,{padding:[30,30],maxZoom:14});}catch(e){}}
+  if(stato)stato.innerHTML='<b>'+markers.length+'</b> sulla mappa'+(senza?' &middot; '+senza+' senza posizione':'');
+}
+function _apriDaMappa(id){_chiudiMappa();if(typeof apriContattoDaId==='function')apriContattoDaId(id,_mapBase);else if(typeof openContact==='function')openContact(id,_mapBase);}
+function _mapSetZona(z){_mapZona=z;var ov=document.getElementById('mappaOverlay');if(ov){document.querySelectorAll('#mappaOverlay .mapz').forEach(function(b){b.classList.remove('on');});}var t=event&&event.target;if(t)t.classList.add('on');_renderMarkers();}
+function _mapSetRaggio(r){_mapRaggio=r;document.querySelectorAll('#mappaOverlay .mapr').forEach(function(b){b.classList.remove('on');});var t=event&&event.target;if(t)t.classList.add('on');if(_mapPos)_renderMarkers();}
+function _mapTrovaMe(){
+  var stato=document.getElementById('mapStato');
+  if(!navigator.geolocation){if(stato)stato.textContent='Geolocalizzazione non disponibile.';return;}
+  if(stato)stato.textContent='Rilevo la posizione…';
+  navigator.geolocation.getCurrentPosition(function(p){
+    _mapPos={lat:p.coords.latitude,lng:p.coords.longitude};
+    if(!_mapRaggio){_mapRaggio=15;var b=document.querySelector('#mappaOverlay .mapr:nth-child(3)');if(b)b.classList.add('on');}
+    if(_mapPosMarker){try{_mapMap.removeLayer(_mapPosMarker);}catch(e){}}
+    _mapPosMarker=L.circleMarker([_mapPos.lat,_mapPos.lng],{radius:9,weight:2,color:'#fff',fillColor:'#e02020',fillOpacity:.9}).addTo(_mapMap);
+    _renderMarkers();
+    _mapMap.setView([_mapPos.lat,_mapPos.lng],11);
+  },function(){if(stato)stato.textContent='Posizione non rilevata (permesso negato?).';},{enableHighAccuracy:true,timeout:15000,maximumAge:60000});
+}
+function _chiudiMappa(){var ov=document.getElementById('mappaOverlay');if(ov)ov.style.display='none';try{if(_mapMap){_mapMap.remove();_mapMap=null;}}catch(e){}_mapCluster=null;_mapPosMarker=null;}
+function mostraMappaItalia(){apriMappaContatti((allContacts||[]).filter(function(c){return !(typeof _isDeceduto==='function'&&_isDeceduto(c));}),'Mappa Italia');}
+function mappaRisultati(){var l=(typeof _currentListData!=='undefined'&&_currentListData&&_currentListData.length)?_currentListData:(allContacts||[]);apriMappaContatti(l.slice(),'Contatti filtrati');}
+
+</script>
 </body>
 </html>
