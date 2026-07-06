@@ -225,6 +225,37 @@ def api_correggi_dati():
     if npv or nrg: save_data(data)
     return jsonify({"ok":True,"province":npv,"regioni":nrg})
 
+@app.route("/api/fondi_duplicati", methods=["POST"])
+def api_fondi_duplicati():
+    if not _solo_titolare_api():
+        return jsonify({"error":"riservato al titolare"}),403
+    import os as _os, json as _json
+    p=_os.path.join(_os.path.dirname(_os.path.abspath(__file__)),"fondi.json")
+    try:
+        piano=_json.load(open(p,encoding="utf-8")).get("fondi",[])
+    except Exception as e:
+        return jsonify({"error":"fondi.json: "+str(e)}),500
+    data=load_data() or {}
+    idx={str(c.get("ID_contatto")):c for c in data.get("contacts",[])}
+    da_eliminare=set(); campi=0
+    for e in piano:
+        keep=idx.get(str(e.get("keep")))
+        if not keep: continue
+        for k,v in (e.get("set") or {}).items():
+            keep[k]=v; campi+=1
+        rem=set(str(x) for x in (e.get("remove") or []))
+        kid=keep.get("ID_contatto")
+        for o in data.get("opere",[]):
+            if str(o.get("ID_contatto")) in rem: o["ID_contatto"]=kid
+        for t in data.get("telefonate",[]):
+            if str(t.get("ID_contatto")) in rem: t["ID_contatto"]=kid
+        da_eliminare |= rem
+    prima=len(data.get("contacts",[]))
+    data["contacts"]=[c for c in data.get("contacts",[]) if str(c.get("ID_contatto")) not in da_eliminare]
+    eliminati=prima-len(data["contacts"])
+    save_data(data)
+    return jsonify({"ok":True,"eliminati":eliminati,"campi":campi})
+
 @app.route('/api/status')
 def status():
     data = load_data()
