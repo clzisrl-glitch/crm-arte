@@ -79,8 +79,8 @@ def _auto_backup(text):
     except Exception as e:
         print(f"  (backup automatico non riuscito: {e})")
 
-def save_data(data):
-    return crm_db.save_data(data)
+def save_data(data, forza=False):
+    return crm_db.save_data(data, forza=forza)
 
 try:
     crm_db.seed_from_file_if_empty()
@@ -303,6 +303,10 @@ def api_load():
 def api_save():
     try:
         incoming = request.get_json(force=True)
+        # BLOCCO ANTI-AZZERAMENTO (vedi api_save_full)
+        if not (incoming.get('contacts') or []):
+            return jsonify({'error': 'Salvataggio rifiutato: nessun contatto ricevuto. '
+                                     'Ricarica la pagina: i dati sul server sono intatti.'}), 409
         # Load existing data to preserve opere
         existing = load_data()
         # Update contacts and telefonate (user-editable)
@@ -326,6 +330,12 @@ def api_save_full():
     other keys already on disk) so a full re-save never wipes the queue."""
     try:
         incoming = request.get_json(force=True)
+        # BLOCCO ANTI-AZZERAMENTO: il client manda sempre le chiavi contacts/
+        # telefonate/opere, anche quando in memoria sono vuote perche' il
+        # caricamento e' fallito. Accettarle cancellava l'archivio (30/07/2026).
+        if not (incoming.get('contacts') or []):
+            return jsonify({'error': 'Salvataggio rifiutato: nessun contatto ricevuto. '
+                                     'Ricarica la pagina: i dati sul server sono intatti.'}), 409
         existing = load_data() or {}
         _reg=_regioni_utente()
         if _reg:
@@ -391,7 +401,10 @@ def api_accessi():
 @app.route('/api/reset', methods=['POST'])
 @solo_titolare('reset')
 def api_reset():
-    save_data({})
+    # forza=True: e' l'unico azzeramento voluto, deciso dal titolare.
+    # NOTA: sul database online resta comunque attivo il trigger
+    # trg_guard_crm_blob, che rifiuta le scritture che dimezzano i dati.
+    save_data({}, forza=True)
     return jsonify({'ok': True})
 
 @app.route('/api/export')

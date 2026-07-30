@@ -1074,6 +1074,15 @@ async function checkDBHasData(){
 
 async function saveAllToDB(){
   const status=document.getElementById('dbStatus');
+  // BARRIERA ANTI-AZZERAMENTO: se in memoria non c'e' nulla, il caricamento
+  // non e' riuscito. Salvare qui cancellava l'archivio sul server (30/07/2026).
+  if(!Array.isArray(contacts)||contacts.length===0){
+    console.error('Salvataggio BLOCCATO: nessun contatto in memoria.');
+    if(status)status.textContent='';
+    showSaveToast('err');
+    alert('Salvataggio bloccato.\n\nIn memoria non risulta nessun contatto: il caricamento dei dati non e\u0027 riuscito.\n\nI dati sul server NON sono stati toccati. Ricarica la pagina.');
+    return;
+  }
   if(status)status.textContent='Salvataggio...';
   showSaveToast('saving');
   // Keep agenda + recupero in sync after any change
@@ -1263,12 +1272,18 @@ async function buildCRM(){
     if(lastContact){currentIdx=currentResults.findIndex(r=>r.ID_contatto===lastContact.ID_contatto);}
     renderAgenda();renderList(allContacts);
     // Save full data to server (first load from CSV)
+    if(!Array.isArray(contacts)||contacts.length===0){
+      // niente da salvare: non mando array vuoti al server (anti-azzeramento)
+      console.error('Primo salvataggio BLOCCATO: nessun contatto caricato.');
+      status.textContent='';
+    }else{
     status.textContent='Salvataggio nel database...';
     try{
       await fetch('/api/save_full',{method:'POST',
         headers:{'Content-Type':'application/json'},
         body:JSON.stringify({contacts,telefonate,opere,lastIdx:currentIdx})});
     }catch(e){console.warn('Server non disponibile');}
+    }
     status.textContent='';
   }catch(e){status.textContent='Errore: '+e.message;console.error(e);}
 }

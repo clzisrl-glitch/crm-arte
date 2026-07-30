@@ -53,6 +53,12 @@ def _comprimi(data):
     import gzip as _g
     return _g.compress(json.dumps(data, ensure_ascii=False, separators=(',',':')).encode('utf-8'))
 
+class DatiIllegibili(Exception):
+    """I dati ci sono ma non si riescono a leggere.
+    NON significa 'database vuoto': chi la riceve NON deve mai concludere
+    che l'archivio sia da ricreare."""
+    pass
+
 def _decomprimi(blob):
     import gzip as _g
     if blob is None:
@@ -61,11 +67,15 @@ def _decomprimi(blob):
     # se per qualche motivo non e' compresso (vecchio formato), provo a leggerlo come testo
     try:
         return json.loads(_g.decompress(b).decode('utf-8'))
-    except Exception:
+    except Exception as _e1:
         try:
             return json.loads(b.decode('utf-8'))
-        except Exception:
-            return {}
+        except Exception as _e2:
+            # PRIMA qui c'era 'return {}': un errore di lettura diventava
+            # silenziosamente "database vuoto", e il primo salvataggio
+            # successivo rendeva quel vuoto definitivo (incidente 30/07/2026).
+            raise DatiIllegibili(
+                f"blob di {len(b)} byte non decodificabile ({_e1} / {_e2})")
 
 def _db_load():
     _db_init()
@@ -77,9 +87,26 @@ def _db_load():
             return _decomprimi(row[0])
     return {}
 
+class SalvataggioSospetto(Exception):
+    """Salvataggio rifiutato perche' cancellerebbe l'archivio."""
+    pass
+
+def _controlla_payload(data, forza):
+    """Un salvataggio senza contatti non e' mai legittimo, tranne il reset
+    esplicito del titolare (forza=True). Senza questo controllo, un
+    caricamento fallito si trasformava in un archivio azzerato."""
+    if forza:
+        return
+    if not isinstance(data, dict) or not (data.get('contacts') or []):
+        raise SalvataggioSospetto(
+            "salvataggio rifiutato: zero contatti. "
+            "Quasi sempre significa che il caricamento iniziale non e' riuscito. "
+            "I dati sul database NON sono stati toccati.")
+
 _last_db_backup_day = None
-def _db_save(data):
+def _db_save(data, forza=False):
     global _last_db_backup_day
+    _controlla_payload(data, forza)
     _db_init()
     conn = _get_pg()
     payload = _comprimi(data)
@@ -97,11 +124,11 @@ def _db_save(data):
             _last_db_backup_day = giorno
 
 def _db_has_data():
-    try:
-        d = _db_load()
-        return bool(d.get('contacts'))
-    except Exception:
-        return False
+    """Attenzione: se la lettura FALLISCE l'eccezione esce di proposito.
+    Prima veniva catturata e si rispondeva False ('vuoto'), il che faceva
+    scattare la reimportazione del file di seed sopra ai dati veri."""
+    d = _db_load()
+    return bool(d.get('contacts'))
 
 # ─────────────────────────────────────────────────────────────
 #  MODO LOCALE — file crm_data.json (come sempre)
@@ -156,8 +183,12 @@ def _file_save(data):
 def load_data():
     return _db_load() if USE_DB else _file_load()
 
-def save_data(data):
-    return _db_save(data) if USE_DB else _file_save(data)
+def save_data(data, forza=False):
+    """forza=True SOLO per il reset esplicito del titolare."""
+    if USE_DB:
+        return _db_save(data, forza=forza)
+    _controlla_payload(data, forza)   # stessa protezione anche in locale
+    return _file_save(data)
 
 def has_data():
     return _db_has_data() if USE_DB else DATA_FILE.exists()
@@ -208,8 +239,13 @@ def seed_from_file_if_empty():
         try:
             if _db_has_data():
                 return False
-        except Exception:
-            pass  # se il controllo fallisce, proseguo a importare
+        except Exception as _ec:
+            # PRIMA qui c'era 'pass  # proseguo a importare': se il controllo
+            # falliva si reimportava il file di seed SOPRA i dati veri.
+            # Se non riusciamo a sapere cosa c'e' nel database, non si tocca.
+            print(f"  ATTENZIONE: controllo dati non riuscito ({_ec}).")
+            print("  Primo caricamento ANNULLATO per non sovrascrivere dati esistenti.")
+            return False
         d = None
         # 1) provo dal file compresso crm_data.json.gz (per l'online, piccolo abbastanza per GitHub)
         gz = BASE_DIR / 'crm_data.json.gz'
