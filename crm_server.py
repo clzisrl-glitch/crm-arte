@@ -388,6 +388,39 @@ def api_aggiungi_telefonata():
         return jsonify({'error': str(e)}), 500
 
 
+@app.route('/api/salva_contatto', methods=['POST'])
+@richiede_login
+def api_salva_contatto():
+    """Salvataggio INCREMENTALE di un singolo contatto (nuovo o modificato).
+    Il client manda SOLO il record interessato invece dell'intero archivio
+    (~78 MB di JSON), che su rete normale non arriva mai a destinazione."""
+    try:
+        body = request.get_json(force=True)
+        c = body.get('contatto')
+        if not c or not str(c.get('ID_contatto', '')).strip():
+            return jsonify({'error': 'contatto mancante o senza ID'}), 400
+        cid = str(c['ID_contatto']).strip()
+        _reg = _regioni_utente()
+        if _reg:
+            regset = set(r.strip().lower() for r in _reg)
+            if (c.get('Regione') or '').strip().lower() not in regset:
+                return jsonify({'error': 'contatto fuori dalla tua zona'}), 403
+        data = load_data() or {}
+        data.setdefault('contacts', [])
+        trovato = False
+        for i, x in enumerate(data['contacts']):
+            if str(x.get('ID_contatto')) == cid:
+                data['contacts'][i] = c
+                trovato = True
+                break
+        if not trovato:
+            data['contacts'].insert(0, c)
+        save_data(data)
+        return jsonify({'ok': True, 'nuovo': not trovato, 'contatti': len(data['contacts'])})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
 @app.route('/api/accessi')
 @solo_titolare('accessi')
 def api_accessi():

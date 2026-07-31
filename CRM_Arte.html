@@ -1072,6 +1072,30 @@ async function checkDBHasData(){
   catch(e){return false;}
 }
 
+async function salvaContattoSingolo(c){
+  const status=document.getElementById('dbStatus');
+  if(status)status.textContent='Salvataggio...';
+  showSaveToast('saving');
+  try{
+    const r=await fetch('/api/salva_contatto',{method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({contatto:c})});
+    if(!r.ok){
+      let m='';try{const j=await r.json();m=j.error||'';}catch(e){}
+      throw new Error('HTTP '+r.status+'. '+m);
+    }
+    if(status){status.textContent='✓ Salvato';setTimeout(()=>{status.textContent='';},2000);}
+    showSaveToast('ok');
+    return true;
+  }catch(e){
+    console.error('Salvataggio contatto NON riuscito:',e.message);
+    if(status)status.textContent='';
+    showSaveToast('err');
+    alert('SALVATAGGIO NON RIUSCITO\n\n'+e.message+'\n\nIl contatto e\u0027 visibile sullo schermo ma NON e\u0027 stato registrato sul server.');
+    return false;
+  }
+}
+
 async function saveAllToDB(){
   const status=document.getElementById('dbStatus');
   // BARRIERA ANTI-AZZERAMENTO: se in memoria non c'e' nulla, il caricamento
@@ -3400,7 +3424,7 @@ function saveNuovoContatto(){
   renderList(allContacts);
   closeNuovoModal();
   renderContactAndMap(c);showTab('principale');
-  saveAllToDB();
+  salvaContattoSingolo(c);
   setTimeout(()=>initContactMap(c),400);
   // Flash
   const nav=document.getElementById('prNav');
