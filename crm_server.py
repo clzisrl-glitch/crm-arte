@@ -214,7 +214,7 @@ def api_correggi_dati():
         return jsonify({"error":"correzioni.json: "+str(e)}),500
     data=load_data() or {}
     idx={str(c.get("ID_contatto")):c for c in data.get("contacts",[])}
-    npv=nrg=0
+    npv=nrg=nct=0
     for i,v in (corr.get("aggiorna") or {}).items():
         c=idx.get(i)
         if not c: continue
@@ -222,8 +222,15 @@ def api_correggi_dati():
             c["Provincia"]=v["Provincia"]; npv+=1
         if v.get("Regione") and c.get("Regione")!=v["Regione"]:
             c["Regione"]=v["Regione"]; nrg+=1
-    if npv or nrg: save_data(data)
-    return jsonify({"ok":True,"province":npv,"regioni":nrg})
+        # Citta: serve alla pulizia frazioni (comune nel campo Citta, frazione
+        # conservata). Se indicata, la frazione va in Note per non perderla.
+        if v.get("Citta") and c.get("Citta")!=v["Citta"]:
+            fz=(v.get("Frazione") or "").strip()
+            if fz and fz.lower() not in (c.get("Note") or "").lower():
+                c["Note"]=((c.get("Note") or "").strip()+" [fraz. "+fz+"]").strip()
+            c["Citta"]=v["Citta"]; nct+=1
+    if npv or nrg or nct: save_data(data)
+    return jsonify({"ok":True,"province":npv,"regioni":nrg,"citta":nct})
 
 @app.route("/api/fondi_duplicati", methods=["POST"])
 def api_fondi_duplicati():
@@ -417,6 +424,89 @@ def api_salva_contatto():
             data['contacts'].insert(0, c)
         save_data(data)
         return jsonify({'ok': True, 'nuovo': not trovato, 'contatti': len(data['contacts'])})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/salva_scheda', methods=['POST'])
+@richiede_login
+def api_salva_scheda():
+    """Salvataggio INCREMENTALE della scheda di UN contatto: sostituisce le sue
+    telefonate e/o le sue opere, lasciando intatto tutto il resto dell'archivio.
+    Serve a non spedire i ~67 MB di /api/save_full, che su rete normale
+    impiegano oltre 8 minuti e non arrivano mai a destinazione."""
+    try:
+        body = request.get_json(force=True)
+        cid = str(body.get('id_contatto', '')).strip()
+        if not cid:
+            return jsonify({'error': 'id_contatto mancante'}), 400
+        data = load_data() or {}
+        # controllo di zona: l'operatore agisce solo sui contatti suoi
+        _reg = _regioni_utente()
+        if _reg:
+            regset = set(r.strip().lower() for r in _reg)
+            suo = next((c for c in data.get('contacts', [])
+                        if str(c.get('ID_contatto')) == cid), None)
+            if not suo or (suo.get('Regione') or '').strip().lower() not in regset:
+                return jsonify({'error': 'contatto fuori dalla tua zona'}), 403
+        fatti = {}
+        for chiave, campo in (('telefonate', 'telefonate'), ('opere', 'opere')):
+            if chiave not in body:
+                continue                      # assente = non toccare
+            nuove = body.get(chiave) or []
+            if not isinstance(nuove, list):
+                return jsonify({'error': chiave + ' deve essere una lista'}), 400
+            altrui = [x for x in (data.get(campo) or [])
+                      if str(x.get('ID_contatto')) != cid]
+            data[campo] = altrui + nuove
+            fatti[chiave] = len(nuove)
+        if not fatti:
+            return jsonify({'error': 'niente da salvare'}), 400
+        # se il client manda anche il contatto aggiornato, lo allineo
+        c = body.get('contatto')
+        if c and str(c.get('ID_contatto', '')).strip() == cid:
+            for i, x in enumerate(data.get('contacts', [])):
+                if str(x.get('ID_contatto')) == cid:
+                    data['contacts'][i] = c
+                    break
+        save_data(data)
+        return jsonify({'ok': True, 'salvati': fatti})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/elimina_contatto', methods=['POST'])
+@richiede_login
+def api_elimina_contatto():
+    """Elimina UN contatto e tutto cio' che gli e' collegato, lato server.
+    Evita di rispedire l'intero archivio con /api/save_full."""
+    try:
+        cid = str((request.get_json(force=True) or {}).get('id_contatto', '')).strip()
+        if not cid:
+            return jsonify({'error': 'id_contatto mancante'}), 400
+        data = load_data() or {}
+        c = next((x for x in data.get('contacts', [])
+                  if str(x.get('ID_contatto')) == cid), None)
+        if not c:
+            return jsonify({'error': 'contatto non trovato'}), 404
+        _reg = _regioni_utente()
+        if _reg:
+            regset = set(r.strip().lower() for r in _reg)
+            if (c.get('Regione') or '').strip().lower() not in regset:
+                return jsonify({'error': 'contatto fuori dalla tua zona'}), 403
+        tolti = {}
+        data['contacts'] = [x for x in data.get('contacts', [])
+                            if str(x.get('ID_contatto')) != cid]
+        tolti['contatto'] = 1
+        for campo in ('telefonate', 'opere', 'verifiche'):
+            prima = data.get(campo) or []
+            dopo = [x for x in prima if str(x.get('ID_contatto')) != cid]
+            if len(dopo) != len(prima):
+                data[campo] = dopo
+                tolti[campo] = len(prima) - len(dopo)
+        save_data(data)
+        return jsonify({'ok': True, 'eliminati': tolti,
+                        'contatti_rimasti': len(data['contacts'])})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
