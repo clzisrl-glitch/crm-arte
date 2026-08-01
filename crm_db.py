@@ -103,6 +103,31 @@ def _controlla_payload(data, forza):
             "Quasi sempre significa che il caricamento iniziale non e' riuscito. "
             "I dati sul database NON sono stati toccati.")
 
+import contextlib as _ctx
+
+@_ctx.contextmanager
+def blocco_scrittura():
+    """Serializza il ciclo leggi-modifica-scrivi fra TUTTI i worker.
+    Senza questo, due operatori che salvano nello stesso momento leggono
+    entrambi la stessa versione dell'archivio e il secondo che scrive
+    CANCELLA le modifiche del primo, senza nessun errore visibile.
+    Usa un advisory lock di PostgreSQL: vale fra processi diversi.
+    In modalita' locale (file) non serve: un solo processo."""
+    if not USE_DB:
+        yield
+        return
+    conn = _get_pg()
+    try:
+        with conn.cursor() as cur:
+            cur.execute("SELECT pg_advisory_lock(738104)")
+        yield
+    finally:
+        try:
+            with conn.cursor() as cur:
+                cur.execute("SELECT pg_advisory_unlock(738104)")
+        except Exception:
+            pass
+
 _last_db_backup_day = None
 def _db_save(data, forza=False):
     global _last_db_backup_day

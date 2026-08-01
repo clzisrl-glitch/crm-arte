@@ -18,6 +18,44 @@ except ImportError:
 app = Flask(__name__)
 # RAILWAY_READY
 import crm_db, crm_auth
+
+# ---------------------------------------------------------------------------
+# SERIALIZZAZIONE DELLE SCRITTURE
+# Ogni rotta che scrive fa: load_data() -> modifica -> save_data().
+# Se due operatori salvano nello stesso momento leggono entrambi la stessa
+# versione e il secondo che scrive CANCELLA le modifiche del primo, senza
+# nessun errore visibile (entrambi vedono "Salvato").
+# Con l'archivio attuale la finestra e' di alcuni secondi, quindi il rischio
+# e' concreto. Qui le richieste di scrittura vengono messe in fila.
+# ---------------------------------------------------------------------------
+ROTTE_CHE_SCRIVONO = {
+    '/api/salva_contatto', '/api/salva_scheda', '/api/elimina_contatto',
+    '/api/aggiungi_telefonata', '/api/contatto_stato', '/api/segnala',
+    '/api/verifica', '/api/save', '/api/save_full', '/api/importa',
+    '/api/correggi_dati', '/api/fondi_duplicati', '/api/reset',
+}
+
+@app.before_request
+def _prendi_blocco():
+    from flask import g, request as _rq
+    g._blocco = None
+    if _rq.method == 'POST' and _rq.path in ROTTE_CHE_SCRIVONO:
+        try:
+            cm = crm_db.blocco_scrittura()
+            cm.__enter__()
+            g._blocco = cm
+        except Exception as e:
+            print(f"blocco scrittura non disponibile: {e}")
+
+@app.teardown_request
+def _rilascia_blocco(exc=None):
+    from flask import g
+    cm = getattr(g, '_blocco', None)
+    if cm is not None:
+        try:
+            cm.__exit__(None, None, None)
+        except Exception:
+            pass
 from functools import wraps
 PORT = int(os.environ.get("PORT","8080"))
 def _utente_corrente():
@@ -81,6 +119,8 @@ def _auto_backup(text):
 
 def save_data(data, forza=False):
     return crm_db.save_data(data, forza=forza)
+def blocco_scrittura():
+    return crm_db.blocco_scrittura()
 
 try:
     crm_db.seed_from_file_if_empty()
