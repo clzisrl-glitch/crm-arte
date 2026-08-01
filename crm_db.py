@@ -240,11 +240,19 @@ def _forza_reset_tabelle():
                            WHERE table_name='crm_blob' AND column_name='data'""")
             row = cur.fetchone()
             tipo = (row[0] if row else '').lower()
-            # se non e' bytea (es. e' jsonb vecchio, o json), butto via e ricreo
+            # Se non e' bytea (es. jsonb/json vecchio) la tabella va sostituita.
+            # PRIMA qui c'era: DROP TABLE crm_blob + DROP TABLE crm_backup.
+            # Due difetti gravi: (1) distruggeva i dati senza possibilita' di
+            # recupero; (2) cancellava ANCHE crm_backup, cioe' tutti i backup,
+            # in base al tipo di una colonna di un'ALTRA tabella.
+            # Ora si RINOMINA: niente viene perso e si puo' recuperare a mano.
             if tipo and tipo != 'bytea':
-                cur.execute("DROP TABLE IF EXISTS crm_blob")
-                cur.execute("DROP TABLE IF EXISTS crm_backup")
-                print(f"  (tabelle vecchio formato '{tipo}' rimosse: verranno ricreate)")
+                import time as _t
+                suff = _t.strftime('%Y%m%d_%H%M%S')
+                cur.execute(f'ALTER TABLE crm_blob RENAME TO crm_blob_vecchia_{suff}')
+                print(f"  ATTENZIONE: crm_blob era di tipo '{tipo}', non bytea.")
+                print(f"  NON e' stata cancellata: rinominata in crm_blob_vecchia_{suff}.")
+                print(f"  I backup (crm_backup) NON sono stati toccati.")
             # ricreo se mancano (formato corretto bytea)
             cur.execute("CREATE TABLE IF NOT EXISTS crm_blob (id INT PRIMARY KEY, data BYTEA)")
             cur.execute("CREATE TABLE IF NOT EXISTS crm_backup (giorno TEXT PRIMARY KEY, data BYTEA, creato TIMESTAMP DEFAULT now())")
