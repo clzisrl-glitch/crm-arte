@@ -51,7 +51,12 @@ def _db_init():
 
 def _comprimi(data):
     import gzip as _g
-    return _g.compress(json.dumps(data, ensure_ascii=False, separators=(',',':')).encode('utf-8'))
+    # Livello 6, non 9 (default). Misurato sull'archivio reale (74 MB):
+    #   livello 9 -> 4,99 s per 6,77 MB
+    #   livello 6 -> 0,88 s per 7,14 MB
+    # Quattro secondi di CPU a ogni salvataggio per risparmiare 370 KB non
+    # conviene: lo spazio non e' un problema, il tempo di scrittura si'.
+    return _g.compress(json.dumps(data, ensure_ascii=False, separators=(',',':')).encode('utf-8'), 6)
 
 class DatiIllegibili(Exception):
     """I dati ci sono ma non si riescono a leggere.
