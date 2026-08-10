@@ -305,11 +305,35 @@ def api_fondi_duplicati():
         for t in data.get("telefonate",[]):
             if str(t.get("ID_contatto")) in rem: t["ID_contatto"]=kid
         da_eliminare |= rem
+    # VERIFICHE: vanno riagganciate alla scheda superstite, non lasciate
+    # appese a un ID che non esiste piu'. La rotta non lo faceva e dopo una
+    # fusione restavano segnalazioni orfane (successo il 10/08/2026).
+    # Il rimappaggio usa il piano, quindi funziona anche a fusione gia' fatta.
+    _mappa={}
+    for e in piano:
+        k=str(e.get("keep"))
+        for r in (e.get("remove") or []): _mappa[str(r)]=k
+    _vivi=set(str(c.get("ID_contatto")) for c in data.get("contacts",[])) - da_eliminare
+    nver=0; nchiuse=0
+    for v in data.get("verifiche",[]):
+        if str(v.get("stato",""))=="risolto": continue
+        vecchie=[str(x) for x in (v.get("schede") or [])]
+        nuove=[]
+        for x in vecchie:
+            y=x if x in _vivi else _mappa.get(x)
+            if y and y in _vivi and y not in nuove: nuove.append(y)
+        if nuove!=vecchie:
+            v["schede"]=nuove; nver+=1
+            if not nuove:
+                v["stato"]="risolto"
+                v["nota"]=((v.get("nota") or "")+" [chiusa: schede fuse]").strip()
+                nchiuse+=1
     prima=len(data.get("contacts",[]))
     data["contacts"]=[c for c in data.get("contacts",[]) if str(c.get("ID_contatto")) not in da_eliminare]
     eliminati=prima-len(data["contacts"])
     save_data(data)
-    return jsonify({"ok":True,"eliminati":eliminati,"campi":campi})
+    return jsonify({"ok":True,"eliminati":eliminati,"campi":campi,
+                    "verifiche_riagganciate":nver,"verifiche_chiuse":nchiuse})
 
 @app.route('/api/status')
 def status():
