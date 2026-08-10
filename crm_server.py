@@ -254,7 +254,7 @@ def api_correggi_dati():
         return jsonify({"error":"correzioni.json: "+str(e)}),500
     data=load_data() or {}
     idx={str(c.get("ID_contatto")):c for c in data.get("contacts",[])}
-    npv=nrg=nct=0
+    npv=nrg=nct=nst=0
     for i,v in (corr.get("aggiorna") or {}).items():
         c=idx.get(i)
         if not c: continue
@@ -269,8 +269,16 @@ def api_correggi_dati():
             if fz and fz.lower() not in (c.get("Note") or "").lower():
                 c["Note"]=((c.get("Note") or "").strip()+" [fraz. "+fz+"]").strip()
             c["Citta"]=v["Citta"]; nct+=1
-    if npv or nrg or nct: save_data(data)
-    return jsonify({"ok":True,"province":npv,"regioni":nrg,"citta":nct})
+        # Stato: per togliere dalla lavorazione i contatti senza recapito.
+        # NotaAggiungi si accoda alle Note solo se non c'e' gia', cosi'
+        # rilanciare la correzione non duplica il testo.
+        if v.get("Stato") and c.get("Stato")!=v["Stato"]:
+            c["Stato"]=v["Stato"]; nst+=1
+        na=(v.get("NotaAggiungi") or "").strip()
+        if na and na.lower() not in (c.get("Note") or "").lower():
+            c["Note"]=((c.get("Note") or "").strip()+" "+na).strip()
+    if npv or nrg or nct or nst: save_data(data)
+    return jsonify({"ok":True,"province":npv,"regioni":nrg,"citta":nct,"stati":nst})
 
 @app.route("/api/fondi_duplicati", methods=["POST"])
 def api_fondi_duplicati():
