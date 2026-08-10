@@ -254,7 +254,7 @@ def api_correggi_dati():
         return jsonify({"error":"correzioni.json: "+str(e)}),500
     data=load_data() or {}
     idx={str(c.get("ID_contatto")):c for c in data.get("contacts",[])}
-    npv=nrg=nct=nst=0
+    npv=nrg=nct=nst=ntel=0
     for i,v in (corr.get("aggiorna") or {}).items():
         c=idx.get(i)
         if not c: continue
@@ -274,11 +274,17 @@ def api_correggi_dati():
         # rilanciare la correzione non duplica il testo.
         if v.get("Stato") and c.get("Stato")!=v["Stato"]:
             c["Stato"]=v["Stato"]; nst+=1
+        # TELEFONI: ricostruzione dei numeri incompleti (zero iniziale mancante,
+        # prefisso del comune mancante). Solo questi campi, mai altri.
+        for _tk in ("Telefono","Telefono2","Tel_Ufficio","Cellulare","Cellulare2"):
+            if v.get(_tk) and str(c.get(_tk) or "")!=str(v[_tk]):
+                c[_tk]=v[_tk]; ntel+=1
         na=(v.get("NotaAggiungi") or "").strip()
         if na and na.lower() not in (c.get("Note") or "").lower():
             c["Note"]=((c.get("Note") or "").strip()+" "+na).strip()
-    if npv or nrg or nct or nst: save_data(data)
-    return jsonify({"ok":True,"province":npv,"regioni":nrg,"citta":nct,"stati":nst})
+    if npv or nrg or nct or nst or ntel: save_data(data)
+    return jsonify({"ok":True,"province":npv,"regioni":nrg,"citta":nct,
+                    "stati":nst,"telefoni":ntel})
 
 @app.route("/api/fondi_duplicati", methods=["POST"])
 def api_fondi_duplicati():
