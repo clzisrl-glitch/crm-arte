@@ -175,7 +175,10 @@ def api_login():
         pass
     from flask import make_response
     resp=make_response(jsonify({"ok":True,"ruolo":u["ruolo"],"nome":u["nome"],"zona":u.get("zona","")}))
-    resp.set_cookie("crm_token", crm_auth.crea_token(u["nome"],u["ruolo"],zona=u.get("zona","")), httponly=True, samesite="Lax", max_age=12*3600)
+    # COOKIE DI SESSIONE: niente max_age -> il browser lo cancella alla chiusura,
+    # cosi' alla riapertura le credenziali vengono richieste di nuovo.
+    # Il token in se' scade comunque dopo 2 ore di validita'.
+    resp.set_cookie("crm_token", crm_auth.crea_token(u["nome"],u["ruolo"],zona=u.get("zona",""),ore=2), httponly=True, samesite="Lax")
     return resp
 @app.route("/api/logout", methods=["POST"])
 def api_logout():
