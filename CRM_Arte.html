@@ -1128,7 +1128,50 @@ async function salvaSchedaContatto(cid,cosa){
   }
 }
 
+// Verifica che il comune sia riconosciuto: se non lo e', il contatto NON
+// comparira' sulla mappa e nessuno se ne accorgerebbe. Meglio dirlo subito,
+// proponendo la correzione piu' probabile.
+let _tabComuni=null;
+async function _controllaComune(c){
+  const citta=String(c&&c.Citta||'').trim();
+  if(!citta) return true;                       // senza citta non avviso
+  try{
+    if(!_tabComuni){
+      const r=await fetch('coordinate_comuni.json');
+      _tabComuni=r.ok? await r.json() : {};
+    }
+  }catch(e){ return true; }                      // tabella non disponibile: non blocco
+  if(!Object.keys(_tabComuni).length) return true;
+  const N=s=>String(s||'').toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^A-Z' ]/g,' ').replace(/\s+/g,' ').trim();
+  const n=N(citta);
+  if(_tabComuni[n]||_tabComuni[citta.toUpperCase().trim()]) return true;
+  // cerco il comune piu' somigliante nella stessa provincia, poi ovunque
+  const K=Object.keys(_tabComuni);
+  // chiave "morbida": via le particelle e gli spazi (REGGIO DI CALABRIA -> REGGIOCALABRIA)
+  const soft=x=>N(x).replace(/\b(DI|DE|DEL|DELLA|DELL|DEI|DELLE|NEL|NELLA|SUL|SULLA|AL|ALLA|IN|A|E|D)\b/g,' ')
+                    .replace(/'/g,'').replace(/\s+/g,'');
+  // distanza di edit, per i refusi tipo "Rome" -> "ROMA"
+  const dist=(a,b)=>{ if(Math.abs(a.length-b.length)>2) return 9;
+    const v=Array.from({length:b.length+1},(_,i)=>i);
+    for(let i=1;i<=a.length;i++){ let prev=v[0]; v[0]=i;
+      for(let j=1;j<=b.length;j++){ const t=v[j];
+        v[j]=Math.min(v[j]+1, v[j-1]+1, prev+(a[i-1]===b[j-1]?0:1)); prev=t; } }
+    return v[b.length]; };
+  const ns=soft(citta);
+  let sugg=K.find(k=>soft(k)===ns);
+  if(!sugg) sugg=K.find(k=>k.startsWith(n)||n.startsWith(k));
+  if(!sugg){ let best=null,bd=3;
+    K.forEach(k=>{ const d=dist(n,k); if(d<bd){bd=d;best=k;} });
+    sugg=best; }
+  const msg='COMUNE NON RICONOSCIUTO: "'+citta+'"\n\n'+
+    'Il contatto verra salvato ma NON comparira sulla mappa.'+
+    (sugg? '\n\nForse volevi scrivere: '+sugg : '')+
+    '\n\nOK = salva lo stesso   |   Annulla = torna indietro e correggo';
+  return confirm(msg);
+}
+
 async function salvaContattoSingolo(c){
+  if(!(await _controllaComune(c))) return false;
   const status=document.getElementById('dbStatus');
   if(status)status.textContent='Salvataggio...';
   showSaveToast('saving');
@@ -3401,6 +3444,23 @@ function _trovaDoppioni(nc){
 function saveNuovoContatto(){
   const cog=(document.getElementById('nc_Cognome').value||'').trim();
   if(!cog){alert('Inserisci almeno il Cognome');return;}
+  // controllo COMUNE: se il nome non e' fra quelli noti, il contatto NON
+  // comparira' sulla mappa. Meglio accorgersene adesso che scoprirlo dopo.
+  try{
+    const _ct=(document.getElementById('nc_Citta')?.value||'').trim();
+    if(_ct && _coordComuni && Object.keys(_coordComuni).length){
+      const _k=_normCom(_ct);
+      if(!_coordComuni[_k]){
+        // provo a suggerire il comune giusto: stessa iniziale, nome simile
+        const _tutti=Object.keys(_coordComuni);
+        const _sim=_tutti.filter(n=>n.startsWith(_k.slice(0,4))||_k.startsWith(n.slice(0,4))||n.replace(/\s/g,'')===_k.replace(/\s/g,'')).slice(0,6);
+        const _sugg=_sim.length?'\n\nForse intendevi:\n\u2022 '+_sim.join('\n\u2022 '):'';
+        if(!confirm('ATTENZIONE \u2014 comune non riconosciuto: "'+_ct+'"'+
+          '\n\nIl contatto verra\u0300 salvato ma NON comparira\u0300 sulla mappa.'+_sugg+
+          '\n\nPremi OK per salvare comunque, Annulla per correggere.')) return;
+      }
+    }
+  }catch(e){}
   // controllo DOPPIONI: numero di telefono o codice fiscale gia' presenti
   const _ph=['nc_Cellulare','nc_Cellulare2','nc_Telefono','nc_Telefono2'].map(id=>String(document.getElementById(id)?.value||'').replace(/\D/g,'')).filter(x=>x.length>=6);
   const _cf=String(document.getElementById('nc_Codice_fiscale')?.value||'').trim().toUpperCase();
@@ -3933,6 +3993,9 @@ document.getElementById('searchModal').addEventListener('click',function(e){if(e
   try{
     const _acc=await _verificaAccesso();
     if(_acc===false){return;}
+    // carico la tabella dei comuni gia' adesso: serve al controllo del comune
+    // quando si crea un contatto nuovo (altrimenti si carica solo con la mappa)
+    try{_caricaComuni();}catch(e){}
     const ok=await checkDBHasData();
     const hint=document.getElementById('dbHint');
     const btn=document.getElementById('btnAvvia');
