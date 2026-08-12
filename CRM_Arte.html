@@ -519,6 +519,7 @@ body[data-ruolo="operatore"] .tab-soloadmin{display:none!important}
   <div class="topbar">
     <span class="topbar-title">CRM</span>
     <div style="display:flex;align-items:center;gap:8px;margin-right:10px">
+      <button onclick="_aggiornaOra()" title="Ricarica i dati dal server" style="font-size:14px;background:none;border:none;cursor:pointer;padding:2px 6px;color:#2a5ab8">&#10227;</button>
       <span id="dbStatus" style="font-size:10px;color:#666;min-width:80px;text-align:right"></span>
     </div>
     <div class="tabs">
@@ -3966,6 +3967,67 @@ async function resetDB(){
   try{await fetch('/api/reset',{method:'POST'});}catch(e){}
   location.reload();
 }
+
+// ---- AGGIORNAMENTO AUTOMATICO ----
+// L'app teneva i dati caricati all'avvio e non li rileggeva piu': chi
+// inseriva un contatto da un'altra postazione non lo vedeva mai comparire.
+// Ogni 2 minuti si chiede al server quanti contatti ha; se il numero e'
+// cambiato si ricaricano i dati, senza toccare cio' che si sta scrivendo.
+let _ultimoConteggio=null, _ricaricaInCorso=false;
+async function _controllaAggiornamenti(){
+  try{
+    if(_ricaricaInCorso) return;
+    // non disturbo mentre si compila o si modifica qualcosa
+    if(typeof editMode!=='undefined' && editMode) return;
+    const nm=document.getElementById('nuovoModal');
+    if(nm && nm.style.display!=='none') return;
+    const rt=document.getElementById('regTelModal');
+    if(rt && rt.style.display!=='none') return;
+    const r=await fetch('/api/status',{cache:'no-store'});
+    if(!r.ok) return;
+    const j=await r.json();
+    const n=parseInt(j.contacts,10);
+    if(!n) return;
+    if(_ultimoConteggio===null){_ultimoConteggio=n;return;}
+    if(n===_ultimoConteggio) return;
+    _ricaricaInCorso=true;
+    const diff=n-_ultimoConteggio;
+    _ultimoConteggio=n;
+    const ok=await loadFromDB();
+    if(ok && Array.isArray(contacts) && contacts.length){
+      allContacts=contacts.filter(c=>c.Stato!=='da_verificare'&&c.Stato!=='potenziale'&&(!c.Note||!/DECEDUT/i.test(c.Note)));
+      try{buildAgendaIndex();}catch(e){}
+      const p=document.querySelector('.page.active');
+      if(p&&p.id==='page-list'){try{renderList(allContacts);}catch(e){}}
+      const t=document.getElementById('saveToast')||document.body.appendChild(Object.assign(document.createElement('div'),{id:'saveToast'}));
+      t.className='show ok';
+      t.innerHTML='&#10227; Dati aggiornati'+(diff>0?' (+'+diff+')':'');
+      clearTimeout(t._timer); t._timer=setTimeout(()=>t.className='',3500);
+    }
+    _ricaricaInCorso=false;
+  }catch(e){_ricaricaInCorso=false;}
+}
+async function _aggiornaOra(){
+  const s=document.getElementById('dbStatus');
+  if(s)s.textContent='Aggiorno...';
+  _ultimoConteggio=null;              // forzo il confronto
+  try{
+    const r=await fetch('/api/status',{cache:'no-store'});
+    const j=await r.json();
+    _ultimoConteggio=parseInt(j.contacts,10)||null;
+    const ok=await loadFromDB();
+    if(ok&&Array.isArray(contacts)&&contacts.length){
+      allContacts=contacts.filter(c=>c.Stato!=='da_verificare'&&c.Stato!=='potenziale'&&(!c.Note||!/DECEDUT/i.test(c.Note)));
+      try{buildAgendaIndex();}catch(e){}
+      const p=document.querySelector('.page.active');
+      if(p&&p.id==='page-list'){try{renderList(allContacts);}catch(e){}}
+      if(s){s.textContent='\u2713 '+contacts.length+' contatti';setTimeout(()=>{s.textContent='';},3000);}
+    } else if(s){ s.textContent='aggiornamento non riuscito'; }
+  }catch(e){ if(s)s.textContent='aggiornamento non riuscito'; }
+}
+
+setInterval(_controllaAggiornamenti,120000);
+document.addEventListener('visibilitychange',function(){if(!document.hidden)_controllaAggiornamenti();});
 
 // KEYBOARD
 document.addEventListener('keydown',e=>{
