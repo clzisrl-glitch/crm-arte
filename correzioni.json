@@ -1,1582 +1,720 @@
 {
  "aggiorna": {
-  "UTET08463": {
-   "Regione": "Estero"
+  "2914": {
+   "Cellulare": "0332425093"
   },
-  "UTET08769": {
-   "Regione": "Estero"
+  "2918": {
+   "Cellulare": "038599148"
   },
-  "UTET09188": {
-   "Provincia": "RM",
-   "Regione": "Lazio"
+  "2919": {
+   "Cellulare": "038548208"
   },
-  "UTET09607": {
-   "Regione": "Estero"
+  "2921": {
+   "Cellulare": "0383368884"
   },
-  "UTET11144": {
-   "Regione": "Estero"
+  "2922": {
+   "Cellulare": "038341000"
   },
-  "UTET11576": {
-   "Regione": "Estero"
+  "2923": {
+   "Cellulare": "038557205"
   },
-  "UTET12707": {
-   "Regione": "Estero"
+  "3257": {
+   "Telefono2": "0755729429"
   },
-  "UTET12774": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "3372": {
+   "Telefono2": "050550921"
   },
-  "UTET13141": {
-   "Regione": "Estero"
+  "7620": {
+   "Telefono2": "0583954245"
   },
-  "UTET13478": {
-   "Regione": "Estero"
+  "8293": {
+   "Telefono2": "0516444190"
   },
-  "UTET15780": {
-   "Regione": "Estero"
+  "8699": {
+   "Telefono2": "0565949898"
   },
-  "UTET16032": {
-   "Regione": "Estero"
+  "8836": {
+   "Telefono2": "0586807742"
   },
-  "SCR0038": {
-   "Regione": "Estero"
+  "9158": {
+   "Telefono2": "055578378"
   },
-  "SCR0071": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "9801": {
+   "Telefono2": "0558071561"
   },
-  "SCR0661": {
-   "Regione": "Estero"
+  "10344": {
+   "Telefono2": "0574592979"
   },
-  "SCR1111": {
-   "Regione": "Estero"
+  "13994": {
+   "Telefono2": "0585290125"
   },
-  "SCR1577": {
-   "Regione": "Estero"
+  "16438": {
+   "Telefono2": "0321629988"
   },
-  "SCR1746": {
-   "Regione": "Estero"
+  "16450": {
+   "Telefono2": "037223216"
   },
-  "SCR2214": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "16452": {
+   "Telefono2": "0374342152"
   },
-  "SCR2332": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "18688": {
+   "Cellulare": "0384820327"
   },
-  "SCR2466": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "18724": {
+   "Telefono2": "0383364832"
   },
-  "SCR2496": {
-   "Regione": "Estero"
+  "19340": {
+   "Telefono2": "0364327954"
   },
-  "SCR2522": {
-   "Provincia": "BS",
-   "Regione": "Lombardia"
+  "19345": {
+   "Cellulare": "036486535"
   },
-  "SCR2605": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "19365": {
+   "Telefono2": "0364390586"
   },
-  "SCR2647": {
-   "Provincia": "BO",
-   "Regione": "Emilia-Romagna"
+  "19388": {
+   "Telefono2": "0364344747"
   },
-  "SCR2734": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "19413": {
+   "Cellulare": "0386757097"
   },
-  "SCR2922": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "19414": {
+   "Cellulare": "038641511"
   },
-  "SCR3047": {
-   "Regione": "Estero"
+  "19415": {
+   "Telefono2": "0376531882"
   },
-  "SCR3099": {
-   "Regione": "Estero"
+  "19416": {
+   "Telefono2": "0376868083"
   },
-  "SCR3100": {
-   "Regione": "Estero"
+  "19952": {
+   "Telefono": "0522882364"
   },
-  "SCR3279": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "21061": {
+   "Telefono2": "0183691206"
   },
-  "SCR3303": {
-   "Regione": "Estero"
+  "22558": {
+   "Telefono2": "0422541391"
   },
-  "SCR3345": {
-   "Regione": "Estero"
+  "24688": {
+   "Telefono2": "0464436827"
   },
-  "SCR3400": {
-   "Regione": "Estero"
+  "24833": {
+   "Cellulare": "0383804008"
   },
-  "SCR3488": {
-   "Regione": "Estero"
+  "24835": {
+   "Telefono2": "038346573"
   },
-  "SCR3715": {
-   "Regione": "Estero"
+  "25060": {
+   "Telefono2": "036543012"
   },
-  "SCR3716": {
-   "Regione": "Estero"
+  "26057": {
+   "Telefono": "0524528790"
   },
-  "SCR3718": {
-   "Regione": "Estero"
+  "27031": {
+   "Telefono": "031931288"
   },
-  "SCR3800": {
-   "Regione": "Estero"
+  "27056": {
+   "Telefono2": "0365374068",
+   "Cellulare": "0365825207"
   },
-  "SCR3801": {
-   "Regione": "Estero"
+  "27060": {
+   "Cellulare": "0302000701"
   },
-  "SCR3818": {
-   "Regione": "Estero"
+  "27064": {
+   "Telefono2": "030302402",
+   "Cellulare": "0303388827"
   },
-  "SCR3833": {
-   "Regione": "Estero"
+  "27076": {
+   "Telefono2": "0306919115"
   },
-  "SCR3862": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "27362": {
+   "Cellulare": "0385250144"
   },
-  "SCR3870": {
-   "Regione": "Estero"
+  "27466": {
+   "Telefono2": "0332310933"
   },
-  "SCR3880": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "27508": {
+   "Telefono": "035571551"
   },
-  "SCR3926": {
-   "Regione": "Estero"
+  "27511": {
+   "Telefono": "0352233331"
   },
-  "SCR3970": {
-   "Regione": "Estero"
+  "27539": {
+   "Telefono": "035536938"
   },
-  "SCR4016": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "31125": {
+   "Telefono": "055721526"
   },
-  "SCR4024": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "31140": {
+   "Telefono": "055632066"
   },
-  "SCR4121": {
-   "Regione": "Estero"
+  "31335": {
+   "Telefono": "0109641927"
   },
-  "SCR4140": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "31684": {
+   "Telefono2": "0755736039"
   },
-  "SCR4328": {
-   "Regione": "Estero"
+  "31736": {
+   "Telefono2": "0755849056"
   },
-  "SCR4356": {
-   "Regione": "Estero"
+  "31739": {
+   "Telefono2": "0756978734"
   },
-  "SCR4388": {
-   "Regione": "Estero"
+  "31755": {
+   "Telefono2": "0742360448"
   },
-  "SCR4440": {
-   "Regione": "Estero"
+  "31785": {
+   "Telefono2": "0742344900"
   },
-  "SCR4446": {
-   "Regione": "Estero"
+  "31787": {
+   "Telefono2": "0742320909"
   },
-  "SCR4467": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "31789": {
+   "Telefono2": "0742670221"
   },
-  "SCR4539": {
-   "Regione": "Estero"
+  "31790": {
+   "Telefono2": "0742358474"
   },
-  "SCR4541": {
-   "Regione": "Estero"
+  "31815": {
+   "Telefono2": "0758816328"
   },
-  "SCR4579": {
-   "Regione": "Estero"
+  "32011": {
+   "Telefono": "050562905"
   },
-  "SCR4580": {
-   "Regione": "Estero"
+  "33742": {
+   "Cellulare": "0321453315"
   },
-  "SCR4582": {
-   "Regione": "Estero"
+  "34656": {
+   "Telefono2": "0332716565"
   },
-  "SCR4600": {
-   "Regione": "Estero"
+  "NORD0040": {
+   "Cellulare": "034591109"
   },
-  "SCR4604": {
-   "Regione": "Estero"
+  "NORD0138": {
+   "Cellulare": "0294964195"
   },
-  "SCR4608": {
-   "Regione": "Estero"
+  "NORD0226": {
+   "Cellulare": "0376808187"
   },
-  "SCR4613": {
-   "Regione": "Estero"
+  "NORD0248": {
+   "Cellulare": "032194031"
   },
-  "SCR4668": {
-   "Regione": "Estero"
+  "NORD0272": {
+   "Cellulare": "0342453607"
   },
-  "SCR4706": {
-   "Regione": "Estero"
+  "NORD0273": {
+   "Cellulare": "0342482278"
   },
-  "CAN00569": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "NORD0274": {
+   "Cellulare": "0342590576"
   },
-  "CAN00686": {
-   "Regione": "Estero"
+  "NORD0323": {
+   "Cellulare": "0332490101"
   },
-  "CAN00970": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "NORD1512": {
+   "Cellulare": "0332537644"
   },
-  "CAN01013": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "NORD1608": {
+   "Cellulare": "0352278137"
   },
-  "CAN01073": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "NORD1636": {
+   "Cellulare": "0364882111"
   },
-  "CAN01151": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "NORD1674": {
+   "Cellulare": "0376868286"
   },
-  "CAN01156": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "NORD1688": {
+   "Cellulare": "0382530609"
   },
-  "CAN01218": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "NORD1712": {
+   "Cellulare": "038382599"
   },
-  "CAN01253": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "NORD1761": {
+   "Telefono": "010782296"
   },
-  "CAN01257": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "NORD1762": {
+   "Telefono": "0108481465"
   },
-  "CAN01555": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "NORD1763": {
+   "Telefono": "0113194343"
   },
-  "CAN01567": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "NORD1764": {
+   "Telefono": "011641888"
   },
-  "CAN01621": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "NORD1765": {
+   "Telefono": "0116503340"
   },
-  "CAN01629": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "NORD1766": {
+   "Telefono": "011714428"
   },
-  "CAN01857": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "NORD1767": {
+   "Telefono": "0118123927"
   },
-  "CAN01879": {
-   "Regione": "Estero"
+  "NORD1769": {
+   "Telefono": "012171988"
   },
-  "CAN02002": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "NORD1770": {
+   "Telefono": "0125579062"
   },
-  "CAN02115": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "NORD1775": {
+   "Telefono": "022894954"
   },
-  "CAN02371": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "NORD1776": {
+   "Telefono": "023082020"
   },
-  "CAN02393": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "NORD1777": {
+   "Telefono": "0248555376"
   },
-  "CAN02397": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "NORD1778": {
+   "Telefono": "0265895456"
   },
-  "CAN02398": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "NORD1779": {
+   "Telefono": "0272008540"
   },
-  "CAN02423": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "NORD1781": {
+   "Telefono": "0290002005"
   },
-  "CAN02503": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "NORD1782": {
+   "Telefono": "029303927"
   },
-  "CAN02506": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "NORD1783": {
+   "Telefono": "029412456"
   },
-  "CAN02703": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "NORD1784": {
+   "Telefono": "029516742"
   },
-  "CAN02900": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "NORD1786": {
+   "Telefono": "030303052"
   },
-  "CAN02925": {
-   "Regione": "Estero"
+  "NORD1787": {
+   "Telefono": "030980250"
   },
-  "CAN03139": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "NORD1788": {
+   "Telefono": "031900069"
   },
-  "CAN03903": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "NORD1789": {
+   "Telefono": "0321454160"
   },
-  "CAN03990": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "NORD1790": {
+   "Telefono": "0322843828"
   },
-  "CAN04125": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "NORD1798": {
+   "Telefono": "0332331366"
   },
-  "CAN04210": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "NORD1869": {
+   "Telefono": "0382554990"
   },
-  "CAN04223": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "NORD1878": {
+   "Telefono": "0350382516"
   },
-  "CAN04236": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET00888": {
+   "Telefono2": "090343644"
   },
-  "CAN04261": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET00929": {
+   "Telefono2": "0744301590"
   },
-  "CAN04342": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET01693": {
+   "Telefono2": "0756920082"
   },
-  "CAN04586": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET01704": {
+   "Telefono2": "0759417824"
   },
-  "CAN04917": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET01814": {
+   "Telefono2": "0743221548"
   },
-  "CAN04964": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET02052": {
+   "Telefono2": "0744300750"
   },
-  "CAN04970": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET02063": {
+   "Telefono2": "0744423509"
   },
-  "CAN04973": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET02654": {
+   "Telefono2": "0744301314"
   },
-  "CAN04992": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET02745": {
+   "Telefono2": "0755722319"
   },
-  "CAN04998": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET02834": {
+   "Telefono2": "085816310"
   },
-  "CAN05593": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET02899": {
+   "Telefono2": "0871349082"
   },
-  "CAN05596": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET03161": {
+   "Telefono2": "0864950793"
   },
-  "CAN05601": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET03416": {
+   "Telefono": "0385250338"
   },
-  "CAN05662": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET03616": {
+   "Telefono2": "0744423569"
   },
-  "CAN05665": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET03762": {
+   "Telefono2": "0873380597"
   },
-  "CAN05735": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET04304": {
+   "Telefono2": "0759417748"
   },
-  "CAN05736": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET04364": {
+   "Telefono2": "071204106"
   },
-  "CAN05768": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET04396": {
+   "Telefono2": "0743520480"
   },
-  "CAN06541": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET04744": {
+   "Telefono2": "0758787500"
   },
-  "CAN06567": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET05025": {
+   "Telefono2": "0753887132"
   },
-  "CAN06596": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET05388": {
+   "Telefono2": "0742360356"
   },
-  "CAN06755": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET05704": {
+   "Telefono2": "0755002740"
   },
-  "CAN07418": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET06468": {
+   "Telefono2": "068578603"
   },
-  "CAN07532": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET06824": {
+   "Telefono2": "082735428"
   },
-  "CAN07556": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET07540": {
+   "Telefono2": "0755732210"
   },
-  "CAN07707": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET07731": {
+   "Telefono2": "0873380597"
   },
-  "CAN07718": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET07798": {
+   "Telefono2": "0759291344"
   },
-  "CAN07722": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET07926": {
+   "Telefono2": "0735232279"
   },
-  "CAN07777": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET08717": {
+   "Telefono2": "0815447318"
   },
-  "CAN07856": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET08918": {
+   "Telefono2": "0707725316"
   },
-  "CAN07975": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET09118": {
+   "Telefono2": "0744282896"
   },
-  "CAN07987": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET09194": {
+   "Telefono2": "070940165"
   },
-  "CAN08103": {
-   "Regione": "Estero"
+  "UTET09500": {
+   "Telefono2": "0755172271"
   },
-  "CAN08118": {
-   "Regione": "Estero"
+  "UTET09592": {
+   "Telefono2": "075607458"
   },
-  "CAN08300": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET09782": {
+   "Telefono2": "0163301757"
   },
-  "CAN08490": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET10010": {
+   "Telefono2": "0578707242"
   },
-  "CAN08571": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET10334": {
+   "Telefono2": "0865451437"
   },
-  "CAN08805": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET10344": {
+   "Telefono2": "085834142"
   },
-  "CAN08808": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET10381": {
+   "Telefono2": "075774576"
   },
-  "CAN09004": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET10388": {
+   "Telefono2": "0758943722"
   },
-  "CAN09015": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET10403": {
+   "Telefono2": "0755721476"
   },
-  "CAN09022": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET10429": {
+   "Telefono2": "0755008489"
   },
-  "CAN09031": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET10479": {
+   "Telefono2": "0755010005"
   },
-  "CAN09123": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET10553": {
+   "Telefono2": "0865451781"
   },
-  "CAN09144": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET10666": {
+   "Telefono": "0374375711"
   },
-  "CAN09205": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET10713": {
+   "Telefono2": "0871560682"
   },
-  "CAN09210": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET10719": {
+   "Telefono2": "0735232279"
   },
-  "CAN09241": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET10749": {
+   "Telefono2": "075691834"
   },
-  "CAN09358": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET10760": {
+   "Telefono2": "0755847571"
   },
-  "CAN09389": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET10769": {
+   "Telefono2": "0744281527"
   },
-  "CAN09811": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET10875": {
+   "Telefono2": "0755735867"
   },
-  "CAN09815": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET10899": {
+   "Telefono2": "0734611085"
   },
-  "CAN09829": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET10910": {
+   "Telefono2": "0874493927"
   },
-  "CAN09935": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET10911": {
+   "Telefono2": "0744715246"
   },
-  "CAN09949": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET10964": {
+   "Telefono2": "0755055898"
   },
-  "CAN09957": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET11101": {
+   "Telefono2": "0756929489"
   },
-  "CAN09983": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET11105": {
+   "Telefono2": "0744301793"
   },
-  "CAN10231": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET11194": {
+   "Telefono2": "0758943722"
   },
-  "CAN10253": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET11213": {
+   "Telefono2": "075271666"
   },
-  "CAN10272": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET11258": {
+   "Telefono2": "067013739"
   },
-  "CAN10328": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET11298": {
+   "Telefono2": "0742351471"
   },
-  "CAN10349": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET11305": {
+   "Telefono2": "0861247710"
   },
-  "CAN10457": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET11313": {
+   "Telefono2": "0744735428"
   },
-  "CAN10470": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET11316": {
+   "Telefono2": "091302773"
   },
-  "CAN10530": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET11332": {
+   "Telefono2": "090771531"
   },
-  "CAN10544": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET11400": {
+   "Telefono2": "0755172229"
   },
-  "CAN10547": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET11445": {
+   "Telefono2": "0874411086"
   },
-  "CAN10556": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET11448": {
+   "Telefono2": "0755735867"
   },
-  "CAN10627": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET11489": {
+   "Telefono2": "0883950749"
   },
-  "CAN10755": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET11492": {
+   "Telefono2": "0418761591"
   },
-  "CAN10843": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET11518": {
+   "Telefono2": "075694122"
   },
-  "CAN10852": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET11636": {
+   "Telefono2": "075607458"
   },
-  "CAN11077": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET11674": {
+   "Telefono2": "0744271666"
   },
-  "CAN11078": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET11731": {
+   "Telefono2": "0755051380"
   },
-  "CAN11193": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET11767": {
+   "Telefono2": "0755003889"
   },
-  "CAN11196": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET11768": {
+   "Telefono2": "075609540"
   },
-  "CAN11485": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET11786": {
+   "Telefono2": "0755773504"
   },
-  "CAN11899": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET11793": {
+   "Telefono2": "0755001898"
   },
-  "CAN12027": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET11799": {
+   "Telefono2": "0758943722"
   },
-  "CAN12037": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET11801": {
+   "Telefono2": "0755725736"
   },
-  "CAN12083": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET11802": {
+   "Telefono2": "075774669"
   },
-  "CAN12128": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET11821": {
+   "Telefono2": "0759413824"
   },
-  "CAN12138": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET11833": {
+   "Telefono2": "0758948093"
   },
-  "CAN12214": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET11849": {
+   "Telefono2": "0755899351"
   },
-  "CAN12370": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET11884": {
+   "Telefono": "0386437019"
   },
-  "CAN12379": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET11915": {
+   "Telefono2": "0578716784"
   },
-  "CAN12383": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET12217": {
+   "Telefono2": "065128970"
   },
-  "CAN12445": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET12298": {
+   "Telefono2": "0755000892"
   },
-  "CAN12450": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET12319": {
+   "Telefono2": "075607103"
   },
-  "CAN12464": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET12383": {
+   "Telefono2": "0759413824"
   },
-  "CAN12470": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET12408": {
+   "Telefono2": "0759413364"
   },
-  "CAN12489": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET12486": {
+   "Telefono": "0386565101"
   },
-  "CAN12490": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET12533": {
+   "Telefono2": "0871331922"
   },
-  "CAN12492": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET12575": {
+   "Telefono2": "065742682"
   },
-  "CAN12493": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET12599": {
+   "Telefono2": "071797851"
   },
-  "CAN12562": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET12607": {
+   "Telefono2": "0818041088"
   },
-  "CAN12578": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET12611": {
+   "Telefono2": "0817414214"
   },
-  "CAN12710": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET12655": {
+   "Telefono2": "0873380597"
   },
-  "CAN13056": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET12679": {
+   "Telefono2": "0759291344"
   },
-  "CAN13270": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET12715": {
+   "Telefono2": "0758948451"
   },
-  "CAN13518": {
-   "Regione": "Estero"
+  "UTET12720": {
+   "Telefono2": "0755716309"
   },
-  "CAN13729": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET12782": {
+   "Telefono2": "063214004"
   },
-  "CAN14013": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET12805": {
+   "Telefono2": "0759417125"
   },
-  "CAN14028": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET13106": {
+   "Telefono2": "0755172229"
   },
-  "CAN14403": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET13144": {
+   "Telefono2": "0577933488"
   },
-  "CAN14668": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET13219": {
+   "Telefono2": "0758943509"
   },
-  "CAN14678": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET13327": {
+   "Telefono2": "075774154"
   },
-  "CAN14911": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET13438": {
+   "Telefono2": "0916170993"
   },
-  "CAN15155": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET13536": {
+   "Telefono2": "075716784"
   },
-  "CAN15176": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET13618": {
+   "Telefono2": "0544212163"
   },
-  "CAN15289": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET13630": {
+   "Telefono2": "0755735867"
   },
-  "CAN15453": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET13639": {
+   "Telefono2": "0755735867"
   },
-  "CAN15559": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET13658": {
+   "Telefono2": "075279698"
   },
-  "CAN15564": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET13685": {
+   "Telefono2": "075813667"
   },
-  "CAN16024": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET13704": {
+   "Telefono2": "075404643"
   },
-  "CAN16030": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET13746": {
+   "Telefono2": "070821103"
   },
-  "CAN16034": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET13810": {
+   "Telefono2": "0759221150"
   },
-  "CAN16196": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET13814": {
+   "Telefono2": "0758042934"
   },
-  "CAN16712": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET14076": {
+   "Telefono2": "0742651302"
   },
-  "CAN17053": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET14119": {
+   "Telefono2": "075694626"
   },
-  "CAN17162": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET14130": {
+   "Telefono2": "075221548"
   },
-  "CAN17197": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET14344": {
+   "Telefono2": "0755067420"
   },
-  "CAN17231": {
-   "Regione": "Estero"
+  "UTET14362": {
+   "Telefono2": "065817036"
   },
-  "CAN17369": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET14369": {
+   "Telefono2": "0753887132"
   },
-  "CAN17653": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET14370": {
+   "Telefono2": "0755000892"
   },
-  "CAN17677": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET14391": {
+   "Telefono2": "0758010518"
   },
-  "CAN17689": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET14763": {
+   "Telefono2": "0758888504"
   },
-  "CAN17835": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET14867": {
+   "Telefono2": "0873380597"
   },
-  "CAN17907": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET14894": {
+   "Telefono2": "075774154"
   },
-  "CAN17913": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET15144": {
+   "Telefono2": "0734777203"
   },
-  "CAN17947": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET15373": {
+   "Telefono": "0374341850"
   },
-  "CAN17992": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET15422": {
+   "Telefono2": "0756978734"
   },
-  "CAN18006": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET15776": {
+   "Telefono2": "0758341264"
   },
-  "CAN18010": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET15996": {
+   "Telefono2": "075609540"
   },
-  "CAN18192": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET16676": {
+   "Telefono2": "0755716309"
   },
-  "CAN18196": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN18686": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN18978": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN18980": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN18989": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN19069": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN19159": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN19804": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN19906": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN19948": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN19986": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN19996": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN20003": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN20038": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN20044": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN20053": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN20124": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN20254": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN20531": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN20533": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN20537": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN20556": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN20712": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN20735": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN20868": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN21439": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN21458": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN21715": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN21733": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN21908": {
-   "Regione": "Estero"
-  },
-  "CAN22007": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN22013": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN22017": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN22030": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN22126": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN22400": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN22493": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN22669": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN22670": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN22699": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN22923": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN22927": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN23117": {
-   "Regione": "Estero"
-  },
-  "CAN23308": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN23334": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN23368": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN23409": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN23410": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN23575": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN23633": {
-   "Regione": "Estero"
-  },
-  "CAN23654": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN23827": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN23932": {
-   "Regione": "Estero"
-  },
-  "CAN23938": {
-   "Regione": "Estero"
-  },
-  "CAN23950": {
-   "Regione": "Estero"
-  },
-  "CAN23977": {
-   "Regione": "Estero"
-  },
-  "CAN24043": {
-   "Regione": "Estero"
-  },
-  "CAN24074": {
-   "Regione": "Estero"
-  },
-  "CAN24077": {
-   "Regione": "Estero"
-  },
-  "CAN24094": {
-   "Regione": "Estero"
-  },
-  "CAN24187": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN24190": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN24632": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN24719": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN25078": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN25218": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN25226": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN25249": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN25287": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN25658": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN25677": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN25679": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN25682": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN25686": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN25751": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN25757": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN25779": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN25865": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN25881": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN26223": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN26231": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN26483": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN26835": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN26903": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN27676": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN27707": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN27727": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN27745": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN27772": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN27785": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN27787": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN27795": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN28174": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN28439": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN28445": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN28853": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN28855": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN29267": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN29629": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN29983": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN30137": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN30141": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN30491": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN30494": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN30497": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN30499": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN30777": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN30857": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN30947": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN31041": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN31088": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN31141": {
-   "Regione": "Estero"
-  },
-  "CAN31283": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN31284": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN31346": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN31444": {
-   "Regione": "Estero"
-  },
-  "CAN31465": {
-   "Regione": "Estero"
-  },
-  "CAN31468": {
-   "Regione": "Estero"
-  },
-  "CAN31471": {
-   "Regione": "Estero"
-  },
-  "CAN31476": {
-   "Regione": "Estero"
-  },
-  "CAN31477": {
-   "Regione": "Estero"
-  },
-  "CAN31485": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN31493": {
-   "Regione": "Estero"
-  },
-  "CAN31500": {
-   "Regione": "Estero"
-  },
-  "CAN31503": {
-   "Regione": "Estero"
-  },
-  "CAN31505": {
-   "Regione": "Estero"
-  },
-  "CAN31506": {
-   "Regione": "Estero"
-  },
-  "CAN31507": {
-   "Regione": "Estero"
-  },
-  "CAN31680": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN31692": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN31955": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN32004": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN32218": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN32231": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN32515": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN32564": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN32572": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN32633": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN32687": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN32696": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN33065": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN33411": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN33866": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN34232": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN34434": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN34707": {
-   "Regione": "Estero"
-  },
-  "CAN34903": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN35020": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN35028": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN35104": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN35353": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN35562": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN35564": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN35653": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN35657": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN35708": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN35709": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN35919": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN35925": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN36029": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN36039": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN36084": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN36251": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN36267": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN36512": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN36599": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN36611": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN36636": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN36750": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN36838": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN36841": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN37464": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN37507": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN37600": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN37801": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN37804": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN37807": {
-   "Provincia": "NA",
-   "Regione": "Campania"
-  },
-  "CAN37809": {
-   "Provincia": "NA",
-   "Regione": "Campania"
+  "UTET16718": {
+   "Telefono2": "0362245041"
   }
  }
 }

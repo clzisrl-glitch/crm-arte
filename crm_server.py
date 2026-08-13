@@ -280,7 +280,11 @@ def api_correggi_dati():
         # TELEFONI: ricostruzione dei numeri incompleti (zero iniziale mancante,
         # prefisso del comune mancante). Solo questi campi, mai altri.
         for _tk in ("Telefono","Telefono2","Tel_Ufficio","Cellulare","Cellulare2"):
-            if v.get(_tk) and str(c.get(_tk) or "")!=str(v[_tk]):
+            # "in v" e non "v.get(...)": la stringa vuota e' un valore valido e
+            # serve a SVUOTARE un campo (es. frammenti tipo "075" o "335").
+            # Con v.get() la stringa vuota sarebbe falsa e il campo non verrebbe
+            # mai ripulito.
+            if _tk in v and str(c.get(_tk) or "")!=str(v[_tk] or ""):
                 c[_tk]=v[_tk]; ntel+=1
         na=(v.get("NotaAggiungi") or "").strip()
         if na and na.lower() not in (c.get("Note") or "").lower():
