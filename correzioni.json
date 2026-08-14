@@ -1,1652 +1,884 @@
 {
  "aggiorna": {
-  "496": {
-   "Telefono2": ""
+  "688": {
+   "Citta": "Castiglione della Pescaia",
+   "Frazione": "CASTIGLION DELLA PESCAIA"
   },
-  "2725": {
-   "Telefono2": "0584392210"
+  "1653": {
+   "Citta": "San Giovanni Valdarno",
+   "Frazione": "SAN GIOVANNI VAL D'ARNO"
   },
-  "3257": {
-   "Telefono": ""
+  "2107": {
+   "Citta": "Capannori",
+   "Frazione": "CAMIGLIANO SANTA GEMMA"
   },
-  "4113": {
-   "Telefono2": ""
+  "2555": {
+   "Citta": "Monte Argentario",
+   "Frazione": "PORTO S. STEFANO"
   },
-  "12090": {
-   "Telefono2": ""
+  "3148": {
+   "Citta": "Lucca",
+   "Frazione": "SAN CONCORDIO DI MORIANO"
   },
-  "15322": {
-   "Telefono2": ""
+  "4167": {
+   "Citta": "Monte Argentario",
+   "Frazione": "PORTO S. STEFANO"
   },
-  "19623": {
-   "Telefono2": ""
+  "4170": {
+   "Citta": "Fivizzano",
+   "Frazione": "CORMEZZANO"
   },
-  "20165": {
-   "Telefono": ""
+  "4396": {
+   "Citta": "Rosignano Marittimo",
+   "Frazione": "ROSIGNANO MARITTMO"
   },
-  "21762": {
-   "Cellulare": ""
+  "4518": {
+   "Citta": "Pitigliano",
+   "Frazione": "LOC. PANTALLA"
   },
-  "21793": {
-   "Telefono": ""
+  "4832": {
+   "Citta": "Manciano",
+   "Frazione": "MARSILIANA"
   },
-  "22348": {
-   "Telefono": ""
+  "4860": {
+   "Citta": "Rosignano Marittimo",
+   "Frazione": "ROSIGNANO"
   },
-  "23280": {
-   "Telefono2": ""
+  "4989": {
+   "Citta": "Grosseto",
+   "Frazione": "PRINCIPINA MARE"
   },
-  "27824": {
-   "Telefono2": ""
+  "5373": {
+   "Citta": "Montecatini-Terme",
+   "Frazione": "MONTECATINI TERME E TETTUCCIO"
   },
-  "28327": {
-   "Cellulare": ""
+  "5376": {
+   "Citta": "Montecatini-Terme",
+   "Frazione": "MONTECATINI TERME E TETTUCCIO"
   },
-  "29105": {
-   "Telefono2": "075393852"
+  "5509": {
+   "Citta": "Chiusi",
+   "Frazione": "CHIUSI CITTA'"
   },
-  "29514": {
-   "Telefono": ""
+  "5915": {
+   "Citta": "Portoferraio",
+   "Frazione": "PORTAFERRAIO"
   },
-  "29541": {
-   "Cellulare": ""
+  "6694": {
+   "Citta": "Valsamoggia",
+   "Frazione": "BAZZANO"
   },
-  "30016": {
-   "Cellulare": ""
+  "7416": {
+   "Citta": "Roma",
+   "Frazione": "PONTE GALERIA 58"
   },
-  "30228": {
-   "Telefono2": ""
+  "7504": {
+   "Citta": "Pontremoli",
+   "Frazione": "MONTELUNGO TERME"
   },
-  "30261": {
-   "Telefono": ""
+  "7820": {
+   "Citta": "Montelupo Fiorentino",
+   "Frazione": "MONTELUIPO FIORENTINO"
   },
-  "30416": {
-   "Telefono": ""
+  "10033": {
+   "Citta": "San Giovanni Valdarno",
+   "Frazione": "SAN GIOVANNI V/NO"
   },
-  "30518": {
-   "Telefono2": ""
+  "10038": {
+   "Citta": "San Giovanni Valdarno",
+   "Frazione": "S. GIOVANNI V/NO"
   },
-  "31733": {
-   "Telefono2": ""
+  "10046": {
+   "Citta": "San Giovanni Valdarno",
+   "Frazione": "S. GIOVANNI V/NO"
   },
-  "31735": {
-   "Telefono2": ""
+  "10078": {
+   "Citta": "San Giovanni Valdarno",
+   "Frazione": "S. GIOVANNI V/NO"
   },
-  "31750": {
-   "Telefono2": "074223875",
-   "Cellulare": ""
+  "10085": {
+   "Citta": "San Giovanni Valdarno",
+   "Frazione": "S. GIOVANNI V/NO"
   },
-  "31751": {
-   "Telefono2": "074223817"
+  "10135": {
+   "Citta": "San Giovanni Valdarno",
+   "Frazione": "S. GIOVANNI V/NO"
+  },
+  "10141": {
+   "Citta": "San Giovanni Valdarno",
+   "Frazione": "S. GIOVANNI V/NO"
+  },
+  "10142": {
+   "Citta": "San Giovanni Valdarno",
+   "Frazione": "S. GIOVANNI V/NO"
+  },
+  "10158": {
+   "Citta": "San Giovanni Valdarno",
+   "Frazione": "S. GIOVANNI V.NO"
+  },
+  "10162": {
+   "Citta": "San Giovanni Valdarno",
+   "Frazione": "S. GIOVANNI V.NO"
+  },
+  "12522": {
+   "Citta": "Poggibonsi",
+   "Frazione": "STAGGIA SENESE"
+  },
+  "12914": {
+   "Citta": "Palazzuolo sul Senio",
+   "Frazione": "PALAZZOLO SUL SENIO"
+  },
+  "13702": {
+   "Citta": "Potenza Picena",
+   "Frazione": "PORTO POTENZA PICENA"
+  },
+  "14231": {
+   "Citta": "Luni",
+   "Frazione": "ORTONOVO"
+  },
+  "14676": {
+   "Citta": "Santa Vittoria in Matenano",
+   "Frazione": "SANTA VITTORIA IN METENANO"
+  },
+  "14961": {
+   "Citta": "Cingoli",
+   "Frazione": "CINGOLI (SAN VITTORE)"
+  },
+  "15138": {
+   "Citta": "Macerata",
+   "Frazione": "MACERTATA"
+  },
+  "15727": {
+   "Citta": "San Ginesio",
+   "Frazione": "SAN GENESIO"
+  },
+  "15749": {
+   "Citta": "Montecatini-Terme",
+   "Frazione": "MONTECATINI"
+  },
+  "15799": {
+   "Citta": "Bellaria-Igea Marina",
+   "Frazione": "BELLARIA"
+  },
+  "15911": {
+   "Citta": "Bellaria-Igea Marina",
+   "Frazione": "BELLARIA"
+  },
+  "15966": {
+   "Citta": "Fauglia",
+   "Frazione": "LUCIANA - FAUGLIA"
+  },
+  "16062": {
+   "Citta": "Castelfranco Piandiscò",
+   "Frazione": "PIAN DI SCIO'"
+  },
+  "16150": {
+   "Citta": "Terranuova Bracciolini",
+   "Frazione": "TERRANUOVA BRACCIALINI"
+  },
+  "17180": {
+   "Citta": "Gaiole in Chianti",
+   "Frazione": "GAIONE INCHIANTI"
+  },
+  "18008": {
+   "Citta": "Genova",
+   "Frazione": "SESTRI PONENTE"
+  },
+  "18166": {
+   "Citta": "San Marcello Piteglio",
+   "Frazione": "LIMESTRE"
+  },
+  "18301": {
+   "Citta": "Pontassieve",
+   "Frazione": "PONTASSEVE"
+  },
+  "19350": {
+   "Citta": "Sale Marasino",
+   "Frazione": "SALE MARESINO"
+  },
+  "20237": {
+   "Citta": "Genova",
+   "Frazione": "SESTRI PONENTE"
+  },
+  "20316": {
+   "Citta": "Genova",
+   "Frazione": "PEGLI"
+  },
+  "20317": {
+   "Citta": "Genova",
+   "Frazione": "PEGLI"
+  },
+  "20354": {
+   "Citta": "Genova",
+   "Frazione": "PEGLI"
+  },
+  "21106": {
+   "Citta": "Genova",
+   "Frazione": "SESTRI PONENTE"
+  },
+  "21956": {
+   "Citta": "Mirano",
+   "Frazione": "SCALTENIGO"
+  },
+  "22134": {
+   "Citta": "San Stino di Livenza",
+   "Frazione": "SANTO STINO DI LEVENZA"
+  },
+  "23060": {
+   "Citta": "Verona",
+   "Frazione": "BORGO TRENTO VERONA"
+  },
+  "23073": {
+   "Citta": "Negrar di Valpolicella",
+   "Frazione": "NEGRAR"
+  },
+  "23113": {
+   "Citta": "Verona",
+   "Frazione": "BORGO TRENTO"
+  },
+  "23850": {
+   "Citta": "Altopiano della Vigolana",
+   "Frazione": "VIGOLO VATTARO"
+  },
+  "24129": {
+   "Citta": "Venezia",
+   "Frazione": "VENZEIA"
+  },
+  "24182": {
+   "Citta": "Cordignano",
+   "Frazione": "CORDIGIANO"
+  },
+  "24452": {
+   "Citta": "Pojana Maggiore",
+   "Frazione": "POIANA MAGGIORE"
+  },
+  "24465": {
+   "Citta": "Gallio",
+   "Frazione": "GALLO"
+  },
+  "24737": {
+   "Citta": "Negrar di Valpolicella",
+   "Frazione": "NEGRAR"
+  },
+  "29767": {
+   "Citta": "Roma",
+   "Frazione": "OSTIA"
+  },
+  "31125": {
+   "Citta": "Scandicci",
+   "Frazione": "BADIA A SETTIMO"
+  },
+  "31771": {
+   "Citta": "Borgorose",
+   "Frazione": "TORANO"
   },
   "31791": {
-   "Telefono2": ""
-  },
-  "31797": {
-   "Telefono": ""
-  },
-  "31803": {
-   "Telefono2": ""
-  },
-  "31807": {
-   "Telefono": ""
-  },
-  "31813": {
-   "Telefono2": ""
-  },
-  "34452": {
-   "Telefono": ""
-  },
-  "UTET00070": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET00074": {
-   "Telefono": "",
-   "Telefono2": ""
-  },
-  "UTET00076": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET00082": {
-   "Telefono": "",
-   "Telefono2": "",
-   "Cellulare": ""
-  },
-  "UTET00098": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET00191": {
-   "Cellulare": ""
-  },
-  "UTET00258": {
-   "Cellulare": ""
-  },
-  "UTET00610": {
-   "Telefono": ""
-  },
-  "UTET00688": {
-   "Cellulare": ""
-  },
-  "UTET00888": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET00889": {
-   "Telefono": "",
-   "Telefono2": "",
-   "Cellulare": ""
-  },
-  "UTET00929": {
-   "Telefono": ""
-  },
-  "UTET01177": {
-   "Telefono2": ""
-  },
-  "UTET01425": {
-   "Telefono": ""
-  },
-  "UTET01526": {
-   "Cellulare": ""
-  },
-  "UTET01666": {
-   "Cellulare": ""
-  },
-  "UTET01693": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET01704": {
-   "Telefono": ""
-  },
-  "UTET01748": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET01814": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET01821": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET01863": {
-   "Telefono2": ""
-  },
-  "UTET02052": {
-   "Telefono": ""
-  },
-  "UTET02057": {
-   "Telefono": ""
-  },
-  "UTET02058": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET02063": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET02150": {
-   "Telefono2": ""
-  },
-  "UTET02645": {
-   "Telefono": "",
-   "Telefono2": ""
-  },
-  "UTET02654": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET02656": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET02745": {
-   "Telefono": ""
-  },
-  "UTET02756": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET02757": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET02759": {
-   "Telefono": ""
-  },
-  "UTET02805": {
-   "Cellulare": ""
-  },
-  "UTET02834": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET02899": {
-   "Telefono": ""
-  },
-  "UTET02972": {
-   "Cellulare": ""
-  },
-  "UTET02973": {
-   "Cellulare": ""
-  },
-  "UTET02986": {
-   "Telefono2": ""
-  },
-  "UTET03089": {
-   "Telefono": ""
-  },
-  "UTET03117": {
-   "Cellulare": ""
-  },
-  "UTET03137": {
-   "Telefono2": ""
-  },
-  "UTET03161": {
-   "Telefono": ""
-  },
-  "UTET03216": {
-   "Cellulare": ""
-  },
-  "UTET03339": {
-   "Telefono2": ""
-  },
-  "UTET03419": {
-   "Telefono": "",
-   "Telefono2": "",
-   "Cellulare": ""
-  },
-  "UTET03597": {
-   "Telefono": "",
-   "Telefono2": "",
-   "Cellulare": ""
-  },
-  "UTET03616": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET03664": {
-   "Telefono": "",
-   "Telefono2": "",
-   "Cellulare": ""
-  },
-  "UTET03762": {
-   "Telefono": ""
-  },
-  "UTET04137": {
-   "Telefono": "",
-   "Telefono2": "",
-   "Cellulare": ""
-  },
-  "UTET04304": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET04315": {
-   "Telefono2": ""
-  },
-  "UTET04364": {
-   "Telefono": ""
-  },
-  "UTET04396": {
-   "Telefono": ""
-  },
-  "UTET04459": {
-   "Cellulare": ""
-  },
-  "UTET04646": {
-   "Cellulare": ""
-  },
-  "UTET04706": {
-   "Cellulare": ""
-  },
-  "UTET04744": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET04760": {
-   "Cellulare": ""
-  },
-  "UTET04805": {
-   "Cellulare": ""
-  },
-  "UTET05015": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET05025": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET05073": {
-   "Telefono": ""
-  },
-  "UTET05079": {
-   "Telefono2": ""
-  },
-  "UTET05140": {
-   "Telefono": ""
-  },
-  "UTET05153": {
-   "Cellulare": ""
-  },
-  "UTET05161": {
-   "Telefono": ""
-  },
-  "UTET05328": {
-   "Cellulare": ""
-  },
-  "UTET05374": {
-   "Telefono": "",
-   "Telefono2": ""
-  },
-  "UTET05377": {
-   "Telefono": ""
-  },
-  "UTET05388": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET05397": {
-   "Telefono2": ""
-  },
-  "UTET05399": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET05458": {
-   "Telefono": "",
-   "Telefono2": ""
-  },
-  "UTET05704": {
-   "Telefono": ""
-  },
-  "UTET05833": {
-   "Cellulare": ""
-  },
-  "UTET06064": {
-   "Telefono2": "",
-   "Cellulare": ""
-  },
-  "UTET06079": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET06106": {
-   "Cellulare": ""
-  },
-  "UTET06138": {
-   "Telefono": "",
-   "Telefono2": ""
-  },
-  "UTET06426": {
-   "Telefono": "",
-   "Telefono2": "",
-   "Cellulare": ""
-  },
-  "UTET06468": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET06571": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET06608": {
-   "Cellulare": ""
-  },
-  "UTET06693": {
-   "Cellulare": ""
-  },
-  "UTET06789": {
-   "Telefono2": ""
-  },
-  "UTET06824": {
-   "Telefono": ""
-  },
-  "UTET06847": {
-   "Telefono": "",
-   "Telefono2": "",
-   "Cellulare": ""
-  },
-  "UTET06997": {
-   "Telefono": "",
-   "Telefono2": ""
-  },
-  "UTET07248": {
-   "Cellulare": ""
-  },
-  "UTET07395": {
-   "Telefono": "",
-   "Telefono2": ""
-  },
-  "UTET07457": {
-   "Telefono2": ""
-  },
-  "UTET07473": {
-   "Telefono": "",
-   "Telefono2": ""
-  },
-  "UTET07540": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET07731": {
-   "Telefono": ""
-  },
-  "UTET07798": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET07817": {
-   "Cellulare": ""
-  },
-  "UTET07926": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET08047": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET08343": {
-   "Telefono2": ""
-  },
-  "UTET08384": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET08444": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET08478": {
-   "Cellulare": ""
-  },
-  "UTET08572": {
-   "Telefono": "",
-   "Telefono2": ""
-  },
-  "UTET08623": {
-   "Telefono2": ""
-  },
-  "UTET08674": {
-   "Cellulare": ""
-  },
-  "UTET08679": {
-   "Cellulare": ""
-  },
-  "UTET08717": {
-   "Telefono": ""
-  },
-  "UTET08764": {
-   "Cellulare": ""
-  },
-  "UTET08894": {
-   "Telefono2": ""
-  },
-  "UTET08918": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET08928": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET09023": {
-   "Telefono": ""
-  },
-  "UTET09113": {
-   "Telefono2": ""
-  },
-  "UTET09118": {
-   "Telefono": ""
-  },
-  "UTET09148": {
-   "Telefono": "",
-   "Telefono2": ""
-  },
-  "UTET09183": {
-   "Telefono": "",
-   "Telefono2": "087359520"
-  },
-  "UTET09194": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET09224": {
-   "Telefono": "",
-   "Telefono2": ""
-  },
-  "UTET09237": {
-   "Telefono": "",
-   "Telefono2": ""
-  },
-  "UTET09264": {
-   "Telefono2": ""
-  },
-  "UTET09304": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET09309": {
-   "Cellulare": ""
-  },
-  "UTET09332": {
-   "Telefono": ""
-  },
-  "UTET09370": {
-   "Cellulare": ""
-  },
-  "UTET09411": {
-   "Telefono": ""
-  },
-  "UTET09500": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET09561": {
-   "Telefono": "",
-   "Telefono2": ""
-  },
-  "UTET09569": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET09592": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET09613": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET09627": {
-   "Telefono": ""
-  },
-  "UTET09654": {
-   "Cellulare": ""
-  },
-  "UTET09675": {
-   "Cellulare": ""
-  },
-  "UTET09735": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET09755": {
-   "Cellulare": ""
-  },
-  "UTET09782": {
-   "Telefono": ""
-  },
-  "UTET09809": {
-   "Telefono": "",
-   "Telefono2": "",
-   "Cellulare": ""
-  },
-  "UTET09900": {
-   "Cellulare": ""
-  },
-  "UTET09954": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET10009": {
-   "Telefono": "",
-   "Telefono2": ""
-  },
-  "UTET10010": {
-   "Telefono": ""
-  },
-  "UTET10166": {
-   "Telefono2": ""
-  },
-  "UTET10194": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET10212": {
-   "Cellulare": ""
-  },
-  "UTET10271": {
-   "Telefono2": ""
-  },
-  "UTET10303": {
-   "Cellulare": ""
-  },
-  "UTET10312": {
-   "Telefono": "",
-   "Telefono2": "077349688"
-  },
-  "UTET10314": {
-   "Cellulare": ""
-  },
-  "UTET10323": {
-   "Telefono2": ""
-  },
-  "UTET10324": {
-   "Telefono2": ""
-  },
-  "UTET10334": {
-   "Telefono": ""
-  },
-  "UTET10336": {
-   "Telefono": ""
-  },
-  "UTET10344": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET10345": {
-   "Telefono2": ""
-  },
-  "UTET10372": {
-   "Telefono": "",
-   "Telefono2": "",
-   "Cellulare": ""
-  },
-  "UTET10380": {
-   "Cellulare": ""
-  },
-  "UTET10381": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET10388": {
-   "Telefono": ""
-  },
-  "UTET10391": {
-   "Cellulare": ""
-  },
-  "UTET10403": {
-   "Telefono": ""
-  },
-  "UTET10429": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET10459": {
-   "Cellulare": ""
-  },
-  "UTET10460": {
-   "Cellulare": ""
-  },
-  "UTET10479": {
-   "Telefono": ""
-  },
-  "UTET10500": {
-   "Telefono2": "",
-   "Cellulare": ""
-  },
-  "UTET10510": {
-   "Telefono": ""
-  },
-  "UTET10546": {
-   "Cellulare": ""
-  },
-  "UTET10553": {
-   "Telefono": ""
-  },
-  "UTET10562": {
-   "Telefono": "",
-   "Telefono2": "",
-   "Cellulare": ""
-  },
-  "UTET10631": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET10690": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET10699": {
-   "Telefono": "",
-   "Telefono2": ""
-  },
-  "UTET10711": {
-   "Telefono": "",
-   "Telefono2": "073332488",
-   "Cellulare": ""
-  },
-  "UTET10713": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET10714": {
-   "Cellulare": ""
-  },
-  "UTET10715": {
-   "Telefono": "",
-   "Telefono2": "",
-   "Cellulare": ""
-  },
-  "UTET10719": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET10733": {
-   "Cellulare": ""
-  },
-  "UTET10734": {
-   "Cellulare": ""
-  },
-  "UTET10741": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET10749": {
-   "Telefono": ""
-  },
-  "UTET10753": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET10755": {
-   "Telefono": ""
-  },
-  "UTET10760": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET10765": {
-   "Cellulare": ""
-  },
-  "UTET10769": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET10805": {
-   "Cellulare": ""
-  },
-  "UTET10813": {
-   "Cellulare": ""
-  },
-  "UTET10843": {
-   "Cellulare": ""
-  },
-  "UTET10848": {
-   "Telefono2": ""
-  },
-  "UTET10852": {
-   "Telefono": "",
-   "Telefono2": "",
-   "Cellulare": ""
-  },
-  "UTET10873": {
-   "Cellulare": ""
-  },
-  "UTET10875": {
-   "Telefono": ""
-  },
-  "UTET10880": {
-   "Cellulare": ""
-  },
-  "UTET10890": {
-   "Telefono": "",
-   "Telefono2": ""
-  },
-  "UTET10892": {
-   "Telefono": "",
-   "Telefono2": "",
-   "Cellulare": ""
-  },
-  "UTET10894": {
-   "Cellulare": ""
-  },
-  "UTET10896": {
-   "Cellulare": ""
-  },
-  "UTET10899": {
-   "Telefono": ""
-  },
-  "UTET10909": {
-   "Cellulare": ""
-  },
-  "UTET10910": {
-   "Telefono": ""
-  },
-  "UTET10911": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET10948": {
-   "Telefono2": ""
-  },
-  "UTET10964": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET10969": {
-   "Telefono": "",
-   "Telefono2": "",
-   "Cellulare": ""
-  },
-  "UTET10977": {
-   "Telefono": ""
-  },
-  "UTET10981": {
-   "Telefono2": ""
-  },
-  "UTET11058": {
-   "Cellulare": ""
-  },
-  "UTET11060": {
-   "Cellulare": ""
-  },
-  "UTET11062": {
-   "Cellulare": ""
-  },
-  "UTET11064": {
-   "Telefono": "",
-   "Telefono2": ""
-  },
-  "UTET11101": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET11105": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET11119": {
-   "Cellulare": ""
-  },
-  "UTET11130": {
-   "Cellulare": ""
-  },
-  "UTET11140": {
-   "Telefono": "",
-   "Telefono2": ""
-  },
-  "UTET11141": {
-   "Telefono": "",
-   "Telefono2": "095399682"
-  },
-  "UTET11161": {
-   "Telefono": "",
-   "Telefono2": "087359520"
-  },
-  "UTET11194": {
-   "Telefono": ""
-  },
-  "UTET11213": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET11244": {
-   "Cellulare": ""
-  },
-  "UTET11252": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET11258": {
-   "Telefono": ""
-  },
-  "UTET11298": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET11305": {
-   "Telefono": ""
-  },
-  "UTET11313": {
-   "Telefono": ""
-  },
-  "UTET11315": {
-   "Cellulare": ""
-  },
-  "UTET11316": {
-   "Telefono": ""
-  },
-  "UTET11332": {
-   "Telefono": ""
-  },
-  "UTET11387": {
-   "Cellulare": ""
-  },
-  "UTET11400": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET11405": {
-   "Telefono": ""
-  },
-  "UTET11408": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET11414": {
-   "Cellulare": ""
-  },
-  "UTET11433": {
-   "Telefono": "",
-   "Telefono2": ""
-  },
-  "UTET11440": {
-   "Telefono": "",
-   "Telefono2": ""
-  },
-  "UTET11441": {
-   "Telefono": ""
-  },
-  "UTET11442": {
-   "Cellulare": ""
-  },
-  "UTET11445": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET11448": {
-   "Telefono": ""
-  },
-  "UTET11453": {
-   "Cellulare": ""
-  },
-  "UTET11455": {
-   "Cellulare": ""
-  },
-  "UTET11463": {
-   "Telefono": ""
-  },
-  "UTET11483": {
-   "Cellulare": ""
-  },
-  "UTET11489": {
-   "Telefono": ""
-  },
-  "UTET11492": {
-   "Telefono": ""
-  },
-  "UTET11518": {
-   "Telefono": ""
-  },
-  "UTET11579": {
-   "Cellulare": ""
-  },
-  "UTET11582": {
-   "Telefono": "",
-   "Telefono2": ""
-  },
-  "UTET11607": {
-   "Cellulare": ""
-  },
-  "UTET11618": {
-   "Cellulare": ""
-  },
-  "UTET11636": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET11639": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET11643": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET11657": {
-   "Telefono": "",
-   "Telefono2": ""
-  },
-  "UTET11659": {
-   "Telefono": "",
-   "Telefono2": ""
-  },
-  "UTET11667": {
-   "Cellulare": ""
-  },
-  "UTET11673": {
-   "Cellulare": ""
-  },
-  "UTET11674": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET11723": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET11728": {
-   "Cellulare": ""
-  },
-  "UTET11731": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET11761": {
-   "Telefono": "",
-   "Telefono2": "",
-   "Cellulare": ""
-  },
-  "UTET11767": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET11768": {
-   "Telefono": ""
-  },
-  "UTET11783": {
-   "Telefono": "",
-   "Telefono2": ""
-  },
-  "UTET11786": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET11791": {
-   "Cellulare": ""
-  },
-  "UTET11793": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET11799": {
-   "Telefono": ""
-  },
-  "UTET11801": {
-   "Telefono": ""
-  },
-  "UTET11802": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET11821": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET11822": {
-   "Telefono": "",
-   "Telefono2": "",
-   "Cellulare": ""
-  },
-  "UTET11827": {
-   "Telefono": "",
-   "Telefono2": ""
-  },
-  "UTET11833": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET11849": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET11867": {
-   "Cellulare": ""
-  },
-  "UTET11870": {
-   "Cellulare": ""
-  },
-  "UTET11892": {
-   "Cellulare": ""
-  },
-  "UTET11915": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET11918": {
-   "Cellulare": ""
-  },
-  "UTET11925": {
-   "Telefono": "",
-   "Telefono2": ""
-  },
-  "UTET11941": {
-   "Telefono": "",
-   "Telefono2": "",
-   "Cellulare": ""
-  },
-  "UTET12000": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET12007": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET12036": {
-   "Cellulare": ""
-  },
-  "UTET12080": {
-   "Cellulare": ""
-  },
-  "UTET12154": {
-   "Cellulare": ""
-  },
-  "UTET12161": {
-   "Cellulare": ""
-  },
-  "UTET12175": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET12200": {
-   "Cellulare": ""
-  },
-  "UTET12212": {
-   "Telefono": "",
-   "Telefono2": ""
-  },
-  "UTET12217": {
-   "Telefono": ""
-  },
-  "UTET12219": {
-   "Telefono": "",
-   "Telefono2": "",
-   "Cellulare": ""
-  },
-  "UTET12247": {
-   "Cellulare": ""
-  },
-  "UTET12268": {
-   "Cellulare": ""
-  },
-  "UTET12298": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET12313": {
-   "Telefono": "",
-   "Telefono2": ""
-  },
-  "UTET12319": {
-   "Telefono": ""
-  },
-  "UTET12327": {
-   "Telefono": "",
-   "Telefono2": ""
-  },
-  "UTET12344": {
-   "Cellulare": ""
-  },
-  "UTET12365": {
-   "Cellulare": ""
-  },
-  "UTET12383": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET12408": {
-   "Telefono": ""
-  },
-  "UTET12427": {
-   "Cellulare": ""
-  },
-  "UTET12440": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET12457": {
-   "Cellulare": ""
-  },
-  "UTET12459": {
-   "Cellulare": ""
-  },
-  "UTET12463": {
-   "Telefono": "",
-   "Telefono2": ""
-  },
-  "UTET12470": {
-   "Cellulare": ""
-  },
-  "UTET12475": {
-   "Cellulare": ""
-  },
-  "UTET12476": {
-   "Cellulare": ""
-  },
-  "UTET12516": {
-   "Cellulare": ""
-  },
-  "UTET12517": {
-   "Cellulare": ""
-  },
-  "UTET12533": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET12575": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET12596": {
-   "Cellulare": ""
-  },
-  "UTET12597": {
-   "Telefono": "",
-   "Telefono2": "",
-   "Cellulare": ""
-  },
-  "UTET12599": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET12607": {
-   "Telefono": ""
-  },
-  "UTET12611": {
-   "Telefono": ""
-  },
-  "UTET12655": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET12656": {
-   "Cellulare": ""
-  },
-  "UTET12679": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET12681": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET12689": {
-   "Telefono": "",
-   "Telefono2": ""
-  },
-  "UTET12703": {
-   "Cellulare": ""
-  },
-  "UTET12715": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET12720": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET12724": {
-   "Telefono": ""
-  },
-  "UTET12726": {
-   "Telefono2": ""
-  },
-  "UTET12736": {
-   "Cellulare": ""
-  },
-  "UTET12758": {
-   "Telefono": "",
-   "Telefono2": "075393852"
-  },
-  "UTET12759": {
-   "Cellulare": ""
-  },
-  "UTET12779": {
-   "Cellulare": ""
-  },
-  "UTET12782": {
-   "Telefono": ""
-  },
-  "UTET12805": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET12871": {
-   "Telefono": "",
-   "Telefono2": ""
-  },
-  "UTET12880": {
-   "Cellulare": ""
-  },
-  "UTET12885": {
-   "Cellulare": ""
-  },
-  "UTET12901": {
-   "Cellulare": ""
-  },
-  "UTET12902": {
-   "Cellulare": ""
-  },
-  "UTET12911": {
-   "Cellulare": ""
-  },
-  "UTET12920": {
-   "Cellulare": ""
-  },
-  "UTET12926": {
-   "Cellulare": ""
-  },
-  "UTET12930": {
-   "Cellulare": ""
-  },
-  "UTET13013": {
-   "Telefono": ""
-  },
-  "UTET13019": {
-   "Telefono": ""
-  },
-  "UTET13020": {
-   "Cellulare": ""
-  },
-  "UTET13028": {
-   "Telefono": "",
-   "Telefono2": "",
-   "Cellulare": ""
-  },
-  "UTET13039": {
-   "Cellulare": ""
-  },
-  "UTET13099": {
-   "Cellulare": ""
-  },
-  "UTET13106": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET13144": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET13161": {
-   "Telefono": "",
-   "Telefono2": ""
-  },
-  "UTET13165": {
-   "Cellulare": ""
-  },
-  "UTET13181": {
-   "Cellulare": ""
-  },
-  "UTET13192": {
-   "Telefono": ""
-  },
-  "UTET13219": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET13220": {
-   "Telefono": "",
-   "Telefono2": "",
-   "Cellulare": ""
-  },
-  "UTET13277": {
-   "Cellulare": ""
-  },
-  "UTET13291": {
-   "Cellulare": ""
-  },
-  "UTET13321": {
-   "Cellulare": ""
-  },
-  "UTET13327": {
-   "Telefono": ""
-  },
-  "UTET13437": {
-   "Cellulare": ""
-  },
-  "UTET13438": {
-   "Telefono": ""
-  },
-  "UTET13478": {
-   "Telefono": "",
-   "Telefono2": ""
-  },
-  "UTET13482": {
-   "Cellulare": ""
-  },
-  "UTET13484": {
-   "Cellulare": ""
-  },
-  "UTET13503": {
-   "Cellulare": ""
-  },
-  "UTET13518": {
-   "Telefono": "",
-   "Telefono2": ""
-  },
-  "UTET13536": {
-   "Telefono": ""
-  },
-  "UTET13540": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET13581": {
-   "Cellulare": ""
-  },
-  "UTET13618": {
-   "Telefono": ""
-  },
-  "UTET13630": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET13639": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET13658": {
-   "Telefono": ""
-  },
-  "UTET13685": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET13704": {
-   "Telefono": ""
-  },
-  "UTET13745": {
-   "Cellulare": ""
-  },
-  "UTET13746": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET13810": {
-   "Telefono": ""
-  },
-  "UTET13814": {
-   "Telefono": ""
-  },
-  "UTET13924": {
-   "Cellulare": ""
-  },
-  "UTET13969": {
-   "Cellulare": ""
-  },
-  "UTET14011": {
-   "Telefono": ""
-  },
-  "UTET14023": {
-   "Telefono": "",
-   "Telefono2": "",
-   "Cellulare": ""
-  },
-  "UTET14040": {
-   "Telefono": "",
-   "Telefono2": ""
-  },
-  "UTET14067": {
-   "Telefono": ""
-  },
-  "UTET14076": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET14095": {
-   "Cellulare": ""
-  },
-  "UTET14119": {
-   "Telefono": ""
-  },
-  "UTET14122": {
-   "Telefono": "",
-   "Telefono2": "",
-   "Cellulare": ""
-  },
-  "UTET14130": {
-   "Telefono": ""
-  },
-  "UTET14195": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET14199": {
-   "Cellulare": ""
-  },
-  "UTET14211": {
-   "Telefono": "",
-   "Telefono2": ""
-  },
-  "UTET14263": {
-   "Cellulare": ""
-  },
-  "UTET14292": {
-   "Telefono": "",
-   "Telefono2": "0783391648",
-   "Cellulare": ""
-  },
-  "UTET14301": {
-   "Cellulare": ""
-  },
-  "UTET14314": {
-   "Telefono2": ""
-  },
-  "UTET14344": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET14345": {
-   "Telefono": "",
-   "Telefono2": "078430580",
-   "Cellulare": ""
-  },
-  "UTET14362": {
-   "Telefono": ""
-  },
-  "UTET14369": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET14370": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET14372": {
-   "Cellulare": ""
-  },
-  "UTET14391": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET14399": {
-   "Cellulare": ""
-  },
-  "UTET14418": {
-   "Telefono": "",
-   "Cellulare": ""
-  },
-  "UTET14439": {
-   "Cellulare": ""
-  },
-  "UTET14494": {
-   "Telefono": "",
-   "Telefono2": "",
-   "Cellulare": ""
-  },
-  "UTET14540": {
-   "Telefono": ""
-  },
-  "UTET14573": {
-   "Telefono": "",
-   "Telefono2": ""
-  },
-  "UTET14603": {
-   "Cellulare": ""
-  },
-  "UTET14763": {
-   "Telefono": ""
-  },
-  "UTET14803": {
-   "Cellulare": ""
-  },
-  "UTET14838": {
-   "Cellulare": ""
-  },
-  "UTET14867": {
-   "Telefono": ""
-  },
-  "UTET14892": {
-   "Cellulare": ""
-  },
-  "UTET14894": {
-   "Telefono": ""
-  },
-  "UTET15053": {
-   "Telefono": "",
-   "Telefono2": ""
-  },
-  "UTET15144": {
-   "Telefono": ""
-  },
-  "UTET15213": {
-   "Telefono": "",
-   "Telefono2": ""
-  },
-  "UTET15231": {
-   "Cellulare": ""
-  },
-  "UTET15342": {
-   "Telefono": ""
-  },
-  "UTET15422": {
-   "Telefono": ""
-  },
-  "UTET15461": {
-   "Telefono": "",
-   "Telefono2": ""
-  },
-  "UTET15584": {
-   "Cellulare": ""
-  },
-  "UTET15686": {
-   "Telefono": "",
-   "Telefono2": ""
-  },
-  "UTET15776": {
-   "Telefono": ""
-  },
-  "UTET15996": {
-   "Telefono": ""
-  },
-  "UTET16004": {
-   "Telefono": "",
-   "Telefono2": ""
-  },
-  "UTET16064": {
-   "Telefono": "",
-   "Telefono2": ""
-  },
-  "UTET16065": {
-   "Telefono": "",
-   "Telefono2": "078370506"
-  },
-  "UTET16263": {
-   "Cellulare": ""
-  },
-  "UTET16495": {
-   "Cellulare": ""
-  },
-  "UTET16657": {
-   "Telefono": "",
-   "Telefono2": "042154409"
-  },
-  "UTET16676": {
-   "Telefono": ""
-  },
-  "UTET16718": {
-   "Telefono": ""
+   "Citta": "Foligno",
+   "Frazione": "SANT'ERACLIO-FOLIGNO"
+  },
+  "31844": {
+   "Citta": "Castel San Pietro Terme",
+   "Frazione": "CASALFIUMANESE-SAN MARTINO IN..."
+  },
+  "31900": {
+   "Citta": "Pistoia",
+   "Frazione": "LE PIASTRE"
+  },
+  "31945": {
+   "Citta": "Altopascio",
+   "Frazione": "MARGINONE-ALTOPASCIO"
+  },
+  "31977": {
+   "Citta": "Capannori",
+   "Frazione": "LUNATA"
+  },
+  "31991": {
+   "Citta": "Bagni di Lucca",
+   "Frazione": "BAGNI DI LUCCA PONTE"
+  },
+  "32041": {
+   "Citta": "Cascina",
+   "Frazione": "CASCIANA- SAN SISTO AL PINO"
+  },
+  "32908": {
+   "Citta": "Colceresa",
+   "Frazione": "MASON VICENTINO"
+  },
+  "35166": {
+   "Citta": "Pinerolo",
+   "Frazione": "PINEROLO (TO)"
+  },
+  "35400": {
+   "Citta": "Monte Compatri",
+   "Frazione": "Montecompatri"
+  },
+  "NORD0383": {
+   "Citta": "Genova",
+   "Frazione": "PEGLI"
+  },
+  "UTET00735": {
+   "Citta": "Palermo",
+   "Frazione": "BORGO NUOVO"
+  },
+  "UTET01436": {
+   "Citta": "Salerno",
+   "Frazione": ""
+  },
+  "UTET01663": {
+   "Citta": "Modena",
+   "Frazione": ""
+  },
+  "UTET01836": {
+   "Citta": "Modena",
+   "Frazione": ""
+  },
+  "UTET01854": {
+   "Citta": "Perugia",
+   "Frazione": "SANTA MARIA ROSSA"
+  },
+  "UTET02174": {
+   "Citta": "Modena",
+   "Frazione": ""
+  },
+  "UTET02190": {
+   "Citta": "Salerno",
+   "Frazione": ""
+  },
+  "UTET02518": {
+   "Citta": "Bergamo",
+   "Frazione": "REDONA"
+  },
+  "UTET03402": {
+   "Citta": "Roma",
+   "Frazione": "SELEZIONA..."
+  },
+  "UTET03636": {
+   "Citta": "Torino",
+   "Frazione": "RENI"
+  },
+  "UTET03893": {
+   "Citta": "Perugia",
+   "Frazione": "PONTE SAN GIOVANNI"
+  },
+  "UTET04122": {
+   "Citta": "Roma",
+   "Frazione": "SELEZIONA..."
+  },
+  "UTET05051": {
+   "Citta": "Perugia",
+   "Frazione": "SAN SISTO"
+  },
+  "UTET05589": {
+   "Citta": "Perugia",
+   "Frazione": "PONTE SAN GIOVANNI-PERUGIA"
+  },
+  "UTET05951": {
+   "Citta": "Roma",
+   "Frazione": "LIDO DI OSTIA"
+  },
+  "UTET09378": {
+   "Citta": "Venezia",
+   "Frazione": "VENEZIA - MESTRE"
+  },
+  "UTET09513": {
+   "Citta": "Perugia",
+   "Frazione": "FERRO DI CAVALLO-PERUGIA"
+  },
+  "UTET10036": {
+   "Citta": "Salerno",
+   "Frazione": ""
+  },
+  "UTET13488": {
+   "Citta": "Brescia",
+   "Frazione": "QUARTIERE ABBA"
+  },
+  "UTET13561": {
+   "Citta": "Bari",
+   "Frazione": "TORRE A MARE BARI"
+  },
+  "UTET16315": {
+   "Citta": "Perugia",
+   "Frazione": "PERUGIA - LACUGNANO"
+  },
+  "SCR0044": {
+   "Citta": "Bologna",
+   "Frazione": "BOLOGNA (BO)"
+  },
+  "SCR0333": {
+   "Citta": "Bologna",
+   "Frazione": "BOLOGNA (BO)"
+  },
+  "SCR0334": {
+   "Citta": "Bologna",
+   "Frazione": "BOLOGNA (BO)"
+  },
+  "SCR0706": {
+   "Citta": "Milano",
+   "Frazione": "MILANO (MI)"
+  },
+  "SCR0946": {
+   "Citta": "Firenze",
+   "Frazione": "FIRENZE (FI)"
+  },
+  "SCR0972": {
+   "Citta": "Firenze",
+   "Frazione": "FIRENZE (FI)"
+  },
+  "SCR1169": {
+   "Citta": "Ancona",
+   "Frazione": "ANCONA (AN)"
+  },
+  "SCR2052": {
+   "Citta": "Milano",
+   "Frazione": "MILANO (MI)"
+  },
+  "SCR2125": {
+   "Citta": "Modena",
+   "Frazione": "MODENA (MO)"
+  },
+  "SCR2278": {
+   "Citta": "Firenze",
+   "Frazione": "FIRENZE (FI)"
+  },
+  "SCR2972": {
+   "Citta": "Milano",
+   "Frazione": "MILANO (MI)"
+  },
+  "SCR3615": {
+   "Citta": "Modena",
+   "Frazione": "PORTILE DI MODENA"
+  },
+  "SCR3739": {
+   "Citta": "Milano",
+   "Frazione": "MILANO (MI)"
+  },
+  "SCR4074": {
+   "Citta": "Firenze",
+   "Frazione": "FIRENZE (FI)"
+  },
+  "SCR4480": {
+   "Citta": "Sesto San Giovanni",
+   "Frazione": "SESTO SAN GIOVANNI (MI)"
+  },
+  "SCR4513": {
+   "Citta": "Verona",
+   "Frazione": "VERONA (VR)"
+  },
+  "CAN00156": {
+   "Citta": "San Giorgio a Cremano",
+   "Frazione": "S.GIORGIO A CREMANO"
+  },
+  "CAN00362": {
+   "Citta": "Roma",
+   "Frazione": "VITINIA"
+  },
+  "CAN00526": {
+   "Citta": "Roma",
+   "Frazione": "VITINIA"
+  },
+  "CAN00542": {
+   "Citta": "Roma",
+   "Frazione": "LIDO DI OSTIA"
+  },
+  "CAN00736": {
+   "Citta": "Roma",
+   "Frazione": "ACILIA"
+  },
+  "CAN00811": {
+   "Citta": "Roma",
+   "Frazione": "ROMA - INFERNETTO"
+  },
+  "CAN02436": {
+   "Citta": "Roma",
+   "Frazione": "LIDO DI OSTIA LEVANTE"
+  },
+  "CAN02448": {
+   "Citta": "Torino",
+   "Frazione": "VIA A. CECCHI, 21/A"
+  },
+  "CAN02615": {
+   "Citta": "Roma",
+   "Frazione": "LIDO DI OSTIA LEVANTE"
+  },
+  "CAN02719": {
+   "Citta": "Roma",
+   "Frazione": "OSTIA"
+  },
+  "CAN02814": {
+   "Citta": "Genova",
+   "Frazione": "PEGLI"
+  },
+  "CAN02815": {
+   "Citta": "Roma",
+   "Frazione": "LIDO DI OSTIA"
+  },
+  "CAN02827": {
+   "Citta": "Genova",
+   "Frazione": "RIVAROLO"
+  },
+  "CAN02831": {
+   "Citta": "Genova",
+   "Frazione": "PRA'"
+  },
+  "CAN02840": {
+   "Citta": "Genova",
+   "Frazione": "BORZOLI"
+  },
+  "CAN03756": {
+   "Citta": "Roma",
+   "Frazione": "VITINIA"
+  },
+  "CAN06002": {
+   "Citta": "Roma",
+   "Frazione": "LIDO DI OSTIA LEVANTE"
+  },
+  "CAN06067": {
+   "Citta": "Roma",
+   "Frazione": "LIDO DI OSTIA LEVANTE"
+  },
+  "CAN06740": {
+   "Citta": "Roma",
+   "Frazione": "LIDO DI OSTIA"
+  },
+  "CAN06853": {
+   "Citta": "Roma",
+   "Frazione": "LIDO DI OSTIA LEVANTE"
+  },
+  "CAN07093": {
+   "Citta": "Roma",
+   "Frazione": "ACILIA"
+  },
+  "CAN07226": {
+   "Citta": "Roma",
+   "Frazione": "LIDO DI OSTIA LEVANTE"
+  },
+  "CAN07361": {
+   "Citta": "Roma",
+   "Frazione": "LIDO DI OSTIA LEVANTE"
+  },
+  "CAN07445": {
+   "Citta": "Roma",
+   "Frazione": "LIDO DI OSTIA LEVANTE"
+  },
+  "CAN07609": {
+   "Citta": "Roma",
+   "Frazione": "LIDO DI OSTIA PONENTE"
+  },
+  "CAN07914": {
+   "Citta": "Roma",
+   "Frazione": "LIDO DI OSTIA LEVANTE"
+  },
+  "CAN07933": {
+   "Citta": "Roma",
+   "Frazione": "LIDO DI OSTIA LEVANTE"
+  },
+  "CAN08106": {
+   "Citta": "Roma",
+   "Frazione": "LIDO DI OSTIA LEVANTE"
+  },
+  "CAN08254": {
+   "Citta": "Roma",
+   "Frazione": "LIDO DI OSTIA LEVANTE"
+  },
+  "CAN08662": {
+   "Citta": "Genova",
+   "Frazione": "NERVI"
+  },
+  "CAN09065": {
+   "Citta": "Roma",
+   "Frazione": "LIDO DI OSTIA LEVANTE"
+  },
+  "CAN09683": {
+   "Citta": "Roma",
+   "Frazione": "ACILIA"
+  },
+  "CAN09942": {
+   "Citta": "Roma",
+   "Frazione": "LIDO DI OSTIA"
+  },
+  "CAN10608": {
+   "Citta": "Genova",
+   "Frazione": "NERVI"
+  },
+  "CAN10623": {
+   "Citta": "Genova",
+   "Frazione": "CORNIGLIANO LIGURE"
+  },
+  "CAN10961": {
+   "Citta": "Roma",
+   "Frazione": "LIDO DI OSTIA"
+  },
+  "CAN11145": {
+   "Citta": "Roma",
+   "Frazione": "LIDO DI OSTIA"
+  },
+  "CAN11280": {
+   "Citta": "Roma",
+   "Frazione": "ACILIA"
+  },
+  "CAN12213": {
+   "Citta": "Genova",
+   "Frazione": "SESTRI PONENTE"
+  },
+  "CAN12222": {
+   "Citta": "Genova",
+   "Frazione": "SESTRI PONENTE"
+  },
+  "CAN12295": {
+   "Citta": "Roma",
+   "Frazione": "LIDO DI OSTIA PONENTE"
+  },
+  "CAN12385": {
+   "Citta": "Roma",
+   "Frazione": "LIDO DI OSTIA LEVANTE"
+  },
+  "CAN12389": {
+   "Citta": "Roma",
+   "Frazione": "LIDO DI OSTIA LEVANTE"
+  },
+  "CAN12716": {
+   "Citta": "Genova",
+   "Frazione": "GENOVA SESTRI PONENTE"
+  },
+  "CAN12861": {
+   "Citta": "Roma",
+   "Frazione": "LIDO DI OSTIA LEVANTE"
+  },
+  "CAN13203": {
+   "Citta": "Roma",
+   "Frazione": "LIDO DI OSTIA"
+  },
+  "CAN13273": {
+   "Citta": "Messina",
+   "Frazione": "S.MARGHERITA"
+  },
+  "CAN13889": {
+   "Citta": "Roma",
+   "Frazione": "LIDO DI OSTIA LEVANTE"
+  },
+  "CAN14009": {
+   "Citta": "Roma",
+   "Frazione": "LIDO DI OSTIA LEVANTE"
+  },
+  "CAN14863": {
+   "Citta": "Roma",
+   "Frazione": "LIDO DI OSTIA LEVANTE"
+  },
+  "CAN14865": {
+   "Citta": "Roma",
+   "Frazione": "LIDO DI OSTIA LEVANTE"
+  },
+  "CAN14870": {
+   "Citta": "Roma",
+   "Frazione": "LIDO DI OSTIA LEVANTE"
+  },
+  "CAN14956": {
+   "Citta": "Palermo",
+   "Frazione": "TOMMASO NATALE PALERMO"
+  },
+  "CAN15149": {
+   "Citta": "L'Aquila",
+   "Frazione": "BAZZANO"
+  },
+  "CAN15168": {
+   "Citta": "Genova",
+   "Frazione": "SESTRI PONENTE"
+  },
+  "CAN15379": {
+   "Citta": "Roma",
+   "Frazione": "LIDO DI OSTIA LEVANTE"
+  },
+  "CAN15748": {
+   "Citta": "San Giuseppe Vesuviano",
+   "Frazione": "S.GIUSEPPE VESUVIANO"
+  },
+  "CAN16243": {
+   "Citta": "Roma",
+   "Frazione": "LIDO DI OSTIA"
+  },
+  "CAN16290": {
+   "Citta": "Roma",
+   "Frazione": "LIDO DI OSTIA LEVANTE"
+  },
+  "CAN16338": {
+   "Citta": "Roma",
+   "Frazione": "VITINIA"
+  },
+  "CAN17403": {
+   "Citta": "Roma",
+   "Frazione": "LIDO DI OSTIA LEVANTE"
+  },
+  "CAN17610": {
+   "Citta": "Roma",
+   "Frazione": "LIDO DI OSTIA"
+  },
+  "CAN17822": {
+   "Citta": "Palermo",
+   "Frazione": "SFERRACAVALLO"
+  },
+  "CAN19063": {
+   "Citta": "Roma",
+   "Frazione": "VITINIA"
+  },
+  "CAN19492": {
+   "Citta": "Venezia",
+   "Frazione": "LIDO DI VENEZIA"
+  },
+  "CAN20323": {
+   "Citta": "Venezia",
+   "Frazione": "LIDO DI VENEZIA"
+  },
+  "CAN20436": {
+   "Citta": "Roma",
+   "Frazione": "ACILIA"
+  },
+  "CAN20444": {
+   "Citta": "Roma",
+   "Frazione": "MOSTACCIANO  ROMA"
+  },
+  "CAN21181": {
+   "Citta": "Roma",
+   "Frazione": "CECCHIGNOLA"
+  },
+  "CAN21438": {
+   "Citta": "Roma",
+   "Frazione": "LIDO DI OSTIA LEVANTE"
+  },
+  "CAN21531": {
+   "Citta": "Genova",
+   "Frazione": "NERVI"
+  },
+  "CAN22689": {
+   "Citta": "Roma",
+   "Frazione": "SPINACETO ROMA"
+  },
+  "CAN23114": {
+   "Citta": "Roma",
+   "Frazione": "ACILIA"
+  },
+  "CAN23126": {
+   "Citta": "Roma",
+   "Frazione": "ACILIA"
+  },
+  "CAN24107": {
+   "Citta": "Roma",
+   "Frazione": "MOSTACCIANO - ZONA A"
+  },
+  "CAN24148": {
+   "Citta": "Roma",
+   "Frazione": "LIDO DI OSTIA"
+  },
+  "CAN24635": {
+   "Citta": "Roma",
+   "Frazione": "R O M A"
+  },
+  "CAN25228": {
+   "Citta": "Roma",
+   "Frazione": "LIDO DI OSTIA LEVANTE"
+  },
+  "CAN26268": {
+   "Citta": "Venezia",
+   "Frazione": "LIDO DI VENEZIA"
+  },
+  "CAN26352": {
+   "Citta": "Roma",
+   "Frazione": "ACILIA"
+  },
+  "CAN26412": {
+   "Citta": "Genova",
+   "Frazione": "SAMPIERDARENA"
+  },
+  "CAN26982": {
+   "Citta": "Palermo",
+   "Frazione": "MONDELLO"
+  },
+  "CAN27251": {
+   "Citta": "Roma",
+   "Frazione": "LIDO DI OSTIA LEVANTE"
+  },
+  "CAN27444": {
+   "Citta": "Roma",
+   "Frazione": "LIDO DI OSTIA LEVANTE"
+  },
+  "CAN27853": {
+   "Citta": "Roma",
+   "Frazione": "LIDO DI OSTIA"
+  },
+  "CAN28750": {
+   "Citta": "Genova",
+   "Frazione": "QUINTO AL MARE"
+  },
+  "CAN30637": {
+   "Citta": "Messina",
+   "Frazione": "S.MARGHERITA"
+  },
+  "CAN31498": {
+   "Citta": "Roma",
+   "Frazione": "LIDO DI OSTIA PONENTE"
+  },
+  "CAN31499": {
+   "Citta": "Roma",
+   "Frazione": "ROMA - OSTIA LIDO"
+  },
+  "CAN32680": {
+   "Citta": "Napoli",
+   "Frazione": "PIANURA"
+  },
+  "CAN33006": {
+   "Citta": "Roma",
+   "Frazione": "OSTIA"
+  },
+  "CAN33265": {
+   "Citta": "Roma",
+   "Frazione": "LIDO DI OSTIA LEVANTE"
+  },
+  "CAN33288": {
+   "Citta": "Roma",
+   "Frazione": "LIDO DI OSTIA LEVANTE"
+  },
+  "CAN33482": {
+   "Citta": "Roma",
+   "Frazione": "LIDO DI OSTIA LEVANTE"
+  },
+  "CAN33699": {
+   "Citta": "Roma",
+   "Frazione": "ACILIA"
+  },
+  "CAN34064": {
+   "Citta": "Roma",
+   "Frazione": "ACILIA"
+  },
+  "CAN34298": {
+   "Citta": "Messina",
+   "Frazione": "S. MARGHERITA"
+  },
+  "CAN34637": {
+   "Citta": "Trieste",
+   "Frazione": "AQUILINIA"
+  },
+  "CAN34815": {
+   "Citta": "Roma",
+   "Frazione": "LIDO DI OSTIA LEVANTE"
+  },
+  "CAN34841": {
+   "Citta": "Roma",
+   "Frazione": "LIDO DI OSTIA LEVANTE"
+  },
+  "CAN34964": {
+   "Citta": "Roma",
+   "Frazione": "LIDO DI OSTIA PONENTE"
+  },
+  "CAN35873": {
+   "Citta": "Roma",
+   "Frazione": "ROMA - OSTIA LIDO"
+  },
+  "CAN37714": {
+   "Citta": "Roma",
+   "Frazione": "LIDO DI OSTIA LEVANTE"
+  },
+  "CAN37829": {
+   "Citta": "Roma",
+   "Frazione": "LIDO DI OSTIA"
   }
  }
 }
