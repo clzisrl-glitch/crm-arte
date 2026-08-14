@@ -1,884 +1,4984 @@
 {
  "aggiorna": {
-  "688": {
-   "Citta": "Castiglione della Pescaia",
-   "Frazione": "CASTIGLION DELLA PESCAIA"
-  },
-  "1653": {
-   "Citta": "San Giovanni Valdarno",
-   "Frazione": "SAN GIOVANNI VAL D'ARNO"
-  },
-  "2107": {
-   "Citta": "Capannori",
-   "Frazione": "CAMIGLIANO SANTA GEMMA"
-  },
-  "2555": {
-   "Citta": "Monte Argentario",
-   "Frazione": "PORTO S. STEFANO"
-  },
-  "3148": {
-   "Citta": "Lucca",
-   "Frazione": "SAN CONCORDIO DI MORIANO"
-  },
-  "4167": {
-   "Citta": "Monte Argentario",
-   "Frazione": "PORTO S. STEFANO"
-  },
-  "4170": {
-   "Citta": "Fivizzano",
-   "Frazione": "CORMEZZANO"
-  },
-  "4396": {
-   "Citta": "Rosignano Marittimo",
-   "Frazione": "ROSIGNANO MARITTMO"
-  },
-  "4518": {
-   "Citta": "Pitigliano",
-   "Frazione": "LOC. PANTALLA"
-  },
-  "4832": {
-   "Citta": "Manciano",
-   "Frazione": "MARSILIANA"
-  },
-  "4860": {
-   "Citta": "Rosignano Marittimo",
-   "Frazione": "ROSIGNANO"
-  },
-  "4989": {
-   "Citta": "Grosseto",
-   "Frazione": "PRINCIPINA MARE"
-  },
-  "5373": {
-   "Citta": "Montecatini-Terme",
-   "Frazione": "MONTECATINI TERME E TETTUCCIO"
-  },
-  "5376": {
-   "Citta": "Montecatini-Terme",
-   "Frazione": "MONTECATINI TERME E TETTUCCIO"
-  },
-  "5509": {
-   "Citta": "Chiusi",
-   "Frazione": "CHIUSI CITTA'"
-  },
-  "5915": {
-   "Citta": "Portoferraio",
-   "Frazione": "PORTAFERRAIO"
-  },
-  "6694": {
-   "Citta": "Valsamoggia",
-   "Frazione": "BAZZANO"
-  },
-  "7416": {
-   "Citta": "Roma",
-   "Frazione": "PONTE GALERIA 58"
-  },
-  "7504": {
-   "Citta": "Pontremoli",
-   "Frazione": "MONTELUNGO TERME"
-  },
-  "7820": {
-   "Citta": "Montelupo Fiorentino",
-   "Frazione": "MONTELUIPO FIORENTINO"
-  },
-  "10033": {
-   "Citta": "San Giovanni Valdarno",
-   "Frazione": "SAN GIOVANNI V/NO"
-  },
-  "10038": {
-   "Citta": "San Giovanni Valdarno",
-   "Frazione": "S. GIOVANNI V/NO"
-  },
-  "10046": {
-   "Citta": "San Giovanni Valdarno",
-   "Frazione": "S. GIOVANNI V/NO"
-  },
-  "10078": {
-   "Citta": "San Giovanni Valdarno",
-   "Frazione": "S. GIOVANNI V/NO"
-  },
-  "10085": {
-   "Citta": "San Giovanni Valdarno",
-   "Frazione": "S. GIOVANNI V/NO"
-  },
-  "10135": {
-   "Citta": "San Giovanni Valdarno",
-   "Frazione": "S. GIOVANNI V/NO"
-  },
-  "10141": {
-   "Citta": "San Giovanni Valdarno",
-   "Frazione": "S. GIOVANNI V/NO"
-  },
-  "10142": {
-   "Citta": "San Giovanni Valdarno",
-   "Frazione": "S. GIOVANNI V/NO"
-  },
-  "10158": {
-   "Citta": "San Giovanni Valdarno",
-   "Frazione": "S. GIOVANNI V.NO"
-  },
-  "10162": {
-   "Citta": "San Giovanni Valdarno",
-   "Frazione": "S. GIOVANNI V.NO"
-  },
-  "12522": {
-   "Citta": "Poggibonsi",
-   "Frazione": "STAGGIA SENESE"
-  },
-  "12914": {
-   "Citta": "Palazzuolo sul Senio",
-   "Frazione": "PALAZZOLO SUL SENIO"
-  },
-  "13702": {
-   "Citta": "Potenza Picena",
-   "Frazione": "PORTO POTENZA PICENA"
-  },
-  "14231": {
-   "Citta": "Luni",
-   "Frazione": "ORTONOVO"
-  },
-  "14676": {
-   "Citta": "Santa Vittoria in Matenano",
-   "Frazione": "SANTA VITTORIA IN METENANO"
-  },
-  "14961": {
-   "Citta": "Cingoli",
-   "Frazione": "CINGOLI (SAN VITTORE)"
-  },
-  "15138": {
-   "Citta": "Macerata",
-   "Frazione": "MACERTATA"
-  },
-  "15727": {
-   "Citta": "San Ginesio",
-   "Frazione": "SAN GENESIO"
-  },
-  "15749": {
-   "Citta": "Montecatini-Terme",
-   "Frazione": "MONTECATINI"
-  },
-  "15799": {
-   "Citta": "Bellaria-Igea Marina",
-   "Frazione": "BELLARIA"
-  },
-  "15911": {
-   "Citta": "Bellaria-Igea Marina",
-   "Frazione": "BELLARIA"
-  },
-  "15966": {
-   "Citta": "Fauglia",
-   "Frazione": "LUCIANA - FAUGLIA"
-  },
-  "16062": {
-   "Citta": "Castelfranco Piandiscò",
-   "Frazione": "PIAN DI SCIO'"
-  },
-  "16150": {
-   "Citta": "Terranuova Bracciolini",
-   "Frazione": "TERRANUOVA BRACCIALINI"
-  },
-  "17180": {
-   "Citta": "Gaiole in Chianti",
-   "Frazione": "GAIONE INCHIANTI"
-  },
-  "18008": {
-   "Citta": "Genova",
-   "Frazione": "SESTRI PONENTE"
-  },
-  "18166": {
-   "Citta": "San Marcello Piteglio",
-   "Frazione": "LIMESTRE"
-  },
-  "18301": {
-   "Citta": "Pontassieve",
-   "Frazione": "PONTASSEVE"
-  },
-  "19350": {
-   "Citta": "Sale Marasino",
-   "Frazione": "SALE MARESINO"
-  },
-  "20237": {
-   "Citta": "Genova",
-   "Frazione": "SESTRI PONENTE"
-  },
-  "20316": {
-   "Citta": "Genova",
-   "Frazione": "PEGLI"
-  },
-  "20317": {
-   "Citta": "Genova",
-   "Frazione": "PEGLI"
-  },
-  "20354": {
-   "Citta": "Genova",
-   "Frazione": "PEGLI"
-  },
-  "21106": {
-   "Citta": "Genova",
-   "Frazione": "SESTRI PONENTE"
-  },
-  "21956": {
-   "Citta": "Mirano",
-   "Frazione": "SCALTENIGO"
-  },
-  "22134": {
-   "Citta": "San Stino di Livenza",
-   "Frazione": "SANTO STINO DI LEVENZA"
-  },
-  "23060": {
-   "Citta": "Verona",
-   "Frazione": "BORGO TRENTO VERONA"
-  },
-  "23073": {
-   "Citta": "Negrar di Valpolicella",
-   "Frazione": "NEGRAR"
-  },
-  "23113": {
-   "Citta": "Verona",
-   "Frazione": "BORGO TRENTO"
-  },
-  "23850": {
-   "Citta": "Altopiano della Vigolana",
-   "Frazione": "VIGOLO VATTARO"
-  },
-  "24129": {
-   "Citta": "Venezia",
-   "Frazione": "VENZEIA"
-  },
-  "24182": {
-   "Citta": "Cordignano",
-   "Frazione": "CORDIGIANO"
-  },
-  "24452": {
-   "Citta": "Pojana Maggiore",
-   "Frazione": "POIANA MAGGIORE"
-  },
-  "24465": {
-   "Citta": "Gallio",
-   "Frazione": "GALLO"
-  },
-  "24737": {
-   "Citta": "Negrar di Valpolicella",
-   "Frazione": "NEGRAR"
-  },
-  "29767": {
-   "Citta": "Roma",
-   "Frazione": "OSTIA"
-  },
-  "31125": {
-   "Citta": "Scandicci",
-   "Frazione": "BADIA A SETTIMO"
-  },
-  "31771": {
-   "Citta": "Borgorose",
-   "Frazione": "TORANO"
-  },
-  "31791": {
-   "Citta": "Foligno",
-   "Frazione": "SANT'ERACLIO-FOLIGNO"
-  },
-  "31844": {
-   "Citta": "Castel San Pietro Terme",
-   "Frazione": "CASALFIUMANESE-SAN MARTINO IN..."
-  },
-  "31900": {
-   "Citta": "Pistoia",
-   "Frazione": "LE PIASTRE"
-  },
-  "31945": {
-   "Citta": "Altopascio",
-   "Frazione": "MARGINONE-ALTOPASCIO"
-  },
-  "31977": {
-   "Citta": "Capannori",
-   "Frazione": "LUNATA"
-  },
-  "31991": {
-   "Citta": "Bagni di Lucca",
-   "Frazione": "BAGNI DI LUCCA PONTE"
-  },
-  "32041": {
-   "Citta": "Cascina",
-   "Frazione": "CASCIANA- SAN SISTO AL PINO"
-  },
-  "32908": {
-   "Citta": "Colceresa",
-   "Frazione": "MASON VICENTINO"
-  },
-  "35166": {
-   "Citta": "Pinerolo",
-   "Frazione": "PINEROLO (TO)"
-  },
-  "35400": {
-   "Citta": "Monte Compatri",
-   "Frazione": "Montecompatri"
-  },
-  "NORD0383": {
-   "Citta": "Genova",
-   "Frazione": "PEGLI"
-  },
-  "UTET00735": {
-   "Citta": "Palermo",
-   "Frazione": "BORGO NUOVO"
-  },
-  "UTET01436": {
-   "Citta": "Salerno",
-   "Frazione": ""
-  },
-  "UTET01663": {
-   "Citta": "Modena",
-   "Frazione": ""
-  },
-  "UTET01836": {
-   "Citta": "Modena",
-   "Frazione": ""
-  },
-  "UTET01854": {
-   "Citta": "Perugia",
-   "Frazione": "SANTA MARIA ROSSA"
-  },
-  "UTET02174": {
-   "Citta": "Modena",
-   "Frazione": ""
-  },
-  "UTET02190": {
-   "Citta": "Salerno",
-   "Frazione": ""
-  },
-  "UTET02518": {
-   "Citta": "Bergamo",
-   "Frazione": "REDONA"
-  },
-  "UTET03402": {
-   "Citta": "Roma",
-   "Frazione": "SELEZIONA..."
-  },
-  "UTET03636": {
-   "Citta": "Torino",
-   "Frazione": "RENI"
-  },
-  "UTET03893": {
-   "Citta": "Perugia",
-   "Frazione": "PONTE SAN GIOVANNI"
-  },
-  "UTET04122": {
-   "Citta": "Roma",
-   "Frazione": "SELEZIONA..."
-  },
-  "UTET05051": {
-   "Citta": "Perugia",
-   "Frazione": "SAN SISTO"
-  },
-  "UTET05589": {
-   "Citta": "Perugia",
-   "Frazione": "PONTE SAN GIOVANNI-PERUGIA"
-  },
-  "UTET05951": {
-   "Citta": "Roma",
-   "Frazione": "LIDO DI OSTIA"
-  },
-  "UTET09378": {
-   "Citta": "Venezia",
-   "Frazione": "VENEZIA - MESTRE"
-  },
-  "UTET09513": {
-   "Citta": "Perugia",
-   "Frazione": "FERRO DI CAVALLO-PERUGIA"
-  },
-  "UTET10036": {
-   "Citta": "Salerno",
-   "Frazione": ""
-  },
-  "UTET13488": {
-   "Citta": "Brescia",
-   "Frazione": "QUARTIERE ABBA"
-  },
-  "UTET13561": {
-   "Citta": "Bari",
-   "Frazione": "TORRE A MARE BARI"
-  },
-  "UTET16315": {
-   "Citta": "Perugia",
-   "Frazione": "PERUGIA - LACUGNANO"
-  },
-  "SCR0044": {
-   "Citta": "Bologna",
-   "Frazione": "BOLOGNA (BO)"
-  },
-  "SCR0333": {
-   "Citta": "Bologna",
-   "Frazione": "BOLOGNA (BO)"
-  },
-  "SCR0334": {
-   "Citta": "Bologna",
-   "Frazione": "BOLOGNA (BO)"
-  },
-  "SCR0706": {
-   "Citta": "Milano",
-   "Frazione": "MILANO (MI)"
-  },
-  "SCR0946": {
-   "Citta": "Firenze",
-   "Frazione": "FIRENZE (FI)"
-  },
-  "SCR0972": {
-   "Citta": "Firenze",
-   "Frazione": "FIRENZE (FI)"
-  },
-  "SCR1169": {
-   "Citta": "Ancona",
-   "Frazione": "ANCONA (AN)"
-  },
-  "SCR2052": {
-   "Citta": "Milano",
-   "Frazione": "MILANO (MI)"
-  },
-  "SCR2125": {
-   "Citta": "Modena",
-   "Frazione": "MODENA (MO)"
-  },
-  "SCR2278": {
-   "Citta": "Firenze",
-   "Frazione": "FIRENZE (FI)"
-  },
-  "SCR2972": {
-   "Citta": "Milano",
-   "Frazione": "MILANO (MI)"
-  },
-  "SCR3615": {
-   "Citta": "Modena",
-   "Frazione": "PORTILE DI MODENA"
-  },
-  "SCR3739": {
-   "Citta": "Milano",
-   "Frazione": "MILANO (MI)"
-  },
-  "SCR4074": {
-   "Citta": "Firenze",
-   "Frazione": "FIRENZE (FI)"
-  },
-  "SCR4480": {
-   "Citta": "Sesto San Giovanni",
-   "Frazione": "SESTO SAN GIOVANNI (MI)"
-  },
-  "SCR4513": {
-   "Citta": "Verona",
-   "Frazione": "VERONA (VR)"
-  },
-  "CAN00156": {
-   "Citta": "San Giorgio a Cremano",
-   "Frazione": "S.GIORGIO A CREMANO"
-  },
-  "CAN00362": {
-   "Citta": "Roma",
-   "Frazione": "VITINIA"
-  },
-  "CAN00526": {
-   "Citta": "Roma",
-   "Frazione": "VITINIA"
-  },
-  "CAN00542": {
-   "Citta": "Roma",
-   "Frazione": "LIDO DI OSTIA"
-  },
-  "CAN00736": {
-   "Citta": "Roma",
-   "Frazione": "ACILIA"
-  },
-  "CAN00811": {
-   "Citta": "Roma",
-   "Frazione": "ROMA - INFERNETTO"
-  },
-  "CAN02436": {
-   "Citta": "Roma",
-   "Frazione": "LIDO DI OSTIA LEVANTE"
-  },
-  "CAN02448": {
-   "Citta": "Torino",
-   "Frazione": "VIA A. CECCHI, 21/A"
-  },
-  "CAN02615": {
-   "Citta": "Roma",
-   "Frazione": "LIDO DI OSTIA LEVANTE"
-  },
-  "CAN02719": {
-   "Citta": "Roma",
-   "Frazione": "OSTIA"
-  },
-  "CAN02814": {
-   "Citta": "Genova",
-   "Frazione": "PEGLI"
-  },
-  "CAN02815": {
-   "Citta": "Roma",
-   "Frazione": "LIDO DI OSTIA"
-  },
-  "CAN02827": {
-   "Citta": "Genova",
-   "Frazione": "RIVAROLO"
-  },
-  "CAN02831": {
-   "Citta": "Genova",
-   "Frazione": "PRA'"
-  },
-  "CAN02840": {
-   "Citta": "Genova",
-   "Frazione": "BORZOLI"
-  },
-  "CAN03756": {
-   "Citta": "Roma",
-   "Frazione": "VITINIA"
-  },
-  "CAN06002": {
-   "Citta": "Roma",
-   "Frazione": "LIDO DI OSTIA LEVANTE"
-  },
-  "CAN06067": {
-   "Citta": "Roma",
-   "Frazione": "LIDO DI OSTIA LEVANTE"
-  },
-  "CAN06740": {
-   "Citta": "Roma",
-   "Frazione": "LIDO DI OSTIA"
-  },
-  "CAN06853": {
-   "Citta": "Roma",
-   "Frazione": "LIDO DI OSTIA LEVANTE"
-  },
-  "CAN07093": {
-   "Citta": "Roma",
-   "Frazione": "ACILIA"
-  },
-  "CAN07226": {
-   "Citta": "Roma",
-   "Frazione": "LIDO DI OSTIA LEVANTE"
-  },
-  "CAN07361": {
-   "Citta": "Roma",
-   "Frazione": "LIDO DI OSTIA LEVANTE"
-  },
-  "CAN07445": {
-   "Citta": "Roma",
-   "Frazione": "LIDO DI OSTIA LEVANTE"
-  },
-  "CAN07609": {
-   "Citta": "Roma",
-   "Frazione": "LIDO DI OSTIA PONENTE"
-  },
-  "CAN07914": {
-   "Citta": "Roma",
-   "Frazione": "LIDO DI OSTIA LEVANTE"
-  },
-  "CAN07933": {
-   "Citta": "Roma",
-   "Frazione": "LIDO DI OSTIA LEVANTE"
-  },
-  "CAN08106": {
-   "Citta": "Roma",
-   "Frazione": "LIDO DI OSTIA LEVANTE"
-  },
-  "CAN08254": {
-   "Citta": "Roma",
-   "Frazione": "LIDO DI OSTIA LEVANTE"
-  },
-  "CAN08662": {
-   "Citta": "Genova",
-   "Frazione": "NERVI"
-  },
-  "CAN09065": {
-   "Citta": "Roma",
-   "Frazione": "LIDO DI OSTIA LEVANTE"
-  },
-  "CAN09683": {
-   "Citta": "Roma",
-   "Frazione": "ACILIA"
-  },
-  "CAN09942": {
-   "Citta": "Roma",
-   "Frazione": "LIDO DI OSTIA"
-  },
-  "CAN10608": {
-   "Citta": "Genova",
-   "Frazione": "NERVI"
-  },
-  "CAN10623": {
-   "Citta": "Genova",
-   "Frazione": "CORNIGLIANO LIGURE"
-  },
-  "CAN10961": {
-   "Citta": "Roma",
-   "Frazione": "LIDO DI OSTIA"
-  },
-  "CAN11145": {
-   "Citta": "Roma",
-   "Frazione": "LIDO DI OSTIA"
-  },
-  "CAN11280": {
-   "Citta": "Roma",
-   "Frazione": "ACILIA"
-  },
-  "CAN12213": {
-   "Citta": "Genova",
-   "Frazione": "SESTRI PONENTE"
-  },
-  "CAN12222": {
-   "Citta": "Genova",
-   "Frazione": "SESTRI PONENTE"
-  },
-  "CAN12295": {
-   "Citta": "Roma",
-   "Frazione": "LIDO DI OSTIA PONENTE"
-  },
-  "CAN12385": {
-   "Citta": "Roma",
-   "Frazione": "LIDO DI OSTIA LEVANTE"
-  },
-  "CAN12389": {
-   "Citta": "Roma",
-   "Frazione": "LIDO DI OSTIA LEVANTE"
-  },
-  "CAN12716": {
-   "Citta": "Genova",
-   "Frazione": "GENOVA SESTRI PONENTE"
-  },
-  "CAN12861": {
-   "Citta": "Roma",
-   "Frazione": "LIDO DI OSTIA LEVANTE"
-  },
-  "CAN13203": {
-   "Citta": "Roma",
-   "Frazione": "LIDO DI OSTIA"
-  },
-  "CAN13273": {
-   "Citta": "Messina",
-   "Frazione": "S.MARGHERITA"
-  },
-  "CAN13889": {
-   "Citta": "Roma",
-   "Frazione": "LIDO DI OSTIA LEVANTE"
-  },
-  "CAN14009": {
-   "Citta": "Roma",
-   "Frazione": "LIDO DI OSTIA LEVANTE"
-  },
-  "CAN14863": {
-   "Citta": "Roma",
-   "Frazione": "LIDO DI OSTIA LEVANTE"
-  },
-  "CAN14865": {
-   "Citta": "Roma",
-   "Frazione": "LIDO DI OSTIA LEVANTE"
-  },
-  "CAN14870": {
-   "Citta": "Roma",
-   "Frazione": "LIDO DI OSTIA LEVANTE"
-  },
-  "CAN14956": {
-   "Citta": "Palermo",
-   "Frazione": "TOMMASO NATALE PALERMO"
-  },
-  "CAN15149": {
-   "Citta": "L'Aquila",
-   "Frazione": "BAZZANO"
-  },
-  "CAN15168": {
-   "Citta": "Genova",
-   "Frazione": "SESTRI PONENTE"
-  },
-  "CAN15379": {
-   "Citta": "Roma",
-   "Frazione": "LIDO DI OSTIA LEVANTE"
-  },
-  "CAN15748": {
-   "Citta": "San Giuseppe Vesuviano",
-   "Frazione": "S.GIUSEPPE VESUVIANO"
-  },
-  "CAN16243": {
-   "Citta": "Roma",
-   "Frazione": "LIDO DI OSTIA"
-  },
-  "CAN16290": {
-   "Citta": "Roma",
-   "Frazione": "LIDO DI OSTIA LEVANTE"
-  },
-  "CAN16338": {
-   "Citta": "Roma",
-   "Frazione": "VITINIA"
-  },
-  "CAN17403": {
-   "Citta": "Roma",
-   "Frazione": "LIDO DI OSTIA LEVANTE"
-  },
-  "CAN17610": {
-   "Citta": "Roma",
-   "Frazione": "LIDO DI OSTIA"
-  },
-  "CAN17822": {
-   "Citta": "Palermo",
-   "Frazione": "SFERRACAVALLO"
-  },
-  "CAN19063": {
-   "Citta": "Roma",
-   "Frazione": "VITINIA"
-  },
-  "CAN19492": {
-   "Citta": "Venezia",
-   "Frazione": "LIDO DI VENEZIA"
-  },
-  "CAN20323": {
-   "Citta": "Venezia",
-   "Frazione": "LIDO DI VENEZIA"
-  },
-  "CAN20436": {
-   "Citta": "Roma",
-   "Frazione": "ACILIA"
-  },
-  "CAN20444": {
-   "Citta": "Roma",
-   "Frazione": "MOSTACCIANO  ROMA"
-  },
-  "CAN21181": {
-   "Citta": "Roma",
-   "Frazione": "CECCHIGNOLA"
-  },
-  "CAN21438": {
-   "Citta": "Roma",
-   "Frazione": "LIDO DI OSTIA LEVANTE"
-  },
-  "CAN21531": {
-   "Citta": "Genova",
-   "Frazione": "NERVI"
-  },
-  "CAN22689": {
-   "Citta": "Roma",
-   "Frazione": "SPINACETO ROMA"
-  },
-  "CAN23114": {
-   "Citta": "Roma",
-   "Frazione": "ACILIA"
-  },
-  "CAN23126": {
-   "Citta": "Roma",
-   "Frazione": "ACILIA"
-  },
-  "CAN24107": {
-   "Citta": "Roma",
-   "Frazione": "MOSTACCIANO - ZONA A"
-  },
-  "CAN24148": {
-   "Citta": "Roma",
-   "Frazione": "LIDO DI OSTIA"
-  },
-  "CAN24635": {
-   "Citta": "Roma",
-   "Frazione": "R O M A"
-  },
-  "CAN25228": {
-   "Citta": "Roma",
-   "Frazione": "LIDO DI OSTIA LEVANTE"
-  },
-  "CAN26268": {
-   "Citta": "Venezia",
-   "Frazione": "LIDO DI VENEZIA"
-  },
-  "CAN26352": {
-   "Citta": "Roma",
-   "Frazione": "ACILIA"
-  },
-  "CAN26412": {
-   "Citta": "Genova",
-   "Frazione": "SAMPIERDARENA"
-  },
-  "CAN26982": {
-   "Citta": "Palermo",
-   "Frazione": "MONDELLO"
-  },
-  "CAN27251": {
-   "Citta": "Roma",
-   "Frazione": "LIDO DI OSTIA LEVANTE"
-  },
-  "CAN27444": {
-   "Citta": "Roma",
-   "Frazione": "LIDO DI OSTIA LEVANTE"
-  },
-  "CAN27853": {
-   "Citta": "Roma",
-   "Frazione": "LIDO DI OSTIA"
-  },
-  "CAN28750": {
-   "Citta": "Genova",
-   "Frazione": "QUINTO AL MARE"
-  },
-  "CAN30637": {
-   "Citta": "Messina",
-   "Frazione": "S.MARGHERITA"
-  },
-  "CAN31498": {
-   "Citta": "Roma",
-   "Frazione": "LIDO DI OSTIA PONENTE"
-  },
-  "CAN31499": {
-   "Citta": "Roma",
-   "Frazione": "ROMA - OSTIA LIDO"
-  },
-  "CAN32680": {
-   "Citta": "Napoli",
-   "Frazione": "PIANURA"
-  },
-  "CAN33006": {
-   "Citta": "Roma",
-   "Frazione": "OSTIA"
-  },
-  "CAN33265": {
-   "Citta": "Roma",
-   "Frazione": "LIDO DI OSTIA LEVANTE"
-  },
-  "CAN33288": {
-   "Citta": "Roma",
-   "Frazione": "LIDO DI OSTIA LEVANTE"
-  },
-  "CAN33482": {
-   "Citta": "Roma",
-   "Frazione": "LIDO DI OSTIA LEVANTE"
-  },
-  "CAN33699": {
-   "Citta": "Roma",
-   "Frazione": "ACILIA"
-  },
-  "CAN34064": {
-   "Citta": "Roma",
-   "Frazione": "ACILIA"
-  },
-  "CAN34298": {
-   "Citta": "Messina",
-   "Frazione": "S. MARGHERITA"
-  },
-  "CAN34637": {
-   "Citta": "Trieste",
-   "Frazione": "AQUILINIA"
-  },
-  "CAN34815": {
-   "Citta": "Roma",
-   "Frazione": "LIDO DI OSTIA LEVANTE"
-  },
-  "CAN34841": {
-   "Citta": "Roma",
-   "Frazione": "LIDO DI OSTIA LEVANTE"
-  },
-  "CAN34964": {
-   "Citta": "Roma",
-   "Frazione": "LIDO DI OSTIA PONENTE"
-  },
-  "CAN35873": {
-   "Citta": "Roma",
-   "Frazione": "ROMA - OSTIA LIDO"
-  },
-  "CAN37714": {
-   "Citta": "Roma",
-   "Frazione": "LIDO DI OSTIA LEVANTE"
-  },
-  "CAN37829": {
-   "Citta": "Roma",
-   "Frazione": "LIDO DI OSTIA"
+  "398": {
+   "Provincia": "FI",
+   "Regione": "Toscana"
+  },
+  "1152": {
+   "Provincia": "PI",
+   "Regione": "Toscana"
+  },
+  "1210": {
+   "Provincia": "FI",
+   "Regione": "Toscana"
+  },
+  "1528": {
+   "Provincia": "PI",
+   "Regione": "Toscana"
+  },
+  "1696": {
+   "Provincia": "GR",
+   "Regione": "Toscana"
+  },
+  "1749": {
+   "Provincia": "LI",
+   "Regione": "Toscana"
+  },
+  "1935": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "2653": {
+   "Provincia": "LI",
+   "Regione": "Toscana"
+  },
+  "3007": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "3104": {
+   "Provincia": "PI",
+   "Regione": "Toscana"
+  },
+  "4726": {
+   "Provincia": "GR",
+   "Regione": "Toscana"
+  },
+  "5419": {
+   "Provincia": "PV",
+   "Regione": "Lombardia"
+  },
+  "6952": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "8584": {
+   "Provincia": "GR",
+   "Regione": "Toscana"
+  },
+  "8638": {
+   "Provincia": "LU",
+   "Regione": "Toscana"
+  },
+  "8639": {
+   "Provincia": "LU",
+   "Regione": "Toscana"
+  },
+  "8668": {
+   "Provincia": "PI",
+   "Regione": "Toscana"
+  },
+  "10446": {
+   "Provincia": "PI",
+   "Regione": "Toscana"
+  },
+  "13283": {
+   "Provincia": "SI",
+   "Regione": "Toscana"
+  },
+  "13662": {
+   "Provincia": "TE",
+   "Regione": "Abruzzo"
+  },
+  "13664": {
+   "Provincia": "TE",
+   "Regione": "Abruzzo"
+  },
+  "13665": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "13666": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "13667": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "13672": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "13673": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "13726": {
+   "Provincia": "PU",
+   "Regione": "Marche"
+  },
+  "13766": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "13767": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "13768": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "13769": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "13792": {
+   "Provincia": "PU",
+   "Regione": "Marche"
+  },
+  "13817": {
+   "Provincia": "LI",
+   "Regione": "Toscana"
+  },
+  "14597": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "15008": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "15037": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "15047": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "15256": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "15396": {
+   "Provincia": "PU",
+   "Regione": "Marche"
+  },
+  "15775": {
+   "Provincia": "FC",
+   "Regione": "Emilia-Romagna"
+  },
+  "15777": {
+   "Provincia": "FC",
+   "Regione": "Emilia-Romagna"
+  },
+  "15778": {
+   "Provincia": "FC",
+   "Regione": "Emilia-Romagna"
+  },
+  "15779": {
+   "Provincia": "FC",
+   "Regione": "Emilia-Romagna"
+  },
+  "15780": {
+   "Provincia": "FC",
+   "Regione": "Emilia-Romagna"
+  },
+  "15781": {
+   "Provincia": "FC",
+   "Regione": "Emilia-Romagna"
+  },
+  "15782": {
+   "Provincia": "FC",
+   "Regione": "Emilia-Romagna"
+  },
+  "15942": {
+   "Provincia": "PI",
+   "Regione": "Toscana"
+  },
+  "16251": {
+   "Provincia": "VB",
+   "Regione": "Piemonte"
+  },
+  "16252": {
+   "Provincia": "VB",
+   "Regione": "Piemonte"
+  },
+  "16255": {
+   "Provincia": "VB",
+   "Regione": "Piemonte"
+  },
+  "16294": {
+   "Provincia": "LC",
+   "Regione": "Lombardia"
+  },
+  "16421": {
+   "Provincia": "AT",
+   "Regione": "Piemonte"
+  },
+  "16432": {
+   "Provincia": "CN",
+   "Regione": "Piemonte"
+  },
+  "17081": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "17138": {
+   "Provincia": "AP",
+   "Regione": "Marche"
+  },
+  "17493": {
+   "Provincia": "LC",
+   "Regione": "Lombardia"
+  },
+  "17727": {
+   "Provincia": "IM",
+   "Regione": "Liguria"
+  },
+  "17736": {
+   "Provincia": "IM",
+   "Regione": "Liguria"
+  },
+  "17981": {
+   "Provincia": "PU",
+   "Regione": "Marche"
+  },
+  "18144": {
+   "Provincia": "PI",
+   "Regione": "Toscana"
+  },
+  "18642": {
+   "Provincia": "VA",
+   "Regione": "Lombardia"
+  },
+  "18644": {
+   "Provincia": "VA",
+   "Regione": "Lombardia"
+  },
+  "18673": {
+   "Provincia": "MI",
+   "Regione": "Lombardia"
+  },
+  "18733": {
+   "Provincia": "MI",
+   "Regione": "Lombardia"
+  },
+  "18953": {
+   "Provincia": "SI",
+   "Regione": "Toscana"
+  },
+  "19895": {
+   "Provincia": "CE",
+   "Regione": "Campania"
+  },
+  "19931": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "20931": {
+   "Provincia": "IM",
+   "Regione": "Liguria"
+  },
+  "21144": {
+   "Provincia": "VR",
+   "Regione": "Veneto"
+  },
+  "21174": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "21326": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "21327": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "21328": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "21333": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "21853": {
+   "Provincia": "UD",
+   "Regione": "Friuli-Venezia Giulia"
+  },
+  "21922": {
+   "Provincia": "VR",
+   "Regione": "Veneto"
+  },
+  "22841": {
+   "Provincia": "VI",
+   "Regione": "Veneto"
+  },
+  "22978": {
+   "Provincia": "VR",
+   "Regione": "Veneto"
+  },
+  "23207": {
+   "Provincia": "VR",
+   "Regione": "Veneto"
+  },
+  "24424": {
+   "Provincia": "VI",
+   "Regione": "Veneto"
+  },
+  "24425": {
+   "Provincia": "VI",
+   "Regione": "Veneto"
+  },
+  "24426": {
+   "Provincia": "VI",
+   "Regione": "Veneto"
+  },
+  "24427": {
+   "Provincia": "VI",
+   "Regione": "Veneto"
+  },
+  "24428": {
+   "Provincia": "VI",
+   "Regione": "Veneto"
+  },
+  "24804": {
+   "Provincia": "MI",
+   "Regione": "Lombardia"
+  },
+  "25065": {
+   "Provincia": "BI",
+   "Regione": "Piemonte"
+  },
+  "25076": {
+   "Provincia": "BO",
+   "Regione": "Emilia-Romagna"
+  },
+  "25077": {
+   "Provincia": "RE",
+   "Regione": "Emilia-Romagna"
+  },
+  "25287": {
+   "Provincia": "SA",
+   "Regione": "Campania"
+  },
+  "25846": {
+   "Provincia": "FC",
+   "Regione": "Emilia-Romagna"
+  },
+  "25847": {
+   "Provincia": "FC",
+   "Regione": "Emilia-Romagna"
+  },
+  "25848": {
+   "Provincia": "FC",
+   "Regione": "Emilia-Romagna"
+  },
+  "25849": {
+   "Provincia": "FC",
+   "Regione": "Emilia-Romagna"
+  },
+  "25850": {
+   "Provincia": "FC",
+   "Regione": "Emilia-Romagna"
+  },
+  "25851": {
+   "Provincia": "FC",
+   "Regione": "Emilia-Romagna"
+  },
+  "25852": {
+   "Provincia": "FC",
+   "Regione": "Emilia-Romagna"
+  },
+  "25853": {
+   "Provincia": "FC",
+   "Regione": "Emilia-Romagna"
+  },
+  "25854": {
+   "Provincia": "FC",
+   "Regione": "Emilia-Romagna"
+  },
+  "25855": {
+   "Provincia": "FC",
+   "Regione": "Emilia-Romagna"
+  },
+  "25856": {
+   "Provincia": "FC",
+   "Regione": "Emilia-Romagna"
+  },
+  "25857": {
+   "Provincia": "FC",
+   "Regione": "Emilia-Romagna"
+  },
+  "25858": {
+   "Provincia": "FC",
+   "Regione": "Emilia-Romagna"
+  },
+  "25859": {
+   "Provincia": "FC",
+   "Regione": "Emilia-Romagna"
+  },
+  "25860": {
+   "Provincia": "FC",
+   "Regione": "Emilia-Romagna"
+  },
+  "25861": {
+   "Provincia": "FC",
+   "Regione": "Emilia-Romagna"
+  },
+  "25862": {
+   "Provincia": "FC",
+   "Regione": "Emilia-Romagna"
+  },
+  "25863": {
+   "Provincia": "FC",
+   "Regione": "Emilia-Romagna"
+  },
+  "25864": {
+   "Provincia": "FC",
+   "Regione": "Emilia-Romagna"
+  },
+  "25865": {
+   "Provincia": "FC",
+   "Regione": "Emilia-Romagna"
+  },
+  "26190": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "26208": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "26683": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "26686": {
+   "Provincia": "LO",
+   "Regione": "Lombardia"
+  },
+  "26715": {
+   "Provincia": "MI",
+   "Regione": "Lombardia"
+  },
+  "26721": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "27214": {
+   "Provincia": "AR",
+   "Regione": "Toscana"
+  },
+  "27848": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "27933": {
+   "Provincia": "LI",
+   "Regione": "Toscana"
+  },
+  "28430": {
+   "Provincia": "LT",
+   "Regione": "Lazio"
+  },
+  "28810": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "28898": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "28906": {
+   "Provincia": "SO",
+   "Regione": "Lombardia"
+  },
+  "29009": {
+   "Provincia": "PC",
+   "Regione": "Emilia-Romagna"
+  },
+  "29056": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "29574": {
+   "Provincia": "LT",
+   "Regione": "Lazio"
+  },
+  "29717": {
+   "Provincia": "FR",
+   "Regione": "Lazio"
+  },
+  "29950": {
+   "Provincia": "FR",
+   "Regione": "Lazio"
+  },
+  "30161": {
+   "Provincia": "LT",
+   "Regione": "Lazio"
+  },
+  "30330": {
+   "Provincia": "LT",
+   "Regione": "Lazio"
+  },
+  "30348": {
+   "Provincia": "FR",
+   "Regione": "Lazio"
+  },
+  "30474": {
+   "Provincia": "RM",
+   "Regione": "Lazio"
+  },
+  "31456": {
+   "Provincia": "FC",
+   "Regione": "Emilia-Romagna"
+  },
+  "31661": {
+   "Provincia": "PG",
+   "Regione": "Umbria"
+  },
+  "32052": {
+   "Provincia": "NA",
+   "Regione": "Campania"
+  },
+  "33713": {
+   "Provincia": "BI",
+   "Regione": "Piemonte"
+  },
+  "34177": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "34202": {
+   "Provincia": "NO",
+   "Regione": "Piemonte"
+  },
+  "34354": {
+   "Provincia": "VT",
+   "Regione": "Lazio"
+  },
+  "34603": {
+   "Provincia": "VT",
+   "Regione": "Lazio"
+  },
+  "34700": {
+   "Provincia": "VA",
+   "Regione": "Lombardia"
+  },
+  "35160": {
+   "Provincia": "TO",
+   "Regione": "Piemonte"
+  },
+  "35211": {
+   "Provincia": "NO",
+   "Regione": "Piemonte"
+  },
+  "NORD1729": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "NORD1733": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "NORD1735": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "NORD1774": {
+   "Provincia": "GE",
+   "Regione": "Liguria"
+  },
+  "UTET00565": {
+   "Provincia": "RA",
+   "Regione": "Emilia-Romagna"
+  },
+  "UTET00650": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "UTET00775": {
+   "Provincia": "AO",
+   "Regione": "Valle d'Aosta/Vallée d'Aoste"
+  },
+  "UTET00795": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "UTET00950": {
+   "Provincia": "NA",
+   "Regione": "Campania"
+  },
+  "UTET00956": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "UTET01047": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "UTET01492": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "UTET01613": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "UTET01668": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "UTET02071": {
+   "Provincia": "SR",
+   "Regione": "Sicilia"
+  },
+  "UTET02113": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "UTET02475": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "UTET02739": {
+   "Provincia": "BO",
+   "Regione": "Emilia-Romagna"
+  },
+  "UTET02908": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "UTET02993": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "UTET03021": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "UTET03104": {
+   "Provincia": "RM",
+   "Regione": "Lazio"
+  },
+  "UTET03195": {
+   "Provincia": "MI",
+   "Regione": "Lombardia"
+  },
+  "UTET03240": {
+   "Provincia": "LT",
+   "Regione": "Lazio"
+  },
+  "UTET03328": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "UTET03353": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "UTET03397": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "UTET03454": {
+   "Provincia": "LU",
+   "Regione": "Toscana"
+  },
+  "UTET03557": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "UTET03569": {
+   "Provincia": "LC",
+   "Regione": "Lombardia"
+  },
+  "UTET03730": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "UTET03745": {
+   "Provincia": "FC",
+   "Regione": "Emilia-Romagna"
+  },
+  "UTET03959": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "UTET03960": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "UTET04592": {
+   "Provincia": "AN",
+   "Regione": "Marche"
+  },
+  "UTET04646": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "UTET04741": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "UTET04763": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "UTET04916": {
+   "Provincia": "LC",
+   "Regione": "Lombardia"
+  },
+  "UTET04923": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "UTET05009": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "UTET05077": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "UTET05081": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "UTET05451": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "UTET06011": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "UTET06044": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "UTET06076": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "UTET06178": {
+   "Provincia": "PD",
+   "Regione": "Veneto"
+  },
+  "UTET06261": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "UTET06385": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "UTET06435": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "UTET06575": {
+   "Provincia": "PD",
+   "Regione": "Veneto"
+  },
+  "UTET06817": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "UTET06824": {
+   "Provincia": "AV",
+   "Regione": "Campania"
+  },
+  "UTET06925": {
+   "Provincia": "LE",
+   "Regione": "Puglia"
+  },
+  "UTET07146": {
+   "Provincia": "RM",
+   "Regione": "Lazio"
+  },
+  "UTET07190": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "UTET07225": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "UTET07588": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "UTET07706": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "UTET07707": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "UTET07976": {
+   "Provincia": "BO",
+   "Regione": "Emilia-Romagna"
+  },
+  "UTET07985": {
+   "Provincia": "CL",
+   "Regione": "Sicilia"
+  },
+  "UTET08041": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "UTET08240": {
+   "Provincia": "AN",
+   "Regione": "Marche"
+  },
+  "UTET08377": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "UTET08463": {
+   "Provincia": "BO",
+   "Regione": "Emilia-Romagna"
+  },
+  "UTET08665": {
+   "Provincia": "RM",
+   "Regione": "Lazio"
+  },
+  "UTET08697": {
+   "Provincia": "VR",
+   "Regione": "Veneto"
+  },
+  "UTET09006": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "UTET09026": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "UTET09134": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "UTET09136": {
+   "Provincia": "NA",
+   "Regione": "Campania"
+  },
+  "UTET09212": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "UTET09221": {
+   "Provincia": "TO",
+   "Regione": "Piemonte"
+  },
+  "UTET09349": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "UTET09550": {
+   "Provincia": "AV",
+   "Regione": "Campania"
+  },
+  "UTET09570": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "UTET09572": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "UTET09683": {
+   "Provincia": "PD",
+   "Regione": "Veneto"
+  },
+  "UTET09905": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "UTET10016": {
+   "Provincia": "CO",
+   "Regione": "Lombardia"
+  },
+  "UTET10314": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "UTET10481": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "UTET10508": {
+   "Provincia": "PU",
+   "Regione": "Marche"
+  },
+  "UTET10670": {
+   "Provincia": "VA",
+   "Regione": "Lombardia"
+  },
+  "UTET10971": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "UTET11509": {
+   "Provincia": "BI",
+   "Regione": "Piemonte"
+  },
+  "UTET11593": {
+   "Provincia": "VT",
+   "Regione": "Lazio"
+  },
+  "UTET11723": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "UTET11791": {
+   "Provincia": "AN",
+   "Regione": "Marche"
+  },
+  "UTET11836": {
+   "Provincia": "CT",
+   "Regione": "Sicilia"
+  },
+  "UTET11858": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "UTET11899": {
+   "Provincia": "RM",
+   "Regione": "Lazio"
+  },
+  "UTET12007": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "UTET12069": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "UTET12141": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "UTET12191": {
+   "Provincia": "RM",
+   "Regione": "Lazio"
+  },
+  "UTET12561": {
+   "Provincia": "RI",
+   "Regione": "Lazio"
+  },
+  "UTET12796": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "UTET12978": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "UTET13119": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "UTET13136": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "UTET13218": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "UTET13421": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "UTET13727": {
+   "Provincia": "RM",
+   "Regione": "Lazio"
+  },
+  "UTET14234": {
+   "Provincia": "BG",
+   "Regione": "Lombardia"
+  },
+  "UTET14437": {
+   "Provincia": "RC",
+   "Regione": "Calabria"
+  },
+  "UTET15108": {
+   "Provincia": "PD",
+   "Regione": "Veneto"
+  },
+  "UTET15295": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "UTET15776": {
+   "Provincia": "PG",
+   "Regione": "Umbria"
+  },
+  "UTET15921": {
+   "Provincia": "FG",
+   "Regione": "Puglia"
+  },
+  "UTET16207": {
+   "Provincia": "TO",
+   "Regione": "Piemonte"
+  },
+  "UTET16309": {
+   "Provincia": "TV",
+   "Regione": "Veneto"
+  },
+  "UTET16405": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "UTET16406": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "UTET16603": {
+   "Provincia": "PU",
+   "Regione": "Marche"
+  },
+  "UTET16614": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "SCR0135": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "SCR0646": {
+   "Provincia": "PN",
+   "Regione": "Friuli-Venezia Giulia"
+  },
+  "SCR1388": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "SCR1724": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "SCR1855": {
+   "Provincia": "PE",
+   "Regione": "Abruzzo"
+  },
+  "SCR2026": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "SCR2490": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "SCR3169": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "SCR3816": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "SCR3980": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "SCR4251": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "TRE0064": {
+   "Provincia": "MN",
+   "Regione": "Lombardia"
+  },
+  "TRE0153": {
+   "Provincia": "MN",
+   "Regione": "Lombardia"
+  },
+  "TRE0222": {
+   "Provincia": "MN",
+   "Regione": "Lombardia"
+  },
+  "TRE0225": {
+   "Provincia": "MI",
+   "Regione": "Lombardia"
+  },
+  "TRE0250": {
+   "Provincia": "MN",
+   "Regione": "Lombardia"
+  },
+  "TRE0304": {
+   "Provincia": "BS",
+   "Regione": "Lombardia"
+  },
+  "TRE0306": {
+   "Provincia": "BS",
+   "Regione": "Lombardia"
+  },
+  "TRE0312": {
+   "Provincia": "BS",
+   "Regione": "Lombardia"
+  },
+  "TRE0316": {
+   "Provincia": "BS",
+   "Regione": "Lombardia"
+  },
+  "TRE0317": {
+   "Provincia": "BS",
+   "Regione": "Lombardia"
+  },
+  "TRE0329": {
+   "Provincia": "BS",
+   "Regione": "Lombardia"
+  },
+  "TRE0330": {
+   "Provincia": "BS",
+   "Regione": "Lombardia"
+  },
+  "TRE0335": {
+   "Provincia": "BS",
+   "Regione": "Lombardia"
+  },
+  "TRE0336": {
+   "Provincia": "BS",
+   "Regione": "Lombardia"
+  },
+  "TRE0341": {
+   "Provincia": "BS",
+   "Regione": "Lombardia"
+  },
+  "TRE0352": {
+   "Provincia": "BS",
+   "Regione": "Lombardia"
+  },
+  "TRE0354": {
+   "Provincia": "BS",
+   "Regione": "Lombardia"
+  },
+  "TRE0356": {
+   "Provincia": "BS",
+   "Regione": "Lombardia"
+  },
+  "TRE0358": {
+   "Provincia": "BS",
+   "Regione": "Lombardia"
+  },
+  "TRE0364": {
+   "Provincia": "BS",
+   "Regione": "Lombardia"
+  },
+  "TRE0368": {
+   "Provincia": "BS",
+   "Regione": "Lombardia"
+  },
+  "TRE0369": {
+   "Provincia": "BS",
+   "Regione": "Lombardia"
+  },
+  "TRE0370": {
+   "Provincia": "BS",
+   "Regione": "Lombardia"
+  },
+  "TRE0371": {
+   "Provincia": "BS",
+   "Regione": "Lombardia"
+  },
+  "TRE0381": {
+   "Provincia": "BS",
+   "Regione": "Lombardia"
+  },
+  "ANT0080": {
+   "Provincia": "IM",
+   "Regione": "Liguria"
+  },
+  "ANT0108": {
+   "Provincia": "GE",
+   "Regione": "Liguria"
+  },
+  "CAN00001": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN00013": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN00018": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN00078": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN00170": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN00179": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN00213": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN00228": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN00238": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN00439": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN00503": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "CAN00571": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "CAN00602": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN00617": {
+   "Provincia": "LC",
+   "Regione": "Lombardia"
+  },
+  "CAN00640": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN00658": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN00662": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN00745": {
+   "Provincia": "LC",
+   "Regione": "Lombardia"
+  },
+  "CAN00785": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN00789": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN00827": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN00884": {
+   "Provincia": "LC",
+   "Regione": "Lombardia"
+  },
+  "CAN00912": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN00988": {
+   "Provincia": "RC",
+   "Regione": "Calabria"
+  },
+  "CAN01024": {
+   "Provincia": "BI",
+   "Regione": "Piemonte"
+  },
+  "CAN01056": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN01113": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN01121": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN01141": {
+   "Provincia": "LO",
+   "Regione": "Lombardia"
+  },
+  "CAN01158": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "CAN01240": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN01247": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN01315": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN01443": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN01457": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN01484": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN01550": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN01572": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN01590": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN01608": {
+   "Provincia": "LC",
+   "Regione": "Lombardia"
+  },
+  "CAN01643": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN01647": {
+   "Provincia": "LO",
+   "Regione": "Lombardia"
+  },
+  "CAN01653": {
+   "Provincia": "LO",
+   "Regione": "Lombardia"
+  },
+  "CAN01657": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "CAN01703": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN01745": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN01765": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN02204": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN02239": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN02260": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN02274": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN02366": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN02382": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN02414": {
+   "Provincia": "GO",
+   "Regione": "Friuli-Venezia Giulia"
+  },
+  "CAN02419": {
+   "Provincia": "VB",
+   "Regione": "Piemonte"
+  },
+  "CAN02438": {
+   "Provincia": "BI",
+   "Regione": "Piemonte"
+  },
+  "CAN02444": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN02465": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "CAN02570": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN02585": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN02595": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN02596": {
+   "Provincia": "VB",
+   "Regione": "Piemonte"
+  },
+  "CAN02639": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN02677": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN02685": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN02715": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN02772": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN02775": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN02778": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN02823": {
+   "Provincia": "BI",
+   "Regione": "Piemonte"
+  },
+  "CAN02931": {
+   "Provincia": "LO",
+   "Regione": "Lombardia"
+  },
+  "CAN02977": {
+   "Provincia": "LO",
+   "Regione": "Lombardia"
+  },
+  "CAN03045": {
+   "Provincia": "VB",
+   "Regione": "Piemonte"
+  },
+  "CAN03143": {
+   "Provincia": "LO",
+   "Regione": "Lombardia"
+  },
+  "CAN03152": {
+   "Provincia": "LO",
+   "Regione": "Lombardia"
+  },
+  "CAN03194": {
+   "Provincia": "BI",
+   "Regione": "Piemonte"
+  },
+  "CAN03284": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN03294": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "CAN03313": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN03315": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "CAN03338": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN03342": {
+   "Provincia": "LO",
+   "Regione": "Lombardia"
+  },
+  "CAN03410": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN03494": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN03507": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN03512": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN03516": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN03550": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN03556": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN03561": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN03564": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN03566": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN03570": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN03585": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN03599": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN03602": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN03603": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN03620": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN03674": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN03738": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "CAN03741": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "CAN03817": {
+   "Provincia": "BI",
+   "Regione": "Piemonte"
+  },
+  "CAN03863": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN03864": {
+   "Provincia": "VB",
+   "Regione": "Piemonte"
+  },
+  "CAN04009": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN04019": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "CAN04053": {
+   "Provincia": "VB",
+   "Regione": "Piemonte"
+  },
+  "CAN04121": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN04148": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN04169": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN04184": {
+   "Provincia": "LC",
+   "Regione": "Lombardia"
+  },
+  "CAN04204": {
+   "Provincia": "LO",
+   "Regione": "Lombardia"
+  },
+  "CAN04209": {
+   "Provincia": "LO",
+   "Regione": "Lombardia"
+  },
+  "CAN04228": {
+   "Provincia": "LO",
+   "Regione": "Lombardia"
+  },
+  "CAN04229": {
+   "Provincia": "LC",
+   "Regione": "Lombardia"
+  },
+  "CAN04232": {
+   "Provincia": "LO",
+   "Regione": "Lombardia"
+  },
+  "CAN04328": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN04339": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN04366": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN04455": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN04464": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN04468": {
+   "Provincia": "LO",
+   "Regione": "Lombardia"
+  },
+  "CAN04533": {
+   "Provincia": "NA",
+   "Regione": "Campania"
+  },
+  "CAN04630": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN04706": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN04730": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN04834": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN04836": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN04839": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN04848": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN04862": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN04878": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN04886": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN04936": {
+   "Provincia": "NA",
+   "Regione": "Campania"
+  },
+  "CAN04959": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN04974": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN04982": {
+   "Provincia": "NA",
+   "Regione": "Campania"
+  },
+  "CAN04986": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN04991": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN05008": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN05009": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN05016": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "CAN05122": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN05168": {
+   "Provincia": "RN",
+   "Regione": "Emilia-Romagna"
+  },
+  "CAN05268": {
+   "Provincia": "RN",
+   "Regione": "Emilia-Romagna"
+  },
+  "CAN05300": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN05439": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN05460": {
+   "Provincia": "VB",
+   "Regione": "Piemonte"
+  },
+  "CAN05470": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN05484": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN05510": {
+   "Provincia": "VB",
+   "Regione": "Piemonte"
+  },
+  "CAN05565": {
+   "Provincia": "BI",
+   "Regione": "Piemonte"
+  },
+  "CAN05594": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN05708": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN05806": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN05890": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN05896": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN06144": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN06145": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN06151": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "CAN06204": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN06213": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN06220": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN06475": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN06488": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN06771": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "CAN06809": {
+   "Provincia": "BI",
+   "Regione": "Piemonte"
+  },
+  "CAN06928": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN07096": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "CAN07130": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN07260": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN07278": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN07280": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN07281": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN07292": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN07341": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN07394": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN07399": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "CAN07572": {
+   "Provincia": "VB",
+   "Regione": "Piemonte"
+  },
+  "CAN07573": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN07588": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN07622": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN07645": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN07714": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN07783": {
+   "Provincia": "VB",
+   "Regione": "Piemonte"
+  },
+  "CAN07829": {
+   "Provincia": "VB",
+   "Regione": "Piemonte"
+  },
+  "CAN07865": {
+   "Provincia": "VB",
+   "Regione": "Piemonte"
+  },
+  "CAN07872": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "CAN07971": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN08030": {
+   "Provincia": "VB",
+   "Regione": "Piemonte"
+  },
+  "CAN08090": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN08141": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN08217": {
+   "Provincia": "LO",
+   "Regione": "Lombardia"
+  },
+  "CAN08226": {
+   "Provincia": "LO",
+   "Regione": "Lombardia"
+  },
+  "CAN08267": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "CAN08329": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN08342": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN08435": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN08470": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN08492": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN08499": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN08549": {
+   "Provincia": "VC",
+   "Regione": "Piemonte"
+  },
+  "CAN08640": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "CAN08657": {
+   "Provincia": "NA",
+   "Regione": "Campania"
+  },
+  "CAN08680": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "CAN08688": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "CAN08826": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN08853": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "CAN08856": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "CAN08935": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN08949": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN08954": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN08993": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN09109": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN09187": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN09200": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN09202": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN09216": {
+   "Provincia": "LO",
+   "Regione": "Lombardia"
+  },
+  "CAN09297": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN09344": {
+   "Provincia": "BI",
+   "Regione": "Piemonte"
+  },
+  "CAN09357": {
+   "Provincia": "BI",
+   "Regione": "Piemonte"
+  },
+  "CAN09360": {
+   "Provincia": "VB",
+   "Regione": "Piemonte"
+  },
+  "CAN09363": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN09424": {
+   "Provincia": "VB",
+   "Regione": "Piemonte"
+  },
+  "CAN09479": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN09515": {
+   "Provincia": "BI",
+   "Regione": "Piemonte"
+  },
+  "CAN09534": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN09734": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN09745": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "CAN09749": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "CAN09790": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN09793": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN09849": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN09896": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN09916": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN09933": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN09977": {
+   "Provincia": "NA",
+   "Regione": "Campania"
+  },
+  "CAN09990": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN10009": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN10017": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN10051": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN10052": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN10070": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN10080": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN10083": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN10116": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN10136": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN10152": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN10213": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN10256": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN10269": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN10390": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN10421": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "CAN10423": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN10427": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN10472": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN10479": {
+   "Provincia": "LO",
+   "Regione": "Lombardia"
+  },
+  "CAN10529": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN10570": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "CAN10584": {
+   "Provincia": "VB",
+   "Regione": "Piemonte"
+  },
+  "CAN10683": {
+   "Provincia": "MI",
+   "Regione": "Lombardia"
+  },
+  "CAN10751": {
+   "Provincia": "LO",
+   "Regione": "Lombardia"
+  },
+  "CAN10784": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN10823": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN10828": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN10835": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN10845": {
+   "Provincia": "LO",
+   "Regione": "Lombardia"
+  },
+  "CAN10871": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN10922": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN10924": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN10932": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN10977": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN11105": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN11115": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN11124": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN11137": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN11150": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN11154": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN11162": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN11182": {
+   "Provincia": "LC",
+   "Regione": "Lombardia"
+  },
+  "CAN11205": {
+   "Provincia": "LC",
+   "Regione": "Lombardia"
+  },
+  "CAN11213": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN11243": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN11249": {
+   "Provincia": "LC",
+   "Regione": "Lombardia"
+  },
+  "CAN11252": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN11258": {
+   "Provincia": "LC",
+   "Regione": "Lombardia"
+  },
+  "CAN11261": {
+   "Provincia": "LC",
+   "Regione": "Lombardia"
+  },
+  "CAN11270": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN11272": {
+   "Provincia": "LC",
+   "Regione": "Lombardia"
+  },
+  "CAN11278": {
+   "Provincia": "LC",
+   "Regione": "Lombardia"
+  },
+  "CAN11281": {
+   "Provincia": "LC",
+   "Regione": "Lombardia"
+  },
+  "CAN11340": {
+   "Provincia": "LC",
+   "Regione": "Lombardia"
+  },
+  "CAN11346": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN11377": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "CAN11389": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "CAN11398": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN11469": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN11487": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN11494": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN11515": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN11527": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN11639": {
+   "Provincia": "TV",
+   "Regione": "Veneto"
+  },
+  "CAN11652": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "CAN11667": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "CAN11806": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "CAN11999": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN12020": {
+   "Provincia": "BI",
+   "Regione": "Piemonte"
+  },
+  "CAN12073": {
+   "Provincia": "TV",
+   "Regione": "Veneto"
+  },
+  "CAN12183": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN12340": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN12354": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN12364": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN12372": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN12382": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN12387": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN12419": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN12426": {
+   "Provincia": "BI",
+   "Regione": "Piemonte"
+  },
+  "CAN12432": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN12443": {
+   "Provincia": "BI",
+   "Regione": "Piemonte"
+  },
+  "CAN12502": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN12618": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN12629": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN12636": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN12658": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN12682": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN12694": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN12707": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN12708": {
+   "Provincia": "LO",
+   "Regione": "Lombardia"
+  },
+  "CAN12773": {
+   "Provincia": "LC",
+   "Regione": "Lombardia"
+  },
+  "CAN12949": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN12976": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN12983": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN12989": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN13044": {
+   "Provincia": "VB",
+   "Regione": "Piemonte"
+  },
+  "CAN13210": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN13225": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN13460": {
+   "Provincia": "CT",
+   "Regione": "Sicilia"
+  },
+  "CAN13526": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN13527": {
+   "Provincia": "BI",
+   "Regione": "Piemonte"
+  },
+  "CAN13531": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN13535": {
+   "Provincia": "BI",
+   "Regione": "Piemonte"
+  },
+  "CAN13536": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN13540": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN13541": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN13553": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN13557": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN13559": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN13561": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN13569": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN13601": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN13639": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN13642": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN13701": {
+   "Provincia": "LC",
+   "Regione": "Lombardia"
+  },
+  "CAN13730": {
+   "Provincia": "LC",
+   "Regione": "Lombardia"
+  },
+  "CAN13816": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN13868": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN13965": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN14037": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN14060": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "CAN14215": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN14275": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "CAN14277": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN14279": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "CAN14301": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN14315": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN14317": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN14580": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN14666": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN14681": {
+   "Provincia": "VB",
+   "Regione": "Piemonte"
+  },
+  "CAN14682": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN14691": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN14694": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN14697": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN14701": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN14704": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN14739": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN14770": {
+   "Provincia": "LC",
+   "Regione": "Lombardia"
+  },
+  "CAN14772": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN14778": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN14794": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "CAN14798": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "CAN14806": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN14831": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN14833": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN14834": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN14837": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN14855": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN14933": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN14940": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN14951": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN15014": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN15030": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN15036": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN15040": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN15088": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN15128": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN15202": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "CAN15203": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "CAN15210": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN15248": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN15259": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN15274": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN15280": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN15285": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN15295": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN15424": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "CAN15426": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "CAN15429": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "CAN15437": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "CAN15484": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN15524": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN15531": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN15560": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN15577": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN15607": {
+   "Provincia": "CA",
+   "Regione": "Sardegna"
+  },
+  "CAN15633": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN15637": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN15641": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN15741": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN15743": {
+   "Provincia": "LC",
+   "Regione": "Lombardia"
+  },
+  "CAN15747": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN15776": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN15801": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN15839": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN15851": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN15950": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN16032": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN16151": {
+   "Provincia": "MI",
+   "Regione": "Lombardia"
+  },
+  "CAN16186": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN16328": {
+   "Provincia": "VB",
+   "Regione": "Piemonte"
+  },
+  "CAN16490": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "CAN16541": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN16679": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN16688": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN16704": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN16753": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN16767": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN16770": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN16775": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN16830": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN16890": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN16946": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN16947": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN16949": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN16981": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN16984": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN16987": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN17038": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN17042": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN17185": {
+   "Provincia": "NA",
+   "Regione": "Campania"
+  },
+  "CAN17494": {
+   "Provincia": "CA",
+   "Regione": "Sardegna"
+  },
+  "CAN17519": {
+   "Provincia": "LC",
+   "Regione": "Lombardia"
+  },
+  "CAN17530": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN17556": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN17639": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN17643": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN17684": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN17716": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN17729": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN17735": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN17736": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN17739": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN17879": {
+   "Provincia": "LO",
+   "Regione": "Lombardia"
+  },
+  "CAN17953": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN17978": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "CAN17999": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "CAN18004": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "CAN18013": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "CAN18086": {
+   "Provincia": "VB",
+   "Regione": "Piemonte"
+  },
+  "CAN18174": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN18179": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN18186": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN18226": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN18273": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN18275": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN18357": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN18475": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN18484": {
+   "Provincia": "VB",
+   "Regione": "Piemonte"
+  },
+  "CAN18503": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN18504": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN18507": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN18559": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN18585": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN18633": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN18760": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN18764": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN18911": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN18932": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN18949": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN19067": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN19254": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "CAN19269": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "CAN19273": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "CAN19344": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "CAN19345": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "CAN19385": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN19404": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "CAN19420": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN19483": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN19593": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN19747": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN19750": {
+   "Provincia": "VB",
+   "Regione": "Piemonte"
+  },
+  "CAN19751": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN19904": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN19938": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN19945": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN20011": {
+   "Provincia": "VB",
+   "Regione": "Piemonte"
+  },
+  "CAN20083": {
+   "Provincia": "AT",
+   "Regione": "Piemonte"
+  },
+  "CAN20197": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN20338": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN20346": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN20364": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN20375": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN20377": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN20378": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN20381": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN20382": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN20383": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN20385": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN20408": {
+   "Provincia": "RN",
+   "Regione": "Emilia-Romagna"
+  },
+  "CAN20468": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN20558": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN20608": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN20640": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN20652": {
+   "Provincia": "LO",
+   "Regione": "Lombardia"
+  },
+  "CAN20658": {
+   "Provincia": "LC",
+   "Regione": "Lombardia"
+  },
+  "CAN20673": {
+   "Provincia": "LO",
+   "Regione": "Lombardia"
+  },
+  "CAN20693": {
+   "Provincia": "LC",
+   "Regione": "Lombardia"
+  },
+  "CAN20698": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN20699": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "CAN20703": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "CAN20706": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "CAN20708": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "CAN20723": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "CAN20726": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "CAN20800": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN20955": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN20980": {
+   "Provincia": "RM",
+   "Regione": "Lazio"
+  },
+  "CAN21033": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN21036": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN21045": {
+   "Provincia": "LC",
+   "Regione": "Lombardia"
+  },
+  "CAN21065": {
+   "Provincia": "CA",
+   "Regione": "Sardegna"
+  },
+  "CAN21076": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN21083": {
+   "Provincia": "LO",
+   "Regione": "Lombardia"
+  },
+  "CAN21087": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN21117": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN21204": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN21245": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN21257": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN21268": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "CAN21324": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN21591": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN21605": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN21646": {
+   "Provincia": "TV",
+   "Regione": "Veneto"
+  },
+  "CAN21650": {
+   "Provincia": "LO",
+   "Regione": "Lombardia"
+  },
+  "CAN21875": {
+   "Provincia": "VB",
+   "Regione": "Piemonte"
+  },
+  "CAN21938": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN21951": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN21953": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN21956": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN21997": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "CAN22036": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN22037": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN22044": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN22048": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN22050": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN22066": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN22082": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN22188": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN22191": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN22248": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN22254": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN22261": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN22325": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN22423": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN22603": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN22811": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN22827": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN22833": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN22860": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN22864": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN22886": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN22920": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN22922": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN22926": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN22933": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN22936": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN22937": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN22941": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN22993": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN23016": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN23022": {
+   "Provincia": "BI",
+   "Regione": "Piemonte"
+  },
+  "CAN23043": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN23055": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN23116": {
+   "Provincia": "BI",
+   "Regione": "Piemonte"
+  },
+  "CAN23202": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "CAN23228": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN23232": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN23286": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN23305": {
+   "Provincia": "NA",
+   "Regione": "Campania"
+  },
+  "CAN23309": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "CAN23310": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "CAN23311": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "CAN23312": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "CAN23605": {
+   "Provincia": "LO",
+   "Regione": "Lombardia"
+  },
+  "CAN23705": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN23799": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN23830": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN23873": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN23876": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN24045": {
+   "Provincia": "VB",
+   "Regione": "Piemonte"
+  },
+  "CAN24098": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN24109": {
+   "Provincia": "LC",
+   "Regione": "Lombardia"
+  },
+  "CAN24151": {
+   "Provincia": "VB",
+   "Regione": "Piemonte"
+  },
+  "CAN24188": {
+   "Provincia": "NA",
+   "Regione": "Campania"
+  },
+  "CAN24209": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN24220": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN24247": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN24250": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN24252": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN24281": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN24322": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN24356": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN24474": {
+   "Provincia": "LO",
+   "Regione": "Lombardia"
+  },
+  "CAN24492": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN24525": {
+   "Provincia": "LC",
+   "Regione": "Lombardia"
+  },
+  "CAN24555": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN24637": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN24655": {
+   "Provincia": "BI",
+   "Regione": "Piemonte"
+  },
+  "CAN24668": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN24671": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN24710": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN24714": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN24717": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN24721": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN24757": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN24761": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN24837": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN24842": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN24845": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN24851": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN24930": {
+   "Provincia": "LC",
+   "Regione": "Lombardia"
+  },
+  "CAN24933": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN24938": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN24951": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN24955": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN24969": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN24973": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN24992": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN25112": {
+   "Provincia": "LO",
+   "Regione": "Lombardia"
+  },
+  "CAN25168": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN25244": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN25343": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN25377": {
+   "Provincia": "LC",
+   "Regione": "Lombardia"
+  },
+  "CAN25418": {
+   "Provincia": "BI",
+   "Regione": "Piemonte"
+  },
+  "CAN25427": {
+   "Provincia": "BI",
+   "Regione": "Piemonte"
+  },
+  "CAN25438": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN25458": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN25469": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN25478": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN25525": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN25681": {
+   "Provincia": "LO",
+   "Regione": "Lombardia"
+  },
+  "CAN25714": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN25718": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN25726": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN25728": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN25729": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN25730": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN25787": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN25798": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN25799": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN25801": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN25803": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN25806": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN25842": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "CAN25847": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "CAN25849": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN25879": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "CAN25892": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "CAN26000": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN26025": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN26070": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN26128": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "CAN26134": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN26144": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "CAN26158": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN26267": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN26274": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN26276": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN26278": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN26283": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN26328": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN26343": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN26345": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN26376": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN26414": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN26474": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN26499": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN26539": {
+   "Provincia": "BI",
+   "Regione": "Piemonte"
+  },
+  "CAN26621": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN26635": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN26736": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN26738": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN26872": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN26883": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN26889": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN26906": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "CAN27111": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN27155": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN27165": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN27173": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN27175": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN27277": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN27280": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN27301": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN27305": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN27308": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN27372": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN27532": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN27554": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN27741": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN27757": {
+   "Provincia": "NA",
+   "Regione": "Campania"
+  },
+  "CAN27798": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN28022": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "CAN28075": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN28116": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN28249": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "CAN28321": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN28340": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN28359": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN28368": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN28451": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN28582": {
+   "Provincia": "LO",
+   "Regione": "Lombardia"
+  },
+  "CAN28618": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN28737": {
+   "Provincia": "BI",
+   "Regione": "Piemonte"
+  },
+  "CAN28814": {
+   "Provincia": "NA",
+   "Regione": "Campania"
+  },
+  "CAN28867": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN28914": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN28917": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN28931": {
+   "Provincia": "VA",
+   "Regione": "Lombardia"
+  },
+  "CAN28962": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN28964": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN28970": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN28974": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN28994": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN29018": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN29077": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN29089": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN29115": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN29155": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN29331": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN29334": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN29336": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN29337": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN29453": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "CAN29587": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN29604": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN29691": {
+   "Provincia": "LO",
+   "Regione": "Lombardia"
+  },
+  "CAN29724": {
+   "Provincia": "BI",
+   "Regione": "Piemonte"
+  },
+  "CAN29877": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN29880": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN29882": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN29886": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN29915": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN29918": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN30058": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN30106": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN30372": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "CAN30561": {
+   "Provincia": "LO",
+   "Regione": "Lombardia"
+  },
+  "CAN30866": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN30886": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN30890": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN31013": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN31019": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN31023": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN31049": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN31065": {
+   "Provincia": "LO",
+   "Regione": "Lombardia"
+  },
+  "CAN31094": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN31123": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN31219": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN31242": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN31280": {
+   "Provincia": "NA",
+   "Regione": "Campania"
+  },
+  "CAN31388": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN31412": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN31433": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN31434": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN31546": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN31550": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN31658": {
+   "Provincia": "LC",
+   "Regione": "Lombardia"
+  },
+  "CAN31719": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN31722": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN31727": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN31728": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN31731": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN31734": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN31738": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN31831": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN31867": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN31873": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN31888": {
+   "Provincia": "LC",
+   "Regione": "Lombardia"
+  },
+  "CAN31930": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN31953": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN31957": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN31961": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN31963": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN31965": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN32002": {
+   "Provincia": "NA",
+   "Regione": "Campania"
+  },
+  "CAN32044": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN32065": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN32072": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN32105": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN32116": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN32146": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN32157": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN32210": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN32229": {
+   "Provincia": "BI",
+   "Regione": "Piemonte"
+  },
+  "CAN32268": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN32270": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN32291": {
+   "Provincia": "BI",
+   "Regione": "Piemonte"
+  },
+  "CAN32312": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN32319": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN32378": {
+   "Provincia": "LC",
+   "Regione": "Lombardia"
+  },
+  "CAN32458": {
+   "Provincia": "VB",
+   "Regione": "Piemonte"
+  },
+  "CAN32476": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN32563": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN32565": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN32578": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN32592": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN32611": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN32617": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN32622": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN32736": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN32741": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN32744": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN32750": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN32820": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN32825": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN32915": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN32929": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN32959": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN32963": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN32979": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN33282": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN33394": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN33484": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN33488": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN33491": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN33497": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN33499": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN33501": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN33504": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN33537": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN33538": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN33560": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN33562": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN33598": {
+   "Provincia": "BI",
+   "Regione": "Piemonte"
+  },
+  "CAN33801": {
+   "Provincia": "BI",
+   "Regione": "Piemonte"
+  },
+  "CAN33965": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN34013": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN34043": {
+   "Provincia": "LO",
+   "Regione": "Lombardia"
+  },
+  "CAN34103": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "CAN34108": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN34120": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN34151": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN34208": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN34274": {
+   "Provincia": "SS",
+   "Regione": "Sardegna"
+  },
+  "CAN34358": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN34382": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN34394": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN34443": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN34450": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN34474": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN34480": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN34496": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN34626": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN34628": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN34631": {
+   "Provincia": "VB",
+   "Regione": "Piemonte"
+  },
+  "CAN34721": {
+   "Provincia": "VB",
+   "Regione": "Piemonte"
+  },
+  "CAN34738": {
+   "Provincia": "VI",
+   "Regione": "Veneto"
+  },
+  "CAN34907": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "CAN35007": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN35029": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN35061": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN35065": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN35130": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN35132": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN35309": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN35323": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN35334": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN35352": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN35450": {
+   "Provincia": "LC",
+   "Regione": "Lombardia"
+  },
+  "CAN35454": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN35457": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN35492": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN35512": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN35521": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN35611": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "CAN35652": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN35677": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN35679": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN35680": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN35753": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN35758": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN35820": {
+   "Provincia": "BI",
+   "Regione": "Piemonte"
+  },
+  "CAN36089": {
+   "Provincia": "NA",
+   "Regione": "Campania"
+  },
+  "CAN36125": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN36207": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN36215": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN36216": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN36231": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN36233": {
+   "Provincia": "VV",
+   "Regione": "Calabria"
+  },
+  "CAN36263": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN36289": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN36331": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN36344": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN36366": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN36382": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN36403": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN36438": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN36477": {
+   "Provincia": "NA",
+   "Regione": "Campania"
+  },
+  "CAN36502": {
+   "Provincia": "MB",
+   "Regione": "Lombardia"
+  },
+  "CAN36700": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN36703": {
+   "Provincia": "PO",
+   "Regione": "Toscana"
+  },
+  "CAN36743": {
+   "Provincia": "VB",
+   "Regione": "Piemonte"
+  },
+  "CAN36834": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN36854": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN36856": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN36860": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN36919": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN37011": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN37069": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN37100": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN37360": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN37363": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN37367": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN37399": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "CAN37418": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN37421": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN37422": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN37423": {
+   "Provincia": "BT",
+   "Regione": "Puglia"
+  },
+  "CAN37428": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN37430": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN37432": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN37434": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
+  },
+  "CAN37471": {
+   "Provincia": "SU",
+   "Regione": "Sardegna"
+  },
+  "CAN37556": {
+   "Provincia": "FM",
+   "Regione": "Marche"
+  },
+  "CAN37699": {
+   "Provincia": "KR",
+   "Regione": "Calabria"
   }
  }
 }
