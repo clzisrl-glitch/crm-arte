@@ -519,7 +519,7 @@ body[data-ruolo="operatore"] .tab-soloadmin{display:none!important}
   <div class="topbar">
     <span class="topbar-title">CRM</span>
     <div style="display:flex;align-items:center;gap:8px;margin-right:10px">
-      <button onclick="_aggiornaOra()" title="Ricarica i dati dal server" style="font-size:14px;background:none;border:none;cursor:pointer;padding:2px 6px;color:#2a5ab8">&#10227;</button>
+      <button onclick="_aggiornaOra()" title="Ricarica i dati dal server" id="btnAggiorna" style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;background:#2a5ab8;color:#fff;border:none;border-radius:16px;cursor:pointer;padding:6px 14px;box-shadow:0 1px 3px rgba(0,0,0,.2)"><span id="iconaAgg" style="font-size:16px;line-height:1">&#10227;</span><span>Aggiorna</span><span id="numContatti" style="background:rgba(255,255,255,.25);border-radius:10px;padding:1px 8px;font-size:12px">&mdash;</span></button>
       <span id="dbStatus" style="font-size:10px;color:#666;min-width:80px;text-align:right"></span>
     </div>
     <div class="tabs">
@@ -3999,6 +3999,7 @@ async function _controllaAggiornamenti(){
       try{buildAgendaIndex();}catch(e){}
       const p=document.querySelector('.page.active');
       if(p&&p.id==='page-list'){try{renderList(allContacts);}catch(e){}}
+      _mostraConteggio(contacts.length);
       const t=document.getElementById('saveToast')||document.body.appendChild(Object.assign(document.createElement('div'),{id:'saveToast'}));
       t.className='show ok';
       t.innerHTML='&#10227; Dati aggiornati'+(diff>0?' (+'+diff+')':'');
@@ -4007,9 +4008,67 @@ async function _controllaAggiornamenti(){
     _ricaricaInCorso=false;
   }catch(e){_ricaricaInCorso=false;}
 }
+// ---- COMPILAZIONE AUTOMATICA DI PROVINCIA E REGIONE ----
+// L'operatore scrive la citta' e prende i suggerimenti dall'elenco ufficiale
+// dei comuni; provincia e regione si riempiono da sole. Se il comune non e'
+// riconosciuto lo dice, ma NON blocca il salvataggio: esteri, San Marino e
+// frazioni devono restare possibili.
+let _COMUNI=null;
+// normalizzazione locale: non dipende da altri blocchi <script>
+function _nrmC(s){return (s||'').toString().toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();}
+async function _caricaElencoComuni(){
+  if(_COMUNI) return _COMUNI;
+  try{
+    const r=await fetch('https://raw.githubusercontent.com/matteocontrini/comuni-json/master/comuni.json');
+    const j=await r.json();
+    _COMUNI={};
+    j.forEach(x=>{_COMUNI[_nrmC(x.nome)]={nome:x.nome,sigla:x.sigla,reg:x.regione.nome,cap:(x.cap||[])[0]||''};});
+    const dl=document.getElementById('listaComuni');
+    if(dl && !dl.children.length){
+      const fr=document.createDocumentFragment();
+      j.forEach(x=>{const o=document.createElement('option');o.value=x.nome;fr.appendChild(o);});
+      dl.appendChild(fr);
+    }
+  }catch(e){ _COMUNI={}; }
+  return _COMUNI;
+}
+async function _comuneScelto(){
+  const inp=document.getElementById('nc_Citta');
+  const av=document.getElementById('nc_avvisoCitta');
+  if(!inp) return;
+  const v=(inp.value||'').trim();
+  if(!v){ if(av)av.textContent=''; inp.style.background=''; return; }
+  const C=await _caricaElencoComuni();
+  const u=C[_nrmC(v)];
+  if(u){
+    inp.style.background='';
+    if(av){av.style.color='#0a7d3c'; av.textContent='\u2713 '+u.nome+' ('+u.sigla+') - '+u.reg;}
+    const pv=document.getElementById('nc_Provincia'), rg=document.getElementById('nc_Regione'), cp=document.getElementById('nc_CAP');
+    if(pv && !pv.dataset.tocco) pv.value=u.sigla;
+    if(rg && !rg.dataset.tocco) rg.value=u.reg;
+    if(cp && !cp.value.trim() && u.cap) cp.value=u.cap;
+  }else{
+    inp.style.background='#fff8e1';
+    if(av){av.style.color='#a06000'; av.textContent='\u26a0 comune non in elenco: compila a mano provincia e regione';}
+  }
+}
+// se l'operatore scrive a mano provincia o regione, non le sovrascrivo piu'
+['nc_Provincia','nc_Regione'].forEach(function(id){
+  document.addEventListener('input',function(e){ if(e.target && e.target.id===id) e.target.dataset.tocco='1'; });
+});
+
+// aggiorna il numero di contatti mostrato accanto al pulsante
+function _mostraConteggio(n){
+  const b=document.getElementById('numContatti');
+  if(b && typeof n==='number' && n>0) b.textContent=n.toLocaleString('it-IT');
+}
 async function _aggiornaOra(){
   const s=document.getElementById('dbStatus');
+  const ico=document.getElementById('iconaAgg');
+  const btn=document.getElementById('btnAggiorna');
   if(s)s.textContent='Aggiorno...';
+  if(ico){ico.style.transition='transform .8s linear';ico.style.transform='rotate(720deg)';}
+  if(btn)btn.disabled=true;
   _ultimoConteggio=null;              // forzo il confronto
   try{
     const r=await fetch('/api/status',{cache:'no-store'});
@@ -4021,9 +4080,12 @@ async function _aggiornaOra(){
       try{buildAgendaIndex();}catch(e){}
       const p=document.querySelector('.page.active');
       if(p&&p.id==='page-list'){try{renderList(allContacts);}catch(e){}}
-      if(s){s.textContent='\u2713 '+contacts.length+' contatti';setTimeout(()=>{s.textContent='';},3000);}
+      _mostraConteggio(contacts.length);
+      if(s){s.textContent='\u2713 aggiornato';setTimeout(()=>{s.textContent='';},3000);}
     } else if(s){ s.textContent='aggiornamento non riuscito'; }
   }catch(e){ if(s)s.textContent='aggiornamento non riuscito'; }
+  if(ico){setTimeout(()=>{ico.style.transition='none';ico.style.transform='none';},850);}
+  if(btn)btn.disabled=false;
 }
 
 setInterval(_controllaAggiornamenti,120000);
@@ -4058,6 +4120,8 @@ document.getElementById('searchModal').addEventListener('click',function(e){if(e
     // carico la tabella dei comuni gia' adesso: serve al controllo del comune
     // quando si crea un contatto nuovo (altrimenti si carica solo con la mappa)
     try{_caricaComuni();}catch(e){}
+    // mostro subito quanti contatti sono caricati, accanto al pulsante Aggiorna
+    try{_mostraConteggio(Array.isArray(contacts)?contacts.length:0);}catch(e){}
     const ok=await checkDBHasData();
     const hint=document.getElementById('dbHint');
     const btn=document.getElementById('btnAvvia');
@@ -4258,7 +4322,7 @@ const EMBEDDED_APPUNTAMENTI=``
       <div><label style="font-size:10px;font-weight:700;color:#666;display:block;margin-bottom:2px;text-transform:uppercase">e-mail</label><input id="nc_Email" class="edit-inp" style="width:100%"></div>
       <div style="grid-column:1/-1;font-size:11px;font-weight:700;color:#1a3a6a;border-bottom:1px solid #e0dcd4;padding-bottom:4px;margin-top:4px">INDIRIZZO</div>
       <div><label style="font-size:10px;font-weight:700;color:#666;display:block;margin-bottom:2px;text-transform:uppercase">Via</label><input id="nc_Via" class="edit-inp" style="width:100%"></div>
-      <div><label style="font-size:10px;font-weight:700;color:#666;display:block;margin-bottom:2px;text-transform:uppercase">Citta</label><input id="nc_Citta" class="edit-inp" style="font-weight:700;width:100%"></div>
+      <div><label style="font-size:10px;font-weight:700;color:#666;display:block;margin-bottom:2px;text-transform:uppercase">Citta</label><input id="nc_Citta" class="edit-inp" list="listaComuni" autocomplete="off" oninput="_comuneScelto()" style="font-weight:700;width:100%"><datalist id="listaComuni"></datalist><div id="nc_avvisoCitta" style="font-size:10px;margin-top:2px"></div></div>
       <div><label style="font-size:10px;font-weight:700;color:#666;display:block;margin-bottom:2px;text-transform:uppercase">Provincia</label><input id="nc_Provincia" class="edit-inp" style="width:100%"></div>
       <div><label style="font-size:10px;font-weight:700;color:#666;display:block;margin-bottom:2px;text-transform:uppercase">CAP</label><input id="nc_CAP" class="edit-inp" style="width:100%"></div>
       <div><label style="font-size:10px;font-weight:700;color:#666;display:block;margin-bottom:2px;text-transform:uppercase">Regione</label><input id="nc_Regione" class="edit-inp" style="width:100%"></div>
