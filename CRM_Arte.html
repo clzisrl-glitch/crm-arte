@@ -140,11 +140,16 @@ body{background:var(--bg);color:var(--ink);font-size:13px;-webkit-font-smoothing
 .topbar{background:#fff;border-bottom:1px solid var(--line2);min-height:48px;height:auto;
   gap:10px;padding:6px 14px;flex-wrap:wrap;align-items:center}
 .topbar-title{color:var(--ink);font-weight:600;letter-spacing:-.01em;flex:0 0 auto;margin-right:4px}
-.tabs{display:flex;gap:4px;flex-wrap:wrap;flex:1;justify-content:flex-end}
+.tabs{display:flex;gap:4px;flex-wrap:wrap;flex:1;justify-content:flex-start}
 .tab{background:transparent;border:1px solid transparent;border-radius:9px;color:var(--muted);
   font-weight:500;padding:6px 13px;font-size:12.5px;white-space:nowrap}
 .tab.active{background:var(--ocean-bg);color:var(--ocean);border-color:transparent;font-weight:600}
 .tab:hover:not(.active){background:#f0f0f2}
+/* trascinamento schede: il cursore lo fa capire */
+.tab[draggable="true"]{cursor:grab}
+.tab[draggable="true"]:active{cursor:grabbing}
+.tab.dragging{opacity:.45;transform:scale(.97)}
+.tab.drop-target{box-shadow:inset 3px 0 0 var(--apl-blue,#2a5ab8)}
 /* schede delle code di lavoro: un solo colore, non quattro diversi */
 .tab-attesa{color:#8a5a10;font-weight:600}
 .tab-attesa.active{background:#fdf3e0;color:#8a5a10}
@@ -402,16 +407,18 @@ body{background:var(--apl-bg);color:var(--apl-ink)}
 #loading{background:var(--apl-bg)}
 .ld-box{border:1px solid var(--apl-line2);border-radius:16px;box-shadow:0 8px 30px rgba(0,0,0,.08)}
 .btn-avvia{background:var(--apl-blue);border-radius:10px}
-.topbar{background:rgba(255,255,255,.85);backdrop-filter:saturate(180%) blur(14px);-webkit-backdrop-filter:saturate(180%) blur(14px);border-bottom:1px solid var(--apl-line);height:46px}
+/* barra: altezza automatica, altrimenti le schede andate a capo finiscono
+   SOPRA la toolbar sottostante */
+.topbar{background:rgba(255,255,255,.85);backdrop-filter:saturate(180%) blur(14px);-webkit-backdrop-filter:saturate(180%) blur(14px);border-bottom:1px solid var(--apl-line);min-height:46px;height:auto;flex-wrap:wrap;gap:8px;padding:6px 14px;align-items:center}
 .topbar-title{color:var(--apl-ink);font-weight:600;letter-spacing:-.2px}
-.tabs{gap:5px}
-.tab{border:1px solid var(--line2);border-radius:9px;background:#fff;color:var(--ink);font-weight:600;padding:9px 12px;font-size:13px;line-height:1;min-height:44px;box-sizing:border-box;display:inline-flex;align-items:center;white-space:nowrap}
+.tabs{gap:5px;display:flex;flex-wrap:wrap;flex:1;justify-content:flex-start;row-gap:6px}
+.tab{border:1px solid var(--line2);border-radius:9px;background:#fff;color:var(--ink);font-weight:600;padding:7px 12px;font-size:12.5px;line-height:1;min-height:34px;box-sizing:border-box;display:inline-flex;align-items:center;white-space:nowrap}
 .tab.active{background:var(--apl-blue);border-color:var(--apl-blue);color:#fff}
 .tab:hover:not(.active){background:#e8e8ed}
 .tb-btn{background:#fff;border:1px solid var(--apl-line);border-radius:8px;color:var(--apl-ink)}
 .tb-btn:hover{background:#e8e8ed}
 .filter-btn.active,.view-btn.active{background:var(--apl-blue);border-color:var(--apl-blue);color:#fff}
-.cal-toolbar{background:var(--apl-bg);border-bottom:1px solid var(--apl-line)}
+.cal-toolbar{background:var(--apl-bg);border-bottom:1px solid var(--apl-line);gap:8px;row-gap:8px;padding:8px 14px;flex-wrap:wrap;align-items:center}
 .cal-hdr-corner,.cal-hdr-day{background:#fbfbfd;border-right:1px solid var(--apl-line2)}
 .cal-hdr-day.today{background:#d8eaff}
 .cal-allday-lbl,.cal-time-col{background:#fbfbfd;border-right:1px solid var(--apl-line2)}
@@ -4092,18 +4099,44 @@ function _abilitaTrascinaSchede(){
   const box=document.querySelector('.tabs'); if(!box||box.dataset.drag) return;
   box.dataset.drag='1';
   let preso=null;
+  // trova la scheda piu' vicina al punto in cui sto trascinando: cosi' funziona
+  // anche verso l'inizio della barra e con le schede su piu' righe
+  function _dopoQuale(x,y){
+    const altre=[...box.querySelectorAll('.tab:not(.dragging)')];
+    let best=null, bestD=Infinity;
+    altre.forEach(function(b){
+      const r=b.getBoundingClientRect();
+      const cx=r.left+r.width/2, cy=r.top+r.height/2;
+      const d=Math.hypot(x-cx,(y-cy)*3);      // peso la riga piu' della colonna
+      if(d<bestD){bestD=d;best={el:b,dopo:x>cx};}
+    });
+    return best;
+  }
+  box.addEventListener('dragover',function(e){
+    e.preventDefault();
+    if(!preso) return;
+    const t=_dopoQuale(e.clientX,e.clientY);
+    box.querySelectorAll('.drop-target').forEach(x=>x.classList.remove('drop-target'));
+    if(!t){box.appendChild(preso);return;}
+    t.el.classList.add('drop-target');
+    box.insertBefore(preso, t.dopo?t.el.nextSibling:t.el);
+  });
+  box.addEventListener('drop',function(e){e.preventDefault();});
   box.querySelectorAll('.tab').forEach(function(b){
     b.draggable=true;
-    b.title=(b.title||'')+'  (trascina per spostare)';
-    b.addEventListener('dragstart',function(e){preso=b;b.style.opacity='.4';e.dataTransfer.effectAllowed='move';});
-    b.addEventListener('dragend',function(){b.style.opacity='';_salvaOrdineSchede();});
-    b.addEventListener('dragover',function(e){
-      e.preventDefault();
-      if(!preso||preso===b) return;
-      const r=b.getBoundingClientRect();
-      const dopo=(e.clientX-r.left)>r.width/2;
-      box.insertBefore(preso, dopo?b.nextSibling:b);
+    if(!/trascina/.test(b.title||'')) b.title=(b.title||'')+'  \u2014  trascina per spostare';
+    b.addEventListener('dragstart',function(e){
+      preso=b; b.classList.add('dragging');
+      e.dataTransfer.effectAllowed='move';
+      try{e.dataTransfer.setData('text/plain',b.dataset.tab||'');}catch(_){}
     });
+    b.addEventListener('dragend',function(){
+      b.classList.remove('dragging');
+      box.querySelectorAll('.drop-target').forEach(x=>x.classList.remove('drop-target'));
+      preso=null; _salvaOrdineSchede();
+    });
+    // un click accidentale a fine trascinamento non deve cambiare pagina
+    b.addEventListener('click',function(e){ if(b.classList.contains('dragging')) e.stopPropagation(); },true);
   });
 }
 let _timerOrdine=null;
