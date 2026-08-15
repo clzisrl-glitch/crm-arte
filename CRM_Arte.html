@@ -4068,6 +4068,59 @@ async function _comuneScelto(){
   document.addEventListener('input',function(e){ if(e.target && e.target.id===id) e.target.dataset.tocco='1'; });
 });
 
+// ---- ORDINE DELLE SCHEDE (solo titolare) ----
+// Il titolare puo' trascinare le schede della barra in alto per metterle
+// nell'ordine che preferisce. L'ordine si salva nel DATABASE (non nel
+// browser), cosi' vale su tutti i dispositivi e lo vedono anche gli
+// operatori. Gli operatori non possono trascinare.
+async function _caricaOrdineSchede(){
+  try{
+    const r=await fetch('/api/ordine_schede');
+    if(!r.ok) return;
+    const j=await r.json();
+    const ord=j.ordine||[];
+    if(!ord.length) return;
+    const box=document.querySelector('.tabs'); if(!box) return;
+    ord.forEach(function(k){
+      const b=box.querySelector('.tab[data-tab="'+k+'"]');
+      if(b) box.appendChild(b);           // rimette in fondo nell'ordine giusto
+    });
+  }catch(e){}
+}
+function _abilitaTrascinaSchede(){
+  if((window._ruolo||'titolare')!=='titolare') return;   // solo il titolare
+  const box=document.querySelector('.tabs'); if(!box||box.dataset.drag) return;
+  box.dataset.drag='1';
+  let preso=null;
+  box.querySelectorAll('.tab').forEach(function(b){
+    b.draggable=true;
+    b.title=(b.title||'')+'  (trascina per spostare)';
+    b.addEventListener('dragstart',function(e){preso=b;b.style.opacity='.4';e.dataTransfer.effectAllowed='move';});
+    b.addEventListener('dragend',function(){b.style.opacity='';_salvaOrdineSchede();});
+    b.addEventListener('dragover',function(e){
+      e.preventDefault();
+      if(!preso||preso===b) return;
+      const r=b.getBoundingClientRect();
+      const dopo=(e.clientX-r.left)>r.width/2;
+      box.insertBefore(preso, dopo?b.nextSibling:b);
+    });
+  });
+}
+let _timerOrdine=null;
+function _salvaOrdineSchede(){
+  clearTimeout(_timerOrdine);
+  _timerOrdine=setTimeout(async function(){
+    const box=document.querySelector('.tabs'); if(!box) return;
+    const ord=[...box.querySelectorAll('.tab')].map(b=>b.dataset.tab).filter(Boolean);
+    const s=document.getElementById('dbStatus');
+    try{
+      const r=await fetch('/api/ordine_schede',{method:'POST',
+        headers:{'Content-Type':'application/json'},body:JSON.stringify({ordine:ord})});
+      if(s){s.textContent=r.ok?'\u2713 ordine salvato':'ordine NON salvato';setTimeout(()=>{s.textContent='';},2500);}
+    }catch(e){ if(s)s.textContent='ordine NON salvato'; }
+  },400);
+}
+
 // aggiorna il numero di contatti mostrato accanto al pulsante
 function _mostraConteggio(n){
   const b=document.getElementById('numContatti');
@@ -4133,6 +4186,8 @@ document.getElementById('searchModal').addEventListener('click',function(e){if(e
     try{_caricaComuni();}catch(e){}
     // mostro subito quanti contatti sono caricati, accanto al pulsante Aggiorna
     try{_mostraConteggio(Array.isArray(contacts)?contacts.length:0);}catch(e){}
+    // ordine delle schede deciso dal titolare + trascinamento (solo titolare)
+    try{await _caricaOrdineSchede();_abilitaTrascinaSchede();}catch(e){}
     const ok=await checkDBHasData();
     const hint=document.getElementById('dbHint');
     const btn=document.getElementById('btnAvvia');

@@ -32,7 +32,7 @@ ROTTE_CHE_SCRIVONO = {
     '/api/salva_contatto', '/api/salva_scheda', '/api/elimina_contatto',
     '/api/aggiungi_telefonata', '/api/contatto_stato', '/api/segnala',
     '/api/verifica', '/api/save', '/api/save_full', '/api/importa',
-    '/api/correggi_dati', '/api/fondi_duplicati', '/api/reset',
+    '/api/correggi_dati', '/api/fondi_duplicati', '/api/reset', '/api/ordine_schede',
 }
 
 @app.before_request
@@ -347,6 +347,26 @@ def api_fondi_duplicati():
     save_data(data)
     return jsonify({"ok":True,"eliminati":eliminati,"campi":campi,
                     "verifiche_riagganciate":nver,"verifiche_chiuse":nchiuse})
+
+@app.route('/api/ordine_schede', methods=['GET','POST'])
+def ordine_schede():
+    """Ordine delle schede della barra in alto, deciso dal titolare.
+    Sta nel database (non nel browser) cosi' vale su tutti i dispositivi e
+    per tutti gli operatori. Solo il titolare puo' modificarlo."""
+    if request.method == 'GET':
+        data = load_data()
+        return jsonify({'ok': True, 'ordine': data.get('ordine_schede') or []})
+    u = _utente_corrente() if crm_auth.USE_AUTH else {'ruolo':'titolare'}
+    if not u or u.get('ruolo') != 'titolare':
+        return jsonify({'error': 'Solo il titolare puo cambiare l ordine.'}), 403
+    body = request.get_json(force=True) or {}
+    ordine = body.get('ordine')
+    if not isinstance(ordine, list) or not all(isinstance(x, str) for x in ordine):
+        return jsonify({'error': 'Ordine non valido.'}), 400
+    data = load_data()
+    data['ordine_schede'] = ordine[:40]
+    save_data(data)
+    return jsonify({'ok': True, 'ordine': data['ordine_schede']})
 
 @app.route('/api/status')
 def status():
