@@ -17,12 +17,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-se
 .ld-sep p{font-size:10px;color:#999;margin-bottom:8px;text-align:center}
 #loadStatus{text-align:center;font-size:11px;color:#666;min-height:16px;margin-top:8px}
 #app{display:none;flex-direction:column;height:100vh}
-.topbar{display:flex;align-items:center;padding:0 16px;background:#f0ede6;border-bottom:2px solid #c8c4bc;flex-shrink:0;height:40px}
-.topbar-title{font-size:15px;font-weight:700;color:#1a3a6a;flex:1}
-.tabs{display:flex;gap:3px}
-.tab{padding:6px 22px;border:1px solid #6090cc;border-radius:4px;font-size:13px;font-weight:700;cursor:pointer;background:#fff;color:#1a3a6a}
-.tab.active{background:#3a7acc;color:#fff;border-color:#2a5aaa}
-.tab:hover:not(.active){background:#e0eeff}
+.topbar{display:flex;align-items:center;gap:10px;padding:5px 14px;background:#f0ede6;border-bottom:2px solid #c8c4bc;flex-shrink:0;min-height:40px;flex-wrap:wrap}
+.topbar-title{font-size:15px;font-weight:700;color:#1a3a6a;flex:0 0 auto;margin-right:12px}
+.tabs{display:flex;gap:4px;flex-wrap:wrap;flex:1}
+.tab{padding:5px 12px;border:1px solid #b9c6d8;border-radius:5px;font-size:12.5px;font-weight:600;cursor:pointer;background:#fff;color:#33465e;white-space:nowrap;transition:background .12s,border-color .12s}
+.tab.active{background:#2a5ab8;color:#fff;border-color:#2a5ab8;box-shadow:0 1px 2px rgba(0,0,0,.15)}
+.tab:hover:not(.active){background:#eef3fa;border-color:#8fa8c8}
 .page{flex:1;overflow:hidden;display:none;flex-direction:column}
 .page.active{display:flex}
 .cal-toolbar{display:flex;align-items:center;gap:5px;padding:4px 10px;background:#e8e6e0;border-bottom:1px solid #c8c4bc;flex-shrink:0;flex-wrap:wrap}
@@ -135,12 +135,23 @@ a.tap.mail{color:#1a6aaa;font-size:13px;word-break:break-all}
   --ocean:#2a5f93;--ocean-bg:#eaf1f8;--call:#2f9d57;--wa:#1f9d57}
 :root{--accent:#2a5f93;--accent-dk:#1f4a73}
 body{background:var(--bg);color:var(--ink);font-size:13px;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
-/* Barra in alto */
-.topbar{background:#fff;border-bottom:1px solid var(--line2);height:48px}
-.topbar-title{color:var(--ink);font-weight:600;letter-spacing:-.01em}
-.tab{background:transparent;border:1px solid transparent;border-radius:9px;color:var(--muted);font-weight:500;padding:7px 16px}
-.tab.active{background:var(--ocean-bg);color:var(--ocean);border-color:transparent}
+/* Barra in alto: il titolo non deve schiacciare il pulsante Aggiorna, e le
+   schede vanno a capo quando la finestra e' stretta invece di sovrapporsi. */
+.topbar{background:#fff;border-bottom:1px solid var(--line2);min-height:48px;height:auto;
+  gap:10px;padding:6px 14px;flex-wrap:wrap;align-items:center}
+.topbar-title{color:var(--ink);font-weight:600;letter-spacing:-.01em;flex:0 0 auto;margin-right:4px}
+.tabs{display:flex;gap:4px;flex-wrap:wrap;flex:1;justify-content:flex-end}
+.tab{background:transparent;border:1px solid transparent;border-radius:9px;color:var(--muted);
+  font-weight:500;padding:6px 13px;font-size:12.5px;white-space:nowrap}
+.tab.active{background:var(--ocean-bg);color:var(--ocean);border-color:transparent;font-weight:600}
 .tab:hover:not(.active){background:#f0f0f2}
+/* schede delle code di lavoro: un solo colore, non quattro diversi */
+.tab-attesa{color:#8a5a10;font-weight:600}
+.tab-attesa.active{background:#fdf3e0;color:#8a5a10}
+/* pulsante Aggiorna: sempre visibile, mai compresso */
+#btnAggiorna{flex:0 0 auto}
+#btnAggiorna:hover{background:#22508f}
+#btnAggiorna:disabled{opacity:.6;cursor:default}
 /* Pulsanti */
 .btn-sm{background:#fff;border:1px solid var(--line2);border-radius:9px;color:var(--ink);padding:7px 12px;font-size:12.5px}
 .btn-sm:hover{background:#f0f0f2}
@@ -528,10 +539,10 @@ body[data-ruolo="operatore"] .tab-soloadmin{display:none!important}
       <button class="tab" data-tab="list" onclick="showTab('list')" title="ELENCO: la lista dei contatti come un foglio Excel. Ordina cliccando le intestazioni, scorri con le frecce e apri con Invio. Mostra i risultati di Trova.">Elenco</button>
       <button class="tab" data-tab="provincia" onclick="showTab('provincia')" title="PROVINCIA: i contatti raggruppati per provincia/comune, per lavorare una zona alla volta.">Provincia</button>
       <button class="tab" data-tab="zonalibera" onclick="showTab('zonalibera')" title="ZONA: trova i contatti vicini a un punto entro un raggio in km, utile per riempire i buchi tra un appuntamento e l'altro.">Zona</button>
-      <button class="tab" data-tab="recupero" onclick="showTab('recupero')" style="color:#c06010;font-weight:700" title="DA RECUPERARE: i contatti da richiamare (telefonata mancata, da risentire) in base alla data di prossimo richiamo.">&#9203; Da Recuperare</button>
-      <button class="tab" data-tab="controllare" onclick="showTab('controllare')" style="color:#7a3ea0;font-weight:700" title="DA CONTROLLARE: la coda dei casi dubbi (doppioni, numeri sospetti, import UTET da confermare). Si risolvono uno a uno e lo stato si salva.">&#128270; Da controllare</button>
-      <button class="tab" data-tab="potenziali" onclick="showTab('potenziali')" style="color:#a06a00;font-weight:700" title="Nominativi da una vecchia lista nazionale (CANI): non sono ancora tuoi clienti. Tenuti da parte, fuori dalle ricerche normali, da contattare quando vuoi.">&#9742; Potenziali</button>
-      <button class="tab" data-tab="nocell" onclick="showTab('nocell')" style="color:#1a6a8a;font-weight:700" title="Clienti attivi SENZA numero di cellulare. Scegli la regione e stampa l'elenco con indirizzo, data di nascita e codice fiscale per cercare i cellulari mancanti.">&#128241; Da controllare cellulare</button>
+      <button class="tab tab-attesa" data-tab="recupero" onclick="showTab('recupero')" title="DA RECUPERARE: i contatti da richiamare (telefonata mancata, da risentire) in base alla data di prossimo richiamo.">&#9203; Da Recuperare</button>
+      <button class="tab tab-attesa" data-tab="controllare" onclick="showTab('controllare')" title="DA CONTROLLARE: la coda dei casi dubbi (doppioni, numeri sospetti, import UTET da confermare). Si risolvono uno a uno e lo stato si salva.">&#128270; Da controllare</button>
+      <button class="tab tab-attesa" data-tab="potenziali" onclick="showTab('potenziali')" title="Nominativi da una vecchia lista nazionale (CANI): non sono ancora tuoi clienti. Tenuti da parte, fuori dalle ricerche normali, da contattare quando vuoi.">&#9742; Potenziali</button>
+      <button class="tab tab-attesa" data-tab="nocell" onclick="showTab('nocell')" title="Clienti attivi SENZA numero di cellulare. Scegli la regione e stampa l'elenco con indirizzo, data di nascita e codice fiscale per cercare i cellulari mancanti.">&#128241; Da controllare cellulare</button>
 <button class="tab" data-tab="welcome" onclick="showTab('welcome')" title="WELCOME: la pagina iniziale con riepilogo e scorciatoie.">Welcome</button>
 <button class="tab tab-soloadmin" data-tab="statistiche" onclick="showTab('statistiche')" title="STATISTICHE (solo titolare): andamento chiamate, esiti, telefoniste.">&#128202; Statistiche</button>
     </div>
