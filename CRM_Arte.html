@@ -2997,9 +2997,24 @@ function runFind(){
     if(field==='Cognome'||field==='Nome')return cv.startsWith(val); // prevale la prima lettera
     return cv.includes(val);
   }));
-  currentResults=results;currentIdx=0;searchActive=true;document.getElementById('findCount').textContent=results.length+' trovati';
-  if(results.length){exitFindMode();renderContactAndMap(results[0]);}
-  else document.getElementById('findCount').textContent='Nessun risultato';
+  if(results.length){
+    currentResults=results;currentIdx=0;searchActive=true;
+    document.getElementById('findCount').textContent=results.length+' trovati';
+    exitFindMode();renderContactAndMap(results[0]);
+  }else{
+    // nessun risultato: NON si tocca currentResults, si torna al contatto di prima
+    document.getElementById('findCount').textContent='Nessun risultato';
+    exitFindMode();
+    const b=document.getElementById('prBody');
+    if(!currentResults.length&&b)b.innerHTML='<div style="padding:60px 20px;text-align:center;color:#888">Nessun contatto da mostrare. Usa &laquo;Trova&raquo; per una nuova ricerca.</div>';
+    const nav=document.getElementById('prNav');
+    if(nav){
+      const prevTxt=nav.textContent,prevCol=nav.style.color,prevW=nav.style.fontWeight;
+      nav.textContent='⚠️ Nessun risultato per la ricerca — sei tornato al contatto';
+      nav.style.color='#b8860b';nav.style.fontWeight='700';
+      setTimeout(()=>{nav.textContent=prevTxt;nav.style.color=prevCol;nav.style.fontWeight=prevW;},3500);
+    }
+  }
 }
 function renderFindForm(){
   const fi=(field,label)=>`<div class="pr-field" style="margin-bottom:4px"><span class="pr-lbl">${label}</span><input class="find-inp" data-field="${field}" onkeydown="if(event.key==='Enter')runFind()"></div>`;
