@@ -3049,11 +3049,19 @@ function renderFindForm(){
 // SEARCH
 let srchTimer=null;
 function liveSearch(q){clearTimeout(srchTimer);srchTimer=setTimeout(()=>{
-  if(!q.trim()){currentResults=allContacts;renderContactAndMap(allContacts[0]);return;}
+  if(!q.trim()){currentResults=allContacts;searchActive=false;currentIdx=0;renderContactAndMap(allContacts[0]);updateAzzeraBtn();return;}
   const ql=q.toLowerCase();
   const f=allContacts.filter(c=>!_isDeceduto(c)&&((c.Cognome||'').toLowerCase().startsWith(ql)||(c.Cognome+' '+c.Nome).toLowerCase().startsWith(ql)));
-  if(f.length){currentResults=f;searchActive=true;currentIdx=0;renderContactAndMap(f[0]);}
-  document.getElementById('prNav').textContent=searchActive?`${currentIdx+1} / ${currentResults.length} risultati · su ${allContacts.length.toLocaleString('it')}`:`${currentIdx+1} / ${allContacts.length.toLocaleString('it')}`;
+  if(f.length){
+    currentResults=f;searchActive=true;currentIdx=0;renderContactAndMap(f[0]);
+    document.getElementById('prNav').textContent=`${currentIdx+1} / ${currentResults.length} risultati · su ${allContacts.length.toLocaleString('it')}`;
+  }else{
+    const b=document.getElementById('prBody');
+    if(b)b.innerHTML='<div style="padding:60px 20px;text-align:center;color:#888">'
+      +'&#128269; Nessun risultato per &laquo;'+esc(q)+'&raquo;'
+      +'<br><button class="btn-u btn-blue-soft" style="margin-top:16px" onclick="document.getElementById(\'quickSearch\').value=\'\';liveSearch(\'\')">&#10005; Torna al contatto</button></div>';
+    document.getElementById('prNav').textContent='Nessun risultato';
+  }
 },250);}
 function openSearch(){document.getElementById('searchModal').style.display='flex';setTimeout(()=>document.getElementById('modalSearch').focus(),50);}
 function closeSearch(){document.getElementById('searchModal').style.display='none';}
