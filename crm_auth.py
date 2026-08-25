@@ -81,22 +81,38 @@ def _parse_utenti():
 UTENTI = _parse_utenti()
 
 # ── token di sessione firmati (niente database necessario) ──
+#
+# NESSUNA SCADENZA A ORE (25/08/2026). Prima il token aveva una scadenza
+# incorporata (12 ore in origine, poi accorciata per errore a 2 ore l'11/08,
+# poi allungata a 12 ore e a 30 giorni per correggere il bug "CRM non
+# salva" - vedi rapporto, appendice 3). Il titolare ha chiesto di non avere
+# NESSUN numero di ore: qualunque limite, per quanto lungo, resta un
+# limite. Tolto del tutto: un token con firma valida resta valido a
+# oltranza, punto.
+# La sicurezza non sparisce: resta la login vera e propria (password),
+# resta il cookie "di sessione" (crm_server.py: nessun max_age, sparisce da
+# solo alla chiusura del browser - quello e' il logout che conta) e resta
+# il pulsante Esci (/api/logout) per un logout esplicito in qualsiasi
+# momento. Per invalidare TUTTI i login in un colpo solo, in un'emergenza,
+# resta la leva di sempre: cambiare CRM_SECRET su Railway (sezione 7 del
+# rapporto: farlo SOLO se necessario, disconnette anche tutti gli operatori).
 def _firma(msg):
     return hmac.new(SECRET.encode(), msg.encode(), hashlib.sha256).hexdigest()
 
-def crea_token(nome, ruolo, ore=12, zona=''):
-    scad = int(time.time()) + ore*3600
-    corpo = f"{nome}|{ruolo}|{zona}|{scad}"
+def crea_token(nome, ruolo, zona=''):
+    # Il campo "creato" resta nel token solo a scopo informativo (non e'
+    # piu' controllato da verifica_token): utile per un domani, se servisse
+    # di nuovo un limite, senza dover cambiare il formato del token.
+    creato = int(time.time())
+    corpo = f"{nome}|{ruolo}|{zona}|{creato}"
     firma = _firma(corpo)
     return base64.urlsafe_b64encode(f"{corpo}|{firma}".encode()).decode()
 
 def verifica_token(token):
     try:
         dati = base64.urlsafe_b64decode(token.encode()).decode()
-        nome, ruolo, zona, scad, firma = dati.rsplit('|', 4)
-        if _firma(f"{nome}|{ruolo}|{zona}|{scad}") != firma:
-            return None
-        if int(scad) < int(time.time()):
+        nome, ruolo, zona, creato, firma = dati.rsplit('|', 4)
+        if _firma(f"{nome}|{ruolo}|{zona}|{creato}") != firma:
             return None
         return {'nome': nome, 'ruolo': ruolo, 'zona': zona}
     except Exception:

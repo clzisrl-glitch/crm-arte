@@ -35,6 +35,28 @@ ROTTE_CHE_SCRIVONO = {
     '/api/correggi_dati', '/api/fondi_duplicati', '/api/reset', '/api/ordine_schede',
 }
 
+# ---------------------------------------------------------------------------
+# DURATA DELLA SESSIONE - NESSUNA (25/08/2026)
+# Storia del bug "CRM non salva" (vedi rapporto, appendice 3): dall'11/08 il
+# token scadeva 2 ore ESATTE dopo il login, senza rinnovo, e chi lavorava
+# piu' a lungo (normale per un CRM usato tutto il giorno) vedeva ogni
+# salvataggio rifiutato con 401 "Devi prima accedere". Corretto prima con
+# una scadenza "a scorrimento" (12 ore, poi 30 giorni, rinnovata a ogni
+# richiesta) - ma restava un limite, per quanto remoto, e il titolare ha
+# chiesto esplicitamente di toglierlo del tutto: "MA RESTANO LE ORE".
+# Tolto: crm_auth.verifica_token non controlla piu' nessuna scadenza (vedi
+# crm_auth.py). Un token con firma valida resta valido finche' esiste il
+# cookie che lo contiene. La sicurezza non sparisce, cambia solo dove sta:
+#   - il cookie e' "di sessione" (nessun max_age, sotto in /api/login):
+#     sparisce da solo alla chiusura del browser, quindi riaprendolo va
+#     comunque rifatto il login;
+#   - il pulsante Esci (/api/logout) resta un logout esplicito immediato;
+#   - in emergenza, cambiare CRM_SECRET su Railway invalida tutti i login
+#     in un colpo solo (sezione 7 del rapporto).
+# Nessun hook di rinnovo: non serve piu' rinnovare una scadenza che non
+# c'e'.
+# ---------------------------------------------------------------------------
+
 @app.before_request
 def _prendi_blocco():
     from flask import g, request as _rq
@@ -56,6 +78,7 @@ def _rilascia_blocco(exc=None):
             cm.__exit__(None, None, None)
         except Exception:
             pass
+
 from functools import wraps
 PORT = int(os.environ.get("PORT","8080"))
 def _utente_corrente():
@@ -176,9 +199,10 @@ def api_login():
     from flask import make_response
     resp=make_response(jsonify({"ok":True,"ruolo":u["ruolo"],"nome":u["nome"],"zona":u.get("zona","")}))
     # COOKIE DI SESSIONE: niente max_age -> il browser lo cancella alla chiusura,
-    # cosi' alla riapertura le credenziali vengono richieste di nuovo.
-    # Il token in se' scade comunque dopo 2 ore di validita'.
-    resp.set_cookie("crm_token", crm_auth.crea_token(u["nome"],u["ruolo"],zona=u.get("zona",""),ore=2), httponly=True, samesite="Lax")
+    # cosi' alla riapertura le credenziali vengono richieste di nuovo. Il
+    # token stesso non ha piu' nessuna scadenza a ore (vedi nota sopra e
+    # crm_auth.py): resta valido finche' esiste questo cookie.
+    resp.set_cookie("crm_token", crm_auth.crea_token(u["nome"],u["ruolo"],zona=u.get("zona","")), httponly=True, samesite="Lax")
     return resp
 @app.route("/api/logout", methods=["POST"])
 def api_logout():
