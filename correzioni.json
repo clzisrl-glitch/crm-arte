@@ -259,6 +259,403 @@
   "CAN37187": {
    "Provincia": "VV",
    "Regione": "Calabria"
+  },
+  "UTET09599": {
+   "Regione": "Estero"
+  },
+  "UTET13791": {
+   "Regione": "Estero"
+  },
+  "UTET15656": {
+   "Regione": "Estero"
+  },
+  "UTET15677": {
+   "Regione": "Estero"
+  },
+  "SCR0425": {
+   "Regione": "Estero"
+  },
+  "SCR0529": {
+   "Regione": "Estero"
+  },
+  "SCR3958": {
+   "Regione": "Estero"
+  },
+  "CAN22582": {
+   "Regione": "Estero"
+  },
+  "CAN35487": {
+   "Regione": "Estero"
+  },
+  "TRE0386": {
+   "Provincia": "MN",
+   "Regione": "Lombardia"
+  },
+  "CAN00156": {
+   "Provincia": "NA",
+   "Regione": "Campania"
+  },
+  "CAN15748": {
+   "Provincia": "NA",
+   "Regione": "Campania"
+  },
+  "SCR1585": {
+   "Regione": "Estero"
+  },
+  "SCR1587": {
+   "Regione": "Estero"
+  },
+  "SCR2199": {
+   "Regione": "Estero"
+  },
+  "SCR2266": {
+   "Regione": "Estero"
+  },
+  "SCR2362": {
+   "Regione": "Estero"
+  },
+  "SCR3995": {
+   "Regione": "Estero"
+  },
+  "CAN01900": {
+   "Regione": "Estero"
+  },
+  "CAN02140": {
+   "Regione": "Estero"
+  },
+  "CAN05458": {
+   "Regione": "Estero"
+  },
+  "CAN05646": {
+   "Regione": "Estero"
+  },
+  "CAN09457": {
+   "Regione": "Estero"
+  },
+  "CAN19196": {
+   "Regione": "Estero"
+  },
+  "CAN19197": {
+   "Regione": "Estero"
+  },
+  "CAN19202": {
+   "Regione": "Estero"
+  },
+  "CAN19205": {
+   "Regione": "Estero"
+  },
+  "CAN19561": {
+   "Regione": "Estero"
+  },
+  "CAN19609": {
+   "Regione": "Estero"
+  },
+  "CAN19696": {
+   "Regione": "Estero"
+  },
+  "CAN19815": {
+   "Regione": "Estero"
+  },
+  "CAN19892": {
+   "Regione": "Estero"
+  },
+  "CAN32171": {
+   "Regione": "Estero"
+  },
+  "UTET01425": {
+   "Provincia": "PT",
+   "Regione": "Toscana"
+  },
+  "SCR2497": {
+   "Provincia": "TA",
+   "Regione": "Puglia"
+  },
+  "SCR2565": {
+   "Provincia": "NA",
+   "Regione": "Campania"
+  },
+  "SCR2582": {
+   "Provincia": "CA",
+   "Regione": "Sardegna"
+  },
+  "SCR4095": {
+   "Provincia": "NA",
+   "Regione": "Campania"
+  },
+  "SCR4218": {
+   "Provincia": "NA",
+   "Regione": "Campania"
+  },
+  "CAN03031": {
+   "Provincia": "NA",
+   "Regione": "Campania"
+  },
+  "CAN05148": {
+   "Provincia": "NA",
+   "Regione": "Campania"
+  },
+  "CAN07541": {
+   "Provincia": "NA",
+   "Regione": "Campania"
+  },
+  "CAN10777": {
+   "Provincia": "NA",
+   "Regione": "Campania"
+  },
+  "CAN22691": {
+   "Provincia": "NA",
+   "Regione": "Campania"
+  },
+  "CAN24500": {
+   "Provincia": "NA",
+   "Regione": "Campania"
+  },
+  "CAN25684": {
+   "Provincia": "NA",
+   "Regione": "Campania"
+  },
+  "CAN35901": {
+   "Provincia": "NA",
+   "Regione": "Campania"
+  },
+  "SCR2572": {
+   "Provincia": "NA",
+   "Regione": "Campania"
+  },
+  "SCR3883": {
+   "Provincia": "PN",
+   "Regione": "Friuli-Venezia Giulia"
+  },
+  "CAN21428": {
+   "Regione": "Estero"
+  },
+  "CAN05531": {
+   "Regione": "Estero"
+  },
+  "SCR3136": {
+   "Regione": "Estero"
+  },
+  "SCR1835": {
+   "Regione": "Estero"
+  },
+  "CAN12204": {
+   "Regione": "Estero"
+  },
+  "CAN13605": {
+   "Regione": "Estero"
+  },
+  "CAN13304": {
+   "Regione": "Estero"
+  },
+  "CAN31463": {
+   "Regione": "Estero"
+  },
+  "CAN20700": {
+   "Regione": "Estero"
+  },
+  "CAN23984": {
+   "Regione": "Estero"
+  },
+  "CAN34918": {
+   "Regione": "Estero"
+  },
+  "SCR1705": {
+   "Regione": "Estero"
+  },
+  "CAN19292": {
+   "Regione": "Estero"
+  },
+  "CAN15081": {
+   "Regione": "Estero"
+  },
+  "SCR4013": {
+   "Regione": "Estero"
+  },
+  "CAN08139": {
+   "Regione": "Estero"
+  },
+  "CAN05559": {
+   "Regione": "Estero"
+  },
+  "CAN15706": {
+   "Regione": "Estero"
+  },
+  "CAN31055": {
+   "Regione": "Estero"
+  },
+  "CAN20285": {
+   "Regione": "Estero"
+  },
+  "SCR3916": {
+   "Regione": "Estero"
+  },
+  "CAN12505": {
+   "Regione": "Estero"
+  },
+  "SCR4361": {
+   "Regione": "Estero"
+  },
+  "SCR1573": {
+   "Regione": "Estero"
+  },
+  "CAN23989": {
+   "Regione": "Estero"
+  },
+  "CAN21553": {
+   "Regione": "Estero"
+  },
+  "CAN08112": {
+   "Regione": "Estero"
+  },
+  "SCR1754": {
+   "Regione": "Estero"
+  },
+  "CAN04289": {
+   "Regione": "Estero"
+  },
+  "CAN05512": {
+   "Regione": "Estero"
+  },
+  "CAN24091": {
+   "Regione": "Estero"
+  },
+  "CAN13310": {
+   "Regione": "Estero"
+  },
+  "CAN15055": {
+   "Regione": "Estero"
+  },
+  "SCR4005": {
+   "Regione": "Estero"
+  },
+  "SCR4207": {
+   "Regione": "Estero"
+  },
+  "CAN24395": {
+   "Regione": "Estero"
+  },
+  "CAN31497": {
+   "Regione": "Estero"
+  },
+  "CAN08588": {
+   "Regione": "Estero"
+  },
+  "CAN23626": {
+   "Regione": "Estero"
+  },
+  "CAN16079": {
+   "Regione": "Estero"
+  },
+  "SCR4405": {
+   "Regione": "Estero"
+  },
+  "CAN21975": {
+   "Regione": "Estero"
+  },
+  "SCR3657": {
+   "Regione": "Estero"
+  },
+  "CAN02036": {
+   "Regione": "Estero"
+  },
+  "SCR2990": {
+   "Regione": "Estero"
+  },
+  "SCR3122": {
+   "Regione": "Estero"
+  },
+  "CAN09764": {
+   "Regione": "Estero"
+  },
+  "SCR4471": {
+   "Regione": "Estero"
+  },
+  "CAN13646": {
+   "Regione": "Estero"
+  },
+  "CAN08135": {
+   "Regione": "Estero"
+  },
+  "CAN16095": {
+   "Regione": "Estero"
+  },
+  "CAN24390": {
+   "Regione": "Estero"
+  },
+  "SCR3045": {
+   "Regione": "Estero"
+  },
+  "SCR3836": {
+   "Regione": "Estero"
+  },
+  "CAN15073": {
+   "Regione": "Estero"
+  },
+  "CAN13152": {
+   "Regione": "Estero"
+  },
+  "CAN05477": {
+   "Regione": "Estero"
+  },
+  "CAN05374": {
+   "Regione": "Estero"
+  },
+  "CAN23647": {
+   "Regione": "Estero"
+  },
+  "CAN03273": {
+   "Regione": "Estero"
+  },
+  "SCR3167": {
+   "Regione": "Estero"
+  },
+  "CAN15103": {
+   "Regione": "Estero"
+  },
+  "CAN04931": {
+   "Regione": "Estero"
+  },
+  "CAN02052": {
+   "Regione": "Estero"
+  },
+  "SCR4369": {
+   "Regione": "Estero"
+  },
+  "SCR3844": {
+   "Regione": "Estero"
+  },
+  "CAN13171": {
+   "Regione": "Estero"
+  },
+  "SCR3070": {
+   "Regione": "Estero"
+  },
+  "CAN19199": {
+   "Regione": "Estero"
+  },
+  "CAN04958": {
+   "Regione": "Estero"
+  },
+  "CAN34823": {
+   "Regione": "Estero"
+  },
+  "CAN26362": {
+   "Regione": "Estero"
+  },
+  "CAN05111": {
+   "Regione": "Estero"
+  },
+  "CAN19206": {
+   "Regione": "Estero"
+  },
+  "UTET10519": {
+   "Regione": "Estero"
+  },
+  "SCR3948": {
+   "Regione": "Estero"
+  },
+  "CAN28971": {
+   "Regione": "Estero"
   }
  }
 }
