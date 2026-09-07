@@ -281,7 +281,7 @@ def api_correggi_dati():
         return jsonify({"error":"correzioni.json: "+str(e)}),500
     data=load_data() or {}
     idx={str(c.get("ID_contatto")):c for c in data.get("contacts",[])}
-    npv=nrg=nct=nst=ntel=nnt=0
+    npv=nrg=nct=nst=ntel=0
     for i,v in (corr.get("aggiorna") or {}).items():
         c=idx.get(i)
         if not c: continue
@@ -313,14 +313,9 @@ def api_correggi_dati():
         na=(v.get("NotaAggiungi") or "").strip()
         if na and na.lower() not in (c.get("Note") or "").lower():
             c["Note"]=((c.get("Note") or "").strip()+" "+na).strip()
-        # Note: sostituzione diretta e completa del testo (usata per unificare
-        # sigle tipo VIP/TOP/GEO/NOC/TRC in TREC/EDIT). A differenza di
-        # NotaAggiungi (che accoda), qui il nuovo testo sostituisce tutto il campo.
-        if "Note" in v and str(c.get("Note") or "") != str(v["Note"] or ""):
-            c["Note"]=v["Note"]; nnt+=1
-    if npv or nrg or nct or nst or ntel or nnt: save_data(data)
+    if npv or nrg or nct or nst or ntel: save_data(data)
     return jsonify({"ok":True,"province":npv,"regioni":nrg,"citta":nct,
-                    "stati":nst,"telefoni":ntel,"note":nnt})
+                    "stati":nst,"telefoni":ntel})
 
 @app.route("/api/fondi_duplicati", methods=["POST"])
 def api_fondi_duplicati():
