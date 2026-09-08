@@ -33,6 +33,7 @@ ROTTE_CHE_SCRIVONO = {
     '/api/aggiungi_telefonata', '/api/contatto_stato', '/api/segnala',
     '/api/verifica', '/api/save', '/api/save_full', '/api/importa',
     '/api/correggi_dati', '/api/fondi_duplicati', '/api/reset', '/api/ordine_schede',
+    '/api/bulk_assegna_orari',
 }
 
 # ---------------------------------------------------------------------------
@@ -605,6 +606,48 @@ def api_salva_scheda():
                     break
         save_data(data)
         return jsonify({'ok': True, 'salvati': fatti})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/bulk_assegna_orari', methods=['POST'])
+@richiede_login
+def api_bulk_assegna_orari():
+    """Assegna Prossima_telefonata/Ora_appuntamento a MOLTI contatti in un
+    unico giro (un solo load_data/save_data invece di uno per contatto).
+    Nata per il pulsante "Sistema richiami senza ora" dell'agenda: prima
+    faceva una chiamata a /api/salva_scheda per contatto (centinaia di
+    ricompressioni dell'intero archivio, una dopo l'altra: lento e con
+    salvataggi che a volte fallivano a meta'). Qui invece l'archivio viene
+    letto e riscritto UNA sola volta per l'intero blocco."""
+    try:
+        body = request.get_json(force=True)
+        aggiornamenti = body.get('aggiornamenti') or []
+        if not isinstance(aggiornamenti, list) or not aggiornamenti:
+            return jsonify({'error': 'nessun aggiornamento ricevuto'}), 400
+        data = load_data() or {}
+        by_id = {str(c.get('ID_contatto')): c for c in data.get('contacts', [])}
+        _reg = _regioni_utente()
+        regset = set(r.strip().lower() for r in _reg) if _reg else None
+        aggiornati, non_trovati, fuori_zona = 0, 0, 0
+        for u in aggiornamenti:
+            cid = str(u.get('id_contatto', '')).strip()
+            c = by_id.get(cid)
+            if not c:
+                non_trovati += 1
+                continue
+            if regset is not None and (c.get('Regione') or '').strip().lower() not in regset:
+                fuori_zona += 1
+                continue
+            if u.get('data'):
+                c['Prossima_telefonata'] = u['data']
+            if u.get('ora'):
+                c['Ora_appuntamento'] = u['ora']
+            aggiornati += 1
+        if aggiornati:
+            save_data(data)
+        return jsonify({'ok': True, 'aggiornati': aggiornati,
+                        'non_trovati': non_trovati, 'fuori_zona': fuori_zona})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
