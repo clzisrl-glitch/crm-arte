@@ -1719,6 +1719,27 @@ function _elencoSenzaOra(){
   }
   return piano;
 }
+// Come salvaSchedaContatto, ma SENZA alert() bloccanti: per un salvataggio in
+// blocco su tanti contatti, un alert per ogni fallimento significherebbe dover
+// cliccare OK centinaia di volte. Ritorna {ok,error} invece di mostrare popup.
+async function _salvaSchedaContattoSilenzioso(cid,cosa){
+  try{
+    const corpo={id_contatto:String(cid)};
+    const q=String(cid);
+    if(!cosa||cosa==='telefonate')corpo.telefonate=(telefonate||[]).filter(t=>String(t.ID_contatto)===q);
+    if(!cosa||cosa==='opere')corpo.opere=(opere||[]).filter(o=>String(o.ID_contatto)===q);
+    if(contactMap&&contactMap[cid])corpo.contatto=contactMap[cid];
+    const r=await fetch('/api/salva_scheda',{method:'POST',
+      headers:{'Content-Type':'application/json'},body:JSON.stringify(corpo)});
+    if(!r.ok){
+      let m='';try{const j=await r.json();m=j.error||'';}catch(e){}
+      return {ok:false,error:'HTTP '+r.status+(m?'. '+m:'')};
+    }
+    return {ok:true};
+  }catch(e){
+    return {ok:false,error:(e&&e.message)||String(e)};
+  }
+}
 async function bulkAssignaOrari(){
   const piano=_elencoSenzaOra();
   if(!piano.length){alert('Nessun richiamo/appuntamento senza ora da sistemare: sono tutti gia\' orari.');return;}
@@ -1730,16 +1751,31 @@ async function bulkAssignaOrari(){
   renderAgenda();
   const totale=piano.length;
   const btn=document.getElementById('btnBulkOrari');
+  if(btn)btn.disabled=true;
   let salvati=0,falliti=0;
+  const erroriEsempio=[]; // solo i primi, per non riempire l'avviso finale
   for(let i=0;i<daSalvare.length;i++){
     if(btn)btn.textContent='⏳ Salvataggio '+(i+1)+'/'+daSalvare.length+'...';
-    const ok=await salvaSchedaContatto(daSalvare[i],'telefonate');
-    if(ok)salvati++;else falliti++;
+    const res=await _salvaSchedaContattoSilenzioso(daSalvare[i],'telefonate');
+    if(res.ok){salvati++;}
+    else{
+      falliti++;
+      if(erroriEsempio.length<3)erroriEsempio.push(daSalvare[i]+': '+res.error);
+      if(/^HTTP 401\b/.test(res.error)){
+        // sessione scaduta: inutile continuare a tentare, si fermerebbe su tutti i restanti
+        if(btn){btn.disabled=false;btn.textContent='\u{1F550} Sistema richiami senza ora';}
+        buildAgendaIndex();renderAgenda();
+        alert('SESSIONE SCADUTA a meta\' operazione.\n\nSistemati e salvati: '+salvati+' su '+daSalvare.length+' contatti (gli altri '+(daSalvare.length-salvati)+' restano nella barra "Tutto il giorno").\n\nRicarica la pagina, accedi di nuovo e ripeti "Sistema richiami senza ora": quelli gia\' fatti non verranno ritoccati.');
+        return;
+      }
+    }
   }
   if(btn){btn.disabled=false;btn.textContent='\u{1F550} Sistema richiami senza ora';}
   buildAgendaIndex();
   renderAgenda();
-  alert('Fatto.\n\n'+totale+' richiami/appuntamenti sistemati su '+daSalvare.length+' contatti.\nSalvati: '+salvati+(falliti?'\nNON salvati per errore (riprova su questi): '+falliti:'')+'\n\nOra dovrebbero comparire nella griglia oraria invece che in "Tutto il giorno" (naviga con le frecce alle settimane in cui si trovano).');
+  alert('Fatto.\n\n'+totale+' richiami/appuntamenti sistemati su '+daSalvare.length+' contatti.\nSalvati: '+salvati+
+    (falliti?'\nNON salvati per errore: '+falliti+' (riprova cliccando di nuovo il pulsante, oppure sistemali singolarmente col trascinamento)\nEsempio errori:\n- '+erroriEsempio.join('\n- '):'')+
+    '\n\nOra dovrebbero comparire nella griglia oraria invece che in "Tutto il giorno" (naviga con le frecce alle settimane in cui si trovano).');
 }
 
 const GIORNI=['lun.','mar.','mer.','gio.','ven.','sab.','dom.'];
