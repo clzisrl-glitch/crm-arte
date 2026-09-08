@@ -580,6 +580,7 @@ body[data-ruolo="operatore"] .tab-soloadmin{display:none!important}
       <label style="font-size:11px;color:#5a5246;display:inline-flex;align-items:center;gap:4px">&#128197; Appuntamenti del giorno:<input type="date" id="agDayPick" style="font-size:12px;padding:2px 5px;border:1px solid #b0a898;border-radius:4px"></label>
       <button class="tb-btn" style="background:#1a3a6a;color:#fff;border-color:#1a3a6a" onclick="stampaAppDelGiorno()" title="Stampa (o salva in PDF) tutti gli appuntamenti del giorno scelto.">&#128424; Stampa PDF</button>
       <button class="tb-btn" style="background:#1a7a30;color:#fff;border-color:#1a7a30" onclick="inviaAppDelGiorno()" title="Apri una email con il riepilogo degli appuntamenti del giorno (il PDF va allegato a mano dopo averlo salvato).">&#9993; Invia email</button>
+      <button class="tb-btn" id="btnBulkOrari" style="background:#8a5a10;color:#fff;border-color:#8a5a10" onclick="bulkAssignaOrari()" title="Assegna in automatico un orario (progressivo, dalle 9:00) a TUTTI i richiami/appuntamenti ancora nella barra &quot;Tutto il giorno&quot; senza ora, in un colpo solo. Restano comunque spostabili singolarmente dopo.">&#128337; Sistema richiami senza ora</button>
       <div class="cal-legend" id="calLegend">
         <span><span class="leg-sq" style="background:#ffd6de;border:1px solid #f3b3c1"></span>Richiami</span>
         <span><span class="leg-sq" style="background:#d9f5de;border:1px solid #abe2b8"></span>Appuntamenti</span>
@@ -1664,6 +1665,20 @@ function evDragStart(e,cid,origDate,origH,origM){
 function evDragEnd(e){e.target.style.opacity='';}
 function evDragOver(e){e.preventDefault();}
 
+// Assegna data/ora a un contatto (stessa logica usata dal drag&drop in agenda).
+// Aggiorna solo lo stato locale: chi chiama deve poi salvare con salvaSchedaContatto(cid,'telefonate').
+function _assegnaOrarioContatto(cid,iso,h,m){
+  agendaMods[cid]={date:iso,h,m};
+  const c=contactMap[cid];
+  if(c){
+    const d=new Date(iso+'T12:00:00');
+    const dd=String(d.getDate()).padStart(2,'0');
+    const mm=String(d.getMonth()+1).padStart(2,'0');
+    const yyyy=d.getFullYear();
+    c.Prossima_telefonata=dd+'/'+mm+'/'+yyyy;
+    c.Ora_appuntamento=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':00';
+  }
+}
 function evDrop(e,dropDate,dropCol){
   e.preventDefault();e.stopPropagation();
   const raw=e.dataTransfer.getData('text/plain');
@@ -1677,21 +1692,54 @@ function evDrop(e,dropDate,dropCol){
   const relY=Math.max(0, e.clientY - colRect.top);
   const newH=Math.max(0,Math.min(23,Math.floor(relY/PX_H)));
   const newM=Math.round(((relY % PX_H)/PX_H)*4)*15%60; // snap to 15min
-  // Save modification
-  agendaMods[cid]={date:dropDate,h:newH,m:newM};
-  // Update contact Prossima_telefonata
-  const c=contactMap[cid];
-  if(c){
-    const d=new Date(dropDate+'T12:00:00');
-    const dd=String(d.getDate()).padStart(2,'0');
-    const mm=String(d.getMonth()+1).padStart(2,'0');
-    const yyyy=d.getFullYear();
-    c.Prossima_telefonata=dd+'/'+mm+'/'+yyyy;
-    c.Ora_appuntamento=String(newH).padStart(2,'0')+':'+String(newM).padStart(2,'0')+':00';
-  }
+  _assegnaOrarioContatto(cid,dropDate,newH,newM);
   buildAgendaIndex();
   renderAgenda();
   salvaSchedaContatto(cid,'telefonate');
+}
+// Sistema in un colpo solo TUTTI i richiami/appuntamenti (di qualunque giorno, passato o
+// futuro, non solo la settimana visibile) che sono ancora senza ora e quindi nella barra
+// "Tutto il giorno": assegna un orario progressivo (dalle 9:00, ogni 20 minuti, per ciascun
+// giorno separatamente) cosi' compaiono nella griglia oraria. Restano comunque spostabili
+// singolarmente con il drag&drop dopo. Salva un contatto alla volta (stesso salvataggio
+// incrementale del drag&drop), mai l'archivio intero.
+function _elencoSenzaOra(){
+  if(typeof buildAgendaIndex==='function')buildAgendaIndex();
+  const giorni=Object.keys(telByDate||{}).sort();
+  const piano=[]; // {cid,iso,h,m} — non tocca ancora nulla
+  for(const iso of giorni){
+    const items=(telByDate[iso]||[]).filter(x=>x.h===null&&x.t&&x.t.ID_contatto);
+    if(!items.length)continue;
+    let h=9,m=0;
+    for(const it of items){
+      piano.push({cid:String(it.t.ID_contatto),iso,h,m});
+      m+=20;if(m>=60){m-=60;h++;}
+      if(h>19){h=19;m=40;} // oltre le 19:40 si accumulano li', nessuno viene perso
+    }
+  }
+  return piano;
+}
+async function bulkAssignaOrari(){
+  const piano=_elencoSenzaOra();
+  if(!piano.length){alert('Nessun richiamo/appuntamento senza ora da sistemare: sono tutti gia\' orari.');return;}
+  const daSalvare=[...new Set(piano.map(p=>p.cid))];
+  if(!confirm(piano.length+' voci senza ora trovate ('+daSalvare.length+' contatti), su tutte le settimane (non solo quella visibile).\n\nVerra\' assegnato un orario progressivo dalle 9:00 in poi per ciascun giorno, cosi\' escono dalla barra "Tutto il giorno". Potrai comunque spostarle singolarmente dopo.\n\nSalvare ora sul server?'))return;
+  // Applica le modifiche in locale SOLO ora che e' confermato
+  for(const p of piano)_assegnaOrarioContatto(p.cid,p.iso,p.h,p.m);
+  buildAgendaIndex();
+  renderAgenda();
+  const totale=piano.length;
+  const btn=document.getElementById('btnBulkOrari');
+  let salvati=0,falliti=0;
+  for(let i=0;i<daSalvare.length;i++){
+    if(btn)btn.textContent='⏳ Salvataggio '+(i+1)+'/'+daSalvare.length+'...';
+    const ok=await salvaSchedaContatto(daSalvare[i],'telefonate');
+    if(ok)salvati++;else falliti++;
+  }
+  if(btn){btn.disabled=false;btn.textContent='\u{1F550} Sistema richiami senza ora';}
+  buildAgendaIndex();
+  renderAgenda();
+  alert('Fatto.\n\n'+totale+' richiami/appuntamenti sistemati su '+daSalvare.length+' contatti.\nSalvati: '+salvati+(falliti?'\nNON salvati per errore (riprova su questi): '+falliti:'')+'\n\nOra dovrebbero comparire nella griglia oraria invece che in "Tutto il giorno" (naviga con le frecce alle settimane in cui si trovano).');
 }
 
 const GIORNI=['lun.','mar.','mer.','gio.','ven.','sab.','dom.'];
