@@ -627,6 +627,10 @@ def api_bulk_assegna_orari():
             return jsonify({'error': 'nessun aggiornamento ricevuto'}), 400
         data = load_data() or {}
         by_id = {str(c.get('ID_contatto')): c for c in data.get('contacts', [])}
+        # Indice del registro chiamate per contatto: serve per il punto qui sotto.
+        tel_by_cid = {}
+        for t in data.get('telefonate', []):
+            tel_by_cid.setdefault(str(t.get('ID_contatto')), []).append(t)
         _reg = _regioni_utente()
         regset = set(r.strip().lower() for r in _reg) if _reg else None
         aggiornati, non_trovati, fuori_zona = 0, 0, 0
@@ -643,6 +647,20 @@ def api_bulk_assegna_orari():
                 c['Prossima_telefonata'] = u['data']
             if u.get('ora'):
                 c['Ora_appuntamento'] = u['ora']
+            # L'agenda (lato client) guarda ANCHE il registro chiamate: se per
+            # questo contatto esiste gia' una voce con la stessa data e senza
+            # ora, quella voce "vince" su quanto appena assegnato al contatto
+            # e la riga resta comunque in "Tutto il giorno". Allineamo quindi
+            # anche le voci del registro sulla stessa data.
+            if u.get('data') and u.get('ora'):
+                for t in tel_by_cid.get(cid, []):
+                    if t.get('Data_appuntamento') != u['data']:
+                        continue
+                    if t.get('Ora_appuntamento'):
+                        continue
+                    es = (t.get('Esito') or '').strip().lower()
+                    if es == 'appuntamento' or 'richiamo' in es or es == 'richiamare':
+                        t['Ora_appuntamento'] = u['ora']
             aggiornati += 1
         if aggiornati:
             save_data(data)

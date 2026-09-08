@@ -1670,13 +1670,29 @@ function evDragOver(e){e.preventDefault();}
 function _assegnaOrarioContatto(cid,iso,h,m){
   agendaMods[cid]={date:iso,h,m};
   const c=contactMap[cid];
+  let ddmmyyyy=null;
   if(c){
     const d=new Date(iso+'T12:00:00');
     const dd=String(d.getDate()).padStart(2,'0');
     const mm=String(d.getMonth()+1).padStart(2,'0');
     const yyyy=d.getFullYear();
-    c.Prossima_telefonata=dd+'/'+mm+'/'+yyyy;
+    ddmmyyyy=dd+'/'+mm+'/'+yyyy;
+    c.Prossima_telefonata=ddmmyyyy;
     c.Ora_appuntamento=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':00';
+  }
+  // buildAgendaIndex() guarda ANCHE il registro chiamate (telefonate): se per
+  // questo contatto esiste gia' una voce di quel giorno senza ora, quella voce
+  // "vince" sull'orario appena assegnato al contatto e resta in "Tutto il
+  // giorno" anche dopo il salvataggio. Aggiorniamo quindi anche il registro.
+  if(ddmmyyyy&&Array.isArray(telefonate)){
+    const oraStr=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':00';
+    for(const t of telefonate){
+      if(String(t.ID_contatto)!==String(cid))continue;
+      if(t.Data_appuntamento!==ddmmyyyy)continue;
+      if(t.Ora_appuntamento)continue;
+      const es=(t.Esito||'').toLowerCase();
+      if(es==='appuntamento'||es.includes('richiamo')||es==='richiamare')t.Ora_appuntamento=oraStr;
+    }
   }
 }
 function evDrop(e,dropDate,dropCol){
