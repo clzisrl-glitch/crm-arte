@@ -432,6 +432,14 @@ body{background:var(--apl-bg);color:var(--apl-ink)}
 .ev-call:hover{background:#ffc3cf}
 .ev-app{background:#d9f5de;border:1px solid #abe2b8;color:#0f6e2e;font-weight:600}
 .ev-app:hover{background:#c7eed0}
+/* Vista combinata "Nord + Centro" (solo titolare/admin): appuntamenti celeste,
+   richiami colorati per zona (giallo=Nord, viola chiaro=Centro) */
+.ev-app-nc{background:#cdeaf9;border:1px solid #9ed3ee;color:#0c5e82;font-weight:600}
+.ev-app-nc:hover{background:#b7e0f4}
+.ev-call-nord{background:#fff2ad;border:1px solid #edd873;color:#7a5d00;font-weight:600}
+.ev-call-nord:hover{background:#ffe97e}
+.ev-call-centro{background:#e6d7f7;border:1px solid #cbaeee;color:#5a2f96;font-weight:600}
+.ev-call-centro:hover{background:#d9c1f2}
 .pr-left{background:#fff;border-right:1px solid var(--apl-line2)}
 .note-box,.addr-box,.meta-box,.numstate{border-radius:12px;border:1px solid var(--apl-line2);background:#fbfbfd}
 input,select,textarea,.edit-inp,.pr-search,.list-search{border-radius:8px;border:1px solid var(--apl-line)}
@@ -567,11 +575,12 @@ body[data-ruolo="operatore"] .tab-soloadmin{display:none!important}
       <button class="tb-btn filter-btn" id="fApp" onclick="setFilter('app')">&#128994; Appuntamenti</button>
       <button class="tb-btn filter-btn" id="fCall" onclick="setFilter('call')">&#128308; Richiami</button>
       <span id="agZonaWrap" style="display:none;align-items:center;gap:4px;margin-left:4px"><span style="width:1px;height:18px;background:#b0a898;margin:0 2px;display:inline-block"></span>&#127758;<select id="agZonaFiltro" onchange="setZonaAgenda(this.value)" style="font-size:12px;padding:3px 6px;border:1px solid #b0a898;border-radius:4px;background:#fff" title="Mostra l'agenda di una zona specifica (solo titolare)"><option value="tutte">Tutte le zone</option><option value="Nord">Nord</option><option value="Centro">Centro</option><option value="Toscana">Toscana</option><option value="Altre">Altre</option></select></span>
+      <button class="tb-btn filter-btn" id="btnNordCentro" onclick="toggleAgendaNordCentro()" style="display:none" title="Mostra insieme le agende di Nord e Centro (solo titolare/admin): appuntamenti in celeste, richiami in giallo (Nord) e viola chiaro (Centro)">&#127758; Nord + Centro</button>
       <span style="width:1px;height:18px;background:#b0a898;margin:0 2px;display:inline-block"></span>
       <label style="font-size:11px;color:#5a5246;display:inline-flex;align-items:center;gap:4px">&#128197; Appuntamenti del giorno:<input type="date" id="agDayPick" style="font-size:12px;padding:2px 5px;border:1px solid #b0a898;border-radius:4px"></label>
       <button class="tb-btn" style="background:#1a3a6a;color:#fff;border-color:#1a3a6a" onclick="stampaAppDelGiorno()" title="Stampa (o salva in PDF) tutti gli appuntamenti del giorno scelto.">&#128424; Stampa PDF</button>
       <button class="tb-btn" style="background:#1a7a30;color:#fff;border-color:#1a7a30" onclick="inviaAppDelGiorno()" title="Apri una email con il riepilogo degli appuntamenti del giorno (il PDF va allegato a mano dopo averlo salvato).">&#9993; Invia email</button>
-      <div class="cal-legend">
+      <div class="cal-legend" id="calLegend">
         <span><span class="leg-sq" style="background:#ffd6de;border:1px solid #f3b3c1"></span>Richiami</span>
         <span><span class="leg-sq" style="background:#d9f5de;border:1px solid #abe2b8"></span>Appuntamenti</span>
       </div>
@@ -1572,6 +1581,22 @@ function _zonaContatto(c){
 }
 var _filtroZonaAgenda='tutte';
 function setZonaAgenda(z){_filtroZonaAgenda=z||'tutte';renderAgenda();}
+var _vistaNordCentro=false;
+function toggleAgendaNordCentro(){
+  _vistaNordCentro=!_vistaNordCentro;
+  const btn=document.getElementById('btnNordCentro');
+  if(btn)btn.classList.toggle('active',_vistaNordCentro);
+  const sel=document.getElementById('agZonaFiltro');
+  if(sel)sel.disabled=_vistaNordCentro;
+  renderAgenda();
+}
+function _clsEvento(item,zona){
+  if(_vistaNordCentro){
+    if(item.type==='app')return 'ev-app-nc';
+    return zona==='Nord'?'ev-call-nord':'ev-call-centro';
+  }
+  return item.type==='app'?'ev-app':'ev-call';
+}
 function buildAgendaIndex(){
   telByDate={};
   for(const t of telefonate){
@@ -1694,7 +1719,23 @@ async function stampaAppDelGiorno(){const iso=_agDayISO();const ids=_appDelGiorn
 async function inviaAppDelGiorno(){const iso=_agDayISO();const ids=_appDelGiorno(iso);if(!ids.length){alert('Nessun appuntamento per il '+_dataIT(iso)+'.');return;}const res=await _scaricaPDF(ids,'Appuntamenti_'+iso);if(!res)return;const w=window.open(res.url,'_blank');if(!w)alert('Per inviare via e-mail: consenti le finestre pop-up, poi dal PDF usa Condividi \u2192 Mail.');else alert('PDF degli appuntamenti del '+_dataIT(iso)+' pronto.\n\nDal PDF aperto usa Condividi \u2192 Mail per inviarlo come allegato.');setTimeout(()=>URL.revokeObjectURL(res.url),60000);}
 function renderAgenda(){
   if(!currentWeek)currentWeek=getMonday(new Date());
-  try{var _zw=document.getElementById('agZonaWrap');if(_zw)_zw.style.display=(!window._ruolo||window._ruolo==='titolare')?'inline-flex':'none';}catch(e){}
+  try{
+    var _isTitolare=(!window._ruolo||window._ruolo==='titolare');
+    var _zw=document.getElementById('agZonaWrap');if(_zw)_zw.style.display=_isTitolare?'inline-flex':'none';
+    var _bnc=document.getElementById('btnNordCentro');if(_bnc)_bnc.style.display=_isTitolare?'':'none';
+    if(!_isTitolare&&_vistaNordCentro)_vistaNordCentro=false;
+    if(_bnc)_bnc.classList.toggle('active',_vistaNordCentro);
+    var _lg=document.getElementById('calLegend');
+    if(_lg){
+      _lg.innerHTML=_vistaNordCentro?
+        '<span><span class="leg-sq" style="background:#fff2ad;border:1px solid #edd873"></span>Richiami Nord</span>'+
+        '<span><span class="leg-sq" style="background:#e6d7f7;border:1px solid #cbaeee"></span>Richiami Centro</span>'+
+        '<span><span class="leg-sq" style="background:#cdeaf9;border:1px solid #9ed3ee"></span>Appuntamenti</span>'
+        :
+        '<span><span class="leg-sq" style="background:#ffd6de;border:1px solid #f3b3c1"></span>Richiami</span>'+
+        '<span><span class="leg-sq" style="background:#d9f5de;border:1px solid #abe2b8"></span>Appuntamenti</span>';
+    }
+  }catch(e){}
   // lista di navigazione cronologica completa (richiami+appuntamenti a seguire) per le frecce
   try{
     var _navTmp=[];
@@ -1722,9 +1763,11 @@ function renderAgenda(){
       const key=`${item.t.ID_contatto}_${iso}_${item.type}_${item.h}_${item.m}`;
       if(seen.has(key))continue;seen.add(key);
       const c=contactMap[item.t.ID_contatto];if(!c)continue;
-      if(_filtroZonaAgenda!=='tutte'&&_zonaContatto(c)!==_filtroZonaAgenda)continue;
+      const _zn=_zonaContatto(c);
+      if(_vistaNordCentro){if(_zn!=='Nord'&&_zn!=='Centro')continue;}
+      else if(_filtroZonaAgenda!=='tutte'&&_zn!==_filtroZonaAgenda)continue;
       totalByDay[i]++;
-      if(item.h===null)byDayAll[i].push({item,c});else byDayH[i].push({item,c});
+      if(item.h===null)byDayAll[i].push({item,c,zona:_zn});else byDayH[i].push({item,c,zona:_zn});
     }
     byDayH[i].sort((a,b)=>(a.item.h*60+a.item.m)-(b.item.h*60+b.item.m));
   }
@@ -1735,7 +1778,7 @@ function renderAgenda(){
   let allday='<div class="cal-allday-lbl">Tutto<br>il giorno</div>';
   for(let i=0;i<7;i++){const iso=fISO(addDays(monday,i));const isToday=iso===todayISO;
     allday+=`<div class="cal-allday-cell${isToday?' today':''}">`;
-    for(const{item,c}of byDayAll[i]){const name=`${c.Cognome||''} ${c.Nome||''}`.trim();const cls=item.type==='app'?'ev-app':'ev-call';
+    for(const{item,c,zona}of byDayAll[i]){const name=`${c.Cognome||''} ${c.Nome||''}`.trim();const cls=_clsEvento(item,zona);
       allday+=`<div class="ev ev-allday ${cls}" style="position:relative;padding-right:18px" onclick="openContact('${esc(c.ID_contatto)}',window._agendaNavAll)"><span onclick="event.stopPropagation();removeFromAgenda('${esc(c.ID_contatto)}','${iso}')" title="Togli dall'agenda" style="position:absolute;top:1px;right:2px;background:rgba(0,0,0,.3);color:#fff;width:13px;height:13px;border-radius:50%;font-size:9px;line-height:13px;text-align:center">&#215;</span>${esc(name)}</div>`;}
     allday+='</div>';}
   document.getElementById('calAlldayRow').innerHTML=allday;
@@ -1779,7 +1822,7 @@ function renderAgenda(){
       const name=`${c.Cognome||''} ${c.Nome||''}`.trim();
       const phones=[c.Cellulare,c.Telefono].filter(Boolean).join(', ');
       const city=c.Citta?`${c.Citta}${c.Provincia?' - '+c.Provincia:''}`:'';
-      const cls=item.type==='app'?'ev-app':'ev-call';
+      const cls=_clsEvento(item,ev.zona);
       const timeStr=`${String(item.h).padStart(2,'0')}:${String(item.m).padStart(2,'0')}`;
       const wp=`${100/ev.ncols}%`;const lp=`${ev.col*100/ev.ncols}%`;
       const posStyle=ev.ncols>1?`left:${lp};width:calc(${wp} - 2px);right:auto;`:'left:1px;right:1px;';
@@ -1809,8 +1852,10 @@ function renderAgenda(){
         const key=`${item.t.ID_contatto}_${iso}_${item.type}_${item.h}_${item.m}`;
         if(seen2.has(key))continue;seen2.add(key);
         const c=contactMap[item.t.ID_contatto];if(!c)continue;
-        if(_filtroZonaAgenda!=='tutte'&&_zonaContatto(c)!==_filtroZonaAgenda)continue;
-        allEvs.push({iso,item,c});
+        const _zn2=_zonaContatto(c);
+        if(_vistaNordCentro){if(_zn2!=='Nord'&&_zn2!=='Centro')continue;}
+        else if(_filtroZonaAgenda!=='tutte'&&_zn2!==_filtroZonaAgenda)continue;
+        allEvs.push({iso,item,c,zona:_zn2});
       }
     }
     if(provSel && provSel.options.length<=1){
@@ -1829,7 +1874,7 @@ function renderAgenda(){
     window._agendaResults=ordered.map(e=>e.c);
     const cnt=document.getElementById('agendaListCount');if(cnt)cnt.textContent=`${ordered.length} eventi`;
     let rows='';let curGroup=null;
-    ordered.forEach(({iso,item,c},idx)=>{
+    ordered.forEach(({iso,item,c,zona},idx)=>{
       const group=sortMode==='prov'?((c.Provincia||'?').toUpperCase()):(weekLabels[weekOf(iso)]||'');
       if(group!==curGroup){curGroup=group;rows+=`<tr><td colspan="7" style="background:#dfe6ee;font-weight:700;color:#2a4a6a;padding:5px 9px;border-bottom:1px solid #b8c4d0">${esc(group)}</td></tr>`;}
       const d=new Date(iso+'T12:00:00');const dow=['Dom','Lun','Mar','Mer','Gio','Ven','Sab'][d.getDay()];
@@ -1837,9 +1882,10 @@ function renderAgenda(){
       const tStr=item.h!==null?`${String(item.h).padStart(2,'0')}:${String(item.m||0).padStart(2,'0')}`:'--';
       const phones=[c.Cellulare,c.Telefono].filter(Boolean).join(' / ');
       const bg=idx%2?'#f0f4f8':'#fff';
+      const _tColor=_vistaNordCentro?(item.type==='app'?'#0c5e82':(zona==='Nord'?'#7a5d00':'#5a2f96')):(item.type==='app'?'#186018':'#901010');
       rows+=`<tr onclick="openContact('${esc(c.ID_contatto)}',window._agendaResults)" style="cursor:pointer">
         <td style="padding:5px 8px;border-bottom:1px solid #e8e4dc;white-space:nowrap;background:${bg}">${esc(dStr)}</td>
-        <td style="padding:5px 8px;border-bottom:1px solid #e8e4dc;font-family:monospace;font-weight:700;color:${item.type==='app'?'#186018':'#901010'};background:${bg}">${tStr}</td>
+        <td style="padding:5px 8px;border-bottom:1px solid #e8e4dc;font-family:monospace;font-weight:700;color:${_tColor};background:${bg}">${tStr}</td>
         <td style="padding:5px 8px;border-bottom:1px solid #e8e4dc;font-weight:700;background:${bg}">${esc(c.Cognome||'')}</td>
         <td style="padding:5px 8px;border-bottom:1px solid #e8e4dc;background:${bg}">${esc(c.Nome||'')}</td>
         <td style="padding:5px 8px;border-bottom:1px solid #e8e4dc;font-family:monospace;font-size:11px;background:${bg}">${esc(phones)}</td>
