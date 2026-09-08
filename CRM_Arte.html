@@ -1779,7 +1779,11 @@ function renderAgenda(){
   for(let i=0;i<7;i++){const iso=fISO(addDays(monday,i));const isToday=iso===todayISO;
     allday+=`<div class="cal-allday-cell${isToday?' today':''}">`;
     for(const{item,c,zona}of byDayAll[i]){const name=`${c.Cognome||''} ${c.Nome||''}`.trim();const cls=_clsEvento(item,zona);
-      allday+=`<div class="ev ev-allday ${cls}" style="position:relative;padding-right:18px" onclick="openContact('${esc(c.ID_contatto)}',window._agendaNavAll)"><span onclick="event.stopPropagation();removeFromAgenda('${esc(c.ID_contatto)}','${iso}')" title="Togli dall'agenda" style="position:absolute;top:1px;right:2px;background:rgba(0,0,0,.3);color:#fff;width:13px;height:13px;border-radius:50%;font-size:9px;line-height:13px;text-align:center">&#215;</span>${esc(name)}</div>`;}
+      allday+=`<div class="ev ev-allday ${cls}" style="position:relative;padding-right:18px;cursor:grab" draggable="true"
+  ondragstart="evDragStart(event,'${esc(c.ID_contatto)}','${iso}',null,0)"
+  ondragend="evDragEnd(event)"
+  title="Nessun orario assegnato — trascina su un'ora del calendario per fissarlo"
+  onclick="openContact('${esc(c.ID_contatto)}',window._agendaNavAll)"><span onclick="event.stopPropagation();removeFromAgenda('${esc(c.ID_contatto)}','${iso}')" title="Togli dall'agenda" style="position:absolute;top:1px;right:2px;background:rgba(0,0,0,.3);color:#fff;width:13px;height:13px;border-radius:50%;font-size:9px;line-height:13px;text-align:center">&#215;</span>&#128337; ${esc(name)}</div>`;}
     allday+='</div>';}
   document.getElementById('calAlldayRow').innerHTML=allday;
   const H=24;let inner='<div class="cal-time-col">';
