@@ -1897,6 +1897,14 @@ function renderAgenda(){
   onclick="openContact('${esc(c.ID_contatto)}',window._agendaNavAll)"><span onclick="event.stopPropagation();removeFromAgenda('${esc(c.ID_contatto)}','${iso}')" title="Togli dall'agenda" style="position:absolute;top:1px;right:2px;background:rgba(0,0,0,.3);color:#fff;width:13px;height:13px;border-radius:50%;font-size:9px;line-height:13px;text-align:center">&#215;</span>&#128337; ${esc(name)}</div>`;}
     allday+='</div>';}
   document.getElementById('calAlldayRow').innerHTML=allday;
+  // Se in questa settimana non c'e' nessun richiamo/appuntamento senza ora,
+  // la barra "Tutto il giorno" non serve: la nascondo per non occupare
+  // spazio inutile. Resta pero' pronta a ricomparire da sola se in futuro
+  // capitasse di nuovo un richiamo senza orario (funge da rete di sicurezza,
+  // non e' stata tolta la funzione — solo lo spazio quando e' vuota).
+  const _alldayTot=byDayAll.reduce((s,arr)=>s+arr.length,0);
+  const _alldayRow=document.getElementById('calAlldayRow');
+  if(_alldayRow)_alldayRow.style.display=_alldayTot?'':'none';
   const H=24;let inner='<div class="cal-time-col">';
   for(let h=0;h<H;h++)inner+=`<div class="cal-t-lbl" style="top:${h*PX_H+2}px">${String(h).padStart(2,'0')}</div>`;
   inner+='</div>';
