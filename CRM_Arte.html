@@ -980,6 +980,7 @@ async function _verificaAccesso(){
     if(j.online&&!j.login){document.getElementById("loginOverlay").style.display="flex";return false;}
     if(j.ruolo){window._ruolo=j.ruolo;document.body.setAttribute("data-ruolo",j.ruolo);}
     if(j.nome){window._nomeUtente=j.nome;}
+    window._titolariSet=new Set((j.titolari||[]).map(function(n){return (n||'').trim().toLowerCase();}));
     return true;
   }catch(e){return true;}
 }
@@ -1580,6 +1581,10 @@ function _zonaContatto(c){
   for(var z in ZN){if(ZN[z].indexOf(reg)>=0)return z;}
   return 'Altre';
 }
+function _daTitolare(operatore){
+  var s=window._titolariSet;if(!s||!s.size||!operatore)return false;
+  return s.has(String(operatore).trim().toLowerCase());
+}
 var _filtroZonaAgenda='tutte';
 function setZonaAgenda(z){_filtroZonaAgenda=z||'tutte';renderAgenda();}
 var _vistaNordCentro=false;
@@ -1854,7 +1859,7 @@ function renderAgenda(){
     Object.keys(telByDate||{}).sort().forEach(function(iso){
       if(iso<_oggiN)return; // da oggi in avanti
       (telByDate[iso]||[]).forEach(function(item){
-        if(item&&item.t)_navTmp.push(item.t);
+        if(item&&item.t&&!(!_isTitolare&&_daTitolare(item.t.Operatore)))_navTmp.push(item.t);
       });
     });
     // dedup per ID mantenendo l'ordine (il primo evento futuro del contatto)
@@ -1871,6 +1876,7 @@ function renderAgenda(){
     for(const item of(telByDate[iso]||[])){
       if(calFilter==='call'&&item.type!=='call')continue;
       if(calFilter==='app'&&item.type!=='app')continue;
+      if(!_isTitolare&&_daTitolare(item.t.Operatore))continue;
       const key=`${item.t.ID_contatto}_${iso}_${item.type}_${item.h}_${item.m}`;
       if(seen.has(key))continue;seen.add(key);
       const c=contactMap[item.t.ID_contatto];if(!c)continue;
@@ -1972,6 +1978,7 @@ function renderAgenda(){
       for(const item of(telByDate[iso]||[])){
         if(calFilter==='call'&&item.type!=='call')continue;
         if(calFilter==='app'&&item.type!=='app')continue;
+        if(!_isTitolare&&_daTitolare(item.t.Operatore))continue;
         const key=`${item.t.ID_contatto}_${iso}_${item.type}_${item.h}_${item.m}`;
         if(seen2.has(key))continue;seen2.add(key);
         const c=contactMap[item.t.ID_contatto];if(!c)continue;

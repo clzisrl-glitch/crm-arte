@@ -217,7 +217,13 @@ def api_chisono():
     if not u: return jsonify({"login":False,"online":crm_auth.USE_AUTH})
     zona=u.get("zona","")
     regioni=crm_auth.regioni_della_zona(zona) if zona else None
-    return jsonify({"login":True,"nome":u["nome"],"ruolo":u["ruolo"],"online":crm_auth.USE_AUTH,"zona":zona,"regioni":regioni})
+    # Nomi (non le password) degli account titolare: servono al frontend per
+    # nascondere dall'agenda degli operatori le telefonate/appuntamenti
+    # registrati dal titolare/admin su contatti della loro stessa zona
+    # (l'operatore deve vedere SOLO la propria agenda, non quella dell'admin
+    # ne' quella di un'altra zona).
+    titolari=sorted(set(v['nome'] for v in crm_auth.UTENTI.values() if v.get('ruolo')=='titolare'))
+    return jsonify({"login":True,"nome":u["nome"],"ruolo":u["ruolo"],"online":crm_auth.USE_AUTH,"zona":zona,"regioni":regioni,"titolari":titolari})
 
 def _solo_titolare_api():
     u=_utente_corrente()
