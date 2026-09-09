@@ -1574,7 +1574,7 @@ function segnaDeceduto(){
 }
 function _zonaContatto(c){
   var ZN={Nord:['Piemonte',"Valle d'Aosta",'Lombardia','Veneto','Trentino-Alto Adige','Friuli-Venezia Giulia','Liguria'],
-          Centro:['Lazio','Umbria','Marche','Sardegna'],
+          Centro:['Lazio','Umbria','Marche','Sardegna','Sicilia','Campania'],
           Toscana:['Toscana']};
   var reg=((c&&c.Regione)||'').trim();
   for(var z in ZN){if(ZN[z].indexOf(reg)>=0)return z;}
@@ -2692,7 +2692,7 @@ function apriContattoDaId(id, listaContesto){
 function _cruscottoZone(){
   // regioni per zona (coerenti col server)
   var ZN={Nord:['Piemonte',"Valle d'Aosta",'Lombardia','Veneto','Trentino-Alto Adige','Friuli-Venezia Giulia','Liguria'],
-          Centro:['Lazio','Umbria','Marche','Sardegna'],
+          Centro:['Lazio','Umbria','Marche','Sardegna','Sicilia','Campania'],
           Toscana:['Toscana']};
   function zonaDi(reg){reg=(reg||'').trim();for(var z in ZN){if(ZN[z].indexOf(reg)>=0)return z;}return 'Altre';}
   // mappa ID_contatto -> zona

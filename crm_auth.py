@@ -26,10 +26,10 @@ MAX_UTENTI = 5
 
 # ── ZONE: una zona è un insieme di regioni. Configurabile via CRM_ZONE. ──
 # Formato CRM_ZONE: nomezona=Regione1|Regione2|...; altrazona=Regione3|...
-# Esempio: centro=Lazio|Umbria|Marche|Sardegna
+# Esempio: centro=Lazio|Umbria|Marche|Sardegna|Sicilia|Campania
 # Se non impostata, vale la mappa predefinita qui sotto.
 ZONE_DEFAULT = {
-    'centro': ['Lazio', 'Umbria', 'Marche', 'Sardegna'],
+    'centro': ['Lazio', 'Umbria', 'Marche', 'Sardegna', 'Sicilia', 'Campania'],
     'nord': ['Piemonte', "Valle d'Aosta", 'Lombardia', 'Veneto', 'Trentino-Alto Adige', 'Friuli-Venezia Giulia', 'Liguria'],
 }
 def _parse_zone():
