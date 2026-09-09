@@ -3165,27 +3165,24 @@ function runFind(){
   const criteria={};
   document.querySelectorAll('#prBody .find-inp').forEach(inp=>{const v=(inp.value||'').trim();if(v)criteria[inp.dataset.field]=v.toLowerCase();});
   if(!Object.keys(criteria).length){document.getElementById('findCount').textContent='Nessun criterio';return;}
-  // ricerca per parole: ogni parola digitata deve comparire nel testo, in QUALSIASI ordine
-  // (prima si cercava la frase intera cosi' com'e' scritta: "clzi 2026" non trovava un campo con "2026 clzi")
-  const mAll=(hay,val)=>{const toks=val.split(/\s+/).filter(Boolean);return toks.every(t=>hay.includes(t));};
   const results=allContacts.filter(c=>Object.entries(criteria).every(([field,val])=>{
     if(field==='__tutto__'){
       const base=[c.Cognome,c.Nome,c.Titolo,c.Societa,c.Citta,c.Provincia,c.Regione,c.Via,c.CAP,c.Frazione,c.Codice_fiscale,c.Email,c.Cellulare,c.Cellulare2,c.Telefono,c.Telefono2,c.Tel_Ufficio,c.Note,c.Luogo_nascita,c.Data_nascita,c.ID_contatto,c.Esito_ultima_chiamata,c.Prossima_telefonata].filter(Boolean).join(' \u00b7 ').toLowerCase();
-      if(mAll(base,val))return true;
-      if((opereByContact[c.ID_contatto]||[]).some(o=>mAll(((o.Artista||'')+' '+(o.Editore||'')+' '+(o.Opera||'')+' '+(o.Pagamento||'')+' '+(o.Rate||'')+' '+(o.Valore||'')).toLowerCase(),val)))return true;
-      if((telByContact[c.ID_contatto]||[]).some(t=>mAll(((t.Esito||'')+' '+(t.Note_appuntamento||'')).toLowerCase(),val)))return true;
+      if(base.includes(val))return true;
+      if((opereByContact[c.ID_contatto]||[]).some(o=>((o.Artista||'')+' '+(o.Editore||'')+' '+(o.Opera||'')+' '+(o.Pagamento||'')+' '+(o.Rate||'')+' '+(o.Valore||'')).toLowerCase().includes(val)))return true;
+      if((telByContact[c.ID_contatto]||[]).some(t=>((t.Esito||'')+' '+(t.Note_appuntamento||'')).toLowerCase().includes(val)))return true;
       return false;
     }
-    if(field==='__note_app__')return(telByContact[c.ID_contatto]||[]).some(t=>mAll((t.Note_appuntamento||'').toLowerCase(),val));
-    if(field==='__esito_tel__')return(telByContact[c.ID_contatto]||[]).some(t=>mAll((t.Esito||'').toLowerCase(),val));
-    if(field==='__opera_artista__')return(opereByContact[c.ID_contatto]||[]).some(o=>mAll((o.Artista||'').toLowerCase(),val)||mAll((o.Editore||'').toLowerCase(),val));
-    if(field==='__opera_editore__')return(opereByContact[c.ID_contatto]||[]).some(o=>mAll((o.Editore||'').toLowerCase(),val));
-    if(field==='__opera_titolo__')return(opereByContact[c.ID_contatto]||[]).some(o=>mAll((o.Opera||'').toLowerCase(),val));
-    if(field==='ID_contatto'){const id=(c.ID_contatto||'').toLowerCase();return id===val||mAll(id,val);}
+    if(field==='__note_app__')return(telByContact[c.ID_contatto]||[]).some(t=>(t.Note_appuntamento||'').toLowerCase().includes(val));
+    if(field==='__esito_tel__')return(telByContact[c.ID_contatto]||[]).some(t=>(t.Esito||'').toLowerCase().includes(val));
+    if(field==='__opera_artista__')return(opereByContact[c.ID_contatto]||[]).some(o=>(o.Artista||'').toLowerCase().includes(val)||(o.Editore||'').toLowerCase().includes(val));
+    if(field==='__opera_editore__')return(opereByContact[c.ID_contatto]||[]).some(o=>(o.Editore||'').toLowerCase().includes(val));
+    if(field==='__opera_titolo__')return(opereByContact[c.ID_contatto]||[]).some(o=>(o.Opera||'').toLowerCase().includes(val));
+    if(field==='ID_contatto'){const id=(c.ID_contatto||'').toLowerCase();return id===val||id.includes(val);}
     const cv=(c[field]||'').toLowerCase();
-    if(field==='Prossima_telefonata'){const d=pd(c[field]);return mAll(cv,val)||(d&&mAll(d.d,val));}
-    if(field==='Cognome'||field==='Nome')return cv.startsWith(val); // prevale la prima lettera, invariato
-    return mAll(cv,val);
+    if(field==='Prossima_telefonata'){const d=pd(c[field]);return cv.includes(val)||(d&&d.d.includes(val));}
+    if(field==='Cognome'||field==='Nome')return cv.startsWith(val); // prevale la prima lettera
+    return cv.includes(val);
   }));
   if(results.length){
     currentResults=results;currentIdx=0;searchActive=true;
