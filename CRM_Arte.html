@@ -3000,31 +3000,55 @@ function _vrData(s){
 }
 function _vrCalcola(dalISO){
   var dal=new Date(dalISO+'T00:00:00');
-  var per={};
+  // Limite in avanti: OGGI. In archivio esistono opere con una data di
+  // acquisto NEL FUTURO (es. 2028, 2029, 2041): sono errori di battitura
+  // sull'anno. Senza questo limite finivano dentro il conteggio "dal
+  // 01/08/2026" e sporcavano la statistica con vendite di anni fa
+  // (segnalato dal titolare l'11/09/2026). Ora vengono escluse e
+  // elencate a parte, cosi' si possono correggere a mano.
+  var fine=new Date(); fine.setHours(23,59,59,999);
+  var per={}, scartate=[];
   (typeof opere!=='undefined'?opere:[]).forEach(function(o){
     var d=_vrData(o.Data_acquisto);
     if(!d||d<dal)return;
     var c=(typeof contactMap!=='undefined')?contactMap[String(o.ID_contatto)]:null;
+    if(d>fine){
+      scartate.push({id:o.ID_contatto,cog:((c&&c.Cognome)||'')+' '+((c&&c.Nome)||''),data:o.Data_acquisto,op:o.Opera});
+      return;
+    }
     var reg=((c&&c.Regione)||'').trim()||'(regione non indicata)';
     if(!per[reg])per[reg]={n:0,val:0,cli:{}};
     per[reg].n++;
     per[reg].val+=parseFloat(String(o.Valore||'').replace(/[^0-9.]/g,''))||0;
     if(o.ID_contatto)per[reg].cli[String(o.ID_contatto)]=1;
   });
-  return per;
+  return {per:per,scartate:scartate};
+}
+function _vrAvvisoScartate(scartate){
+  if(!scartate||!scartate.length)return '';
+  var h='<div style="background:#fff6e5;border:1px solid #e9c87a;border-radius:8px;padding:10px 12px;margin-bottom:12px;font-size:12.5px;color:#8a6100">'+
+    '<b>&#9888; '+scartate.length+(scartate.length===1?' opera esclusa':' opere escluse')+': data di acquisto nel futuro</b> (errore di battitura sull\'anno). '+
+    'Non vengono contate nelle vendite. Da correggere nella scheda del cliente:<ul style="margin:6px 0 0 18px;padding:0">';
+  scartate.slice(0,12).forEach(function(s){
+    h+='<li>'+esc(String(s.id))+' &middot; '+esc((s.cog||'').trim())+' &middot; <b>'+esc(s.data||'')+'</b> &middot; '+esc((s.op||'').slice(0,45))+'</li>';
+  });
+  if(scartate.length>12)h+='<li>&hellip; e altre '+(scartate.length-12)+'</li>';
+  h+='</ul></div>';
+  return h;
 }
 function _vrTabella(){
-  var per=_vrCalcola(_vrDal);
+  var res=_vrCalcola(_vrDal);
+  var per=res.per, avviso=_vrAvvisoScartate(res.scartate);
   var regs=Object.keys(per).sort(function(a,b){return per[b].val-per[a].val;});
   var gg=_vrDal.split('-'); var dalIt=gg[2]+'/'+gg[1]+'/'+gg[0];
   if(!regs.length){
-    return '<div style="color:#999;font-size:13px;padding:12px;background:#fafafa;border-radius:8px;margin-bottom:22px">'+
+    return avviso+'<div style="color:#999;font-size:13px;padding:12px;background:#fafafa;border-radius:8px;margin-bottom:22px">'+
       'Nessuna opera caricata con data dal '+esc(dalIt)+' in poi. Appena verranno registrate le vendite, qui compare il riepilogo regione per regione.</div>';
   }
   var tN=0,tV=0,tC=0;
   regs.forEach(function(r){tN+=per[r].n;tV+=per[r].val;tC+=Object.keys(per[r].cli).length;});
   var maxV=Math.max.apply(null,regs.map(function(r){return per[r].val;}))||1;
-  var h='<table style="width:100%;border-collapse:collapse;margin-bottom:10px">'+
+  var h=avviso+'<table style="width:100%;border-collapse:collapse;margin-bottom:10px">'+
     '<tr style="background:#f4f6fa">'+
     '<th style="text-align:left;padding:8px;font-size:12px;color:#666">Regione</th>'+
     '<th style="padding:8px;font-size:12px;color:#666">Opere</th>'+
