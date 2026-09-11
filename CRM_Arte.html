@@ -3017,10 +3017,15 @@ function _vrCalcola(dalISO){
       return;
     }
     var reg=((c&&c.Regione)||'').trim()||'(regione non indicata)';
-    if(!per[reg])per[reg]={n:0,val:0,cli:{}};
+    if(!per[reg])per[reg]={n:0,val:0,cli:{},righe:[]};
     per[reg].n++;
-    per[reg].val+=parseFloat(String(o.Valore||'').replace(/[^0-9.]/g,''))||0;
+    var v=parseFloat(String(o.Valore||'').replace(/[^0-9.]/g,''))||0;
+    per[reg].val+=v;
     if(o.ID_contatto)per[reg].cli[String(o.ID_contatto)]=1;
+    per[reg].righe.push({id:String(o.ID_contatto||''),
+      cog:(((c&&c.Cognome)||'')+' '+((c&&c.Nome)||'')).trim()||'(scheda non trovata)',
+      citta:((c&&c.Citta)||''), prov:((c&&c.Provincia)||''),
+      data:o.Data_acquisto||'', opera:o.Opera||'', ed:o.Editore||'', val:v, ord:d.getTime()});
   });
   return {per:per,scartate:scartate};
 }
@@ -3056,15 +3061,18 @@ function _vrTabella(){
     '<th style="text-align:right;padding:8px;font-size:12px;color:#666">Venduto</th>'+
     '<th style="padding:8px;font-size:12px;color:#666;width:34%">Peso</th>'+
     '<th style="padding:8px;font-size:12px;color:#666">%</th></tr>';
-  regs.forEach(function(r){
+  window._vrRegs=regs;   // l'indice evita i problemi con gli apostrofi (Valle d'Aosta)
+  regs.forEach(function(r,ri){
     var o=per[r], w=Math.round(o.val/maxV*100), q=tV?Math.round(o.val/tV*100):0;
-    h+='<tr style="border-bottom:1px solid #eee">'+
-      '<td style="padding:8px;font-weight:600;color:#1a3a6a">'+esc(r)+'</td>'+
+    var aperta=(_vrAperta===r);
+    h+='<tr onclick="_vrApri('+ri+')" title="Clicca per vedere i clienti di questa regione" style="border-bottom:1px solid #eee;cursor:pointer;background:'+(aperta?'#f4f8fd':'transparent')+'">'+
+      '<td style="padding:8px;font-weight:600;color:#1a3a6a">'+(aperta?'&#9662;':'&#9656;')+' '+esc(r)+'</td>'+
       '<td style="text-align:center;padding:8px">'+o.n+'</td>'+
       '<td style="text-align:center;padding:8px;color:#888">'+Object.keys(o.cli).length+'</td>'+
       '<td style="text-align:right;padding:8px;font-weight:600;color:#2a7a2a">'+_fmtEuro(o.val)+'</td>'+
       '<td style="padding:8px"><div style="background:#eef;border-radius:6px;height:16px"><div style="width:'+w+'%;background:#7aa3d6;height:100%;border-radius:6px"></div></div></td>'+
       '<td style="text-align:center;padding:8px;font-size:12px;color:#888">'+q+'%</td></tr>';
+    if(aperta)h+='<tr><td colspan="6" style="padding:0 8px 12px">'+_vrElencoClienti(r,o,ri)+'</td></tr>';
   });
   h+='<tr style="background:#f7f9fc;font-weight:700;color:#1a3a6a">'+
     '<td style="padding:9px">TOTALE ('+regs.length+' regioni)</td>'+
@@ -3081,6 +3089,53 @@ function _vrAggiorna(){
   if(i&&i.value)_vrDal=i.value;
   var b=document.getElementById('vrBody');
   if(b)b.innerHTML=_vrTabella();
+}
+
+// ── Elenco dei clienti dietro al fatturato di una regione ──────────
+// Cliccando una regione si apre l'elenco delle vendite che compongono
+// quel totale; da ogni riga si salta alla scheda del cliente (pulsante
+// "Apri scheda"), con le frecce avanti/indietro che restano dentro i
+// clienti di quella regione.
+var _vrAperta='';
+function _vrApri(ri){
+  var r=(window._vrRegs||[])[ri];
+  if(r==null)return;
+  _vrAperta=(_vrAperta===r)?'':r;
+  _vrAggiorna();
+}
+function _vrElencoClienti(reg,o,ri){
+  var righe=(o.righe||[]).slice().sort(function(a,b){return b.val-a.val;});
+  var h='<div style="border:1px solid #dce6f2;border-radius:10px;overflow:hidden">'+
+    '<div style="background:#f4f8fd;padding:7px 10px;font-size:12px;color:#1a3a6a;font-weight:600">'+
+    esc(reg)+' &middot; '+righe.length+(righe.length===1?' vendita':' vendite')+' &middot; '+_fmtEuro(o.val)+'</div>'+
+    '<table style="width:100%;border-collapse:collapse;font-size:12.5px">';
+  righe.forEach(function(x){
+    h+='<tr style="border-top:1px solid #eef2f7">'+
+      '<td style="padding:7px 10px;font-weight:600;color:#1a3a6a">'+esc(x.cog)+
+        '<div style="font-weight:400;color:#999;font-size:11px">'+esc(x.citta)+(x.prov?' ('+esc(x.prov)+')':'')+' &middot; ID '+esc(x.id)+'</div></td>'+
+      '<td style="padding:7px 10px;color:#555">'+esc(x.opera)+(x.ed?' <span style="color:#aaa">&middot; '+esc(x.ed)+'</span>':'')+'</td>'+
+      '<td style="padding:7px 10px;text-align:center;color:#888;white-space:nowrap">'+esc(x.data)+'</td>'+
+      '<td style="padding:7px 10px;text-align:right;font-weight:600;color:#2a7a2a;white-space:nowrap">'+_fmtEuro(x.val)+'</td>'+
+      '<td style="padding:7px 10px;text-align:right;white-space:nowrap">'+
+        '<button onclick="event.stopPropagation();_vrVaiScheda(\''+esc(x.id)+'\','+ri+')" title="Apre la scheda di questo cliente" '+
+        'style="background:#1a5ab8;color:#fff;border:none;border-radius:7px;padding:5px 10px;font-size:12px;cursor:pointer;font-weight:600">Apri scheda</button></td></tr>';
+  });
+  h+='</table></div>';
+  return h;
+}
+function _vrVaiScheda(id,ri){
+  var reg=(window._vrRegs||[])[ri];
+  var res=_vrCalcola(_vrDal);
+  var o=res.per[reg]||{righe:[]};
+  // la navigazione con le frecce resta dentro i clienti di questa regione
+  var lista=[];
+  var visti={};
+  (o.righe||[]).forEach(function(x){
+    if(visti[x.id])return; visti[x.id]=1;
+    var c=(typeof contactMap!=='undefined')?contactMap[String(x.id)]:null;
+    if(c)lista.push(c);
+  });
+  if(typeof openContact==='function')openContact(id,lista);
 }
 function _sezioneVenditeRegione(){
   // doppia sicurezza: la scheda Statistiche e' gia' riservata, ma questa
