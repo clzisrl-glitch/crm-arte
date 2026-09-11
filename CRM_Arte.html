@@ -432,14 +432,22 @@ body{background:var(--apl-bg);color:var(--apl-ink)}
 .ev-call:hover{background:#ffc3cf}
 .ev-app{background:#d9f5de;border:1px solid #abe2b8;color:#0f6e2e;font-weight:600}
 .ev-app:hover{background:#c7eed0}
-/* Vista combinata "Nord + Centro" (solo titolare/admin): appuntamenti celeste,
-   richiami colorati per zona (giallo=Nord, viola chiaro=Centro) */
+/* Vista combinata "Zone a colori" (solo titolare/admin): appuntamenti celeste,
+   richiami colorati per zona. I colori stanno anche in ZONE_AGENDA (JS):
+   se ne cambi uno qui, cambialo anche li', altrimenti legenda e agenda
+   non coincidono piu'. */
 .ev-app-nc{background:#cdeaf9;border:1px solid #9ed3ee;color:#0c5e82;font-weight:600}
 .ev-app-nc:hover{background:#b7e0f4}
 .ev-call-nord{background:#fff2ad;border:1px solid #edd873;color:#7a5d00;font-weight:600}
 .ev-call-nord:hover{background:#ffe97e}
 .ev-call-centro{background:#e6d7f7;border:1px solid #cbaeee;color:#5a2f96;font-weight:600}
 .ev-call-centro:hover{background:#d9c1f2}
+.ev-call-triveneto{background:#cfeee6;border:1px solid #9ed8c9;color:#0a6b58;font-weight:600}
+.ev-call-triveneto:hover{background:#b9e6da}
+.ev-call-toscana{background:#ffe2bf;border:1px solid #f0c896;color:#8a5a10;font-weight:600}
+.ev-call-toscana:hover{background:#ffd5a3}
+.ev-call-altre{background:#e8e8ec;border:1px solid #cccccc;color:#555555;font-weight:600}
+.ev-call-altre:hover{background:#dcdce1}
 .pr-left{background:#fff;border-right:1px solid var(--apl-line2)}
 .note-box,.addr-box,.meta-box,.numstate{border-radius:12px;border:1px solid var(--apl-line2);background:#fbfbfd}
 input,select,textarea,.edit-inp,.pr-search,.list-search{border-radius:8px;border:1px solid var(--apl-line)}
@@ -500,6 +508,11 @@ body[data-ruolo="operatore"] [onclick^="backupCompleto"],
 body[data-ruolo="operatore"] [onclick^="exportExcel"],
 body[data-ruolo="operatore"] [onclick^="deleteContact"]{display:none !important;}
 body[data-ruolo="operatore"] .tab-soloadmin{display:none!important}
+/* Testi e istruzioni differenziati per ruolo. _soloTitolare sparisce per le
+   telefoniste; _soloOperatore compare SOLO per loro (in locale, senza login,
+   data-ruolo non c'e' e si vede la versione titolare). */
+body[data-ruolo="operatore"] ._soloTitolare{display:none!important}
+body:not([data-ruolo="operatore"]) ._soloOperatore{display:none!important}
 #mappaOverlay{display:none;position:fixed;inset:0;z-index:4000;background:#fff;flex-direction:column}
 #mappaOverlay .maptop{background:#1a3a6a;color:#fff;padding:8px 12px;display:flex;flex-direction:column;gap:6px}
 #mappaOverlay .maphdr{display:flex;align-items:center;gap:10px;font-size:16px}
@@ -575,7 +588,7 @@ body[data-ruolo="operatore"] .tab-soloadmin{display:none!important}
       <button class="tb-btn filter-btn" id="fApp" onclick="setFilter('app')">&#128994; Appuntamenti</button>
       <button class="tb-btn filter-btn" id="fCall" onclick="setFilter('call')">&#128308; Richiami</button>
       <span id="agZonaWrap" style="display:none;align-items:center;gap:4px;margin-left:4px"><span style="width:1px;height:18px;background:#b0a898;margin:0 2px;display:inline-block"></span>&#127758;<select id="agZonaFiltro" onchange="setZonaAgenda(this.value)" style="font-size:12px;padding:3px 6px;border:1px solid #b0a898;border-radius:4px;background:#fff" title="Mostra l'agenda di una zona specifica (solo titolare)"><option value="tutte">Tutte le zone</option><option value="Nord">Nord</option><option value="Triveneto">Triveneto</option><option value="Centro">Centro</option><option value="Toscana">Toscana</option><option value="Altre">Altre</option></select></span>
-      <button class="tb-btn filter-btn" id="btnNordCentro" onclick="toggleAgendaNordCentro()" style="display:none" title="Mostra insieme le agende di Nord e Centro (solo titolare/admin): appuntamenti in celeste, richiami in giallo (Nord) e viola chiaro (Centro)">&#127758; Nord + Centro</button>
+      <button class="tb-btn filter-btn" id="btnZoneColori" onclick="toggleAgendaZone()" style="display:none" title="Mostra insieme le agende di TUTTE le zone (solo titolare/admin), ogni zona con il suo colore: Nord giallo, Triveneto verde acqua, Centro viola chiaro, Toscana arancio, Altre grigio. Gli appuntamenti restano celesti.">&#127758; Zone a colori</button>
       <span style="width:1px;height:18px;background:#b0a898;margin:0 2px;display:inline-block"></span>
       <label style="font-size:11px;color:#5a5246;display:inline-flex;align-items:center;gap:4px">&#128197; Appuntamenti del giorno:<input type="date" id="agDayPick" style="font-size:12px;padding:2px 5px;border:1px solid #b0a898;border-radius:4px"></label>
       <button class="tb-btn" style="background:#1a3a6a;color:#fff;border-color:#1a3a6a" onclick="stampaAppDelGiorno()" title="Stampa (o salva in PDF) tutti gli appuntamenti del giorno scelto.">&#128424; Stampa PDF</button>
@@ -812,8 +825,8 @@ body[data-ruolo="operatore"] .tab-soloadmin{display:none!important}
     <div class="list-scroll" style="padding:24px 32px;max-width:1080px;font-size:13.5px;line-height:1.6;color:#222">
       <h2 style="font-size:23px;color:#1f4a73;margin:0 0 2px;font-weight:600;letter-spacing:-.01em">&#127912; Arte Editoria Monete</h2>
       <div id="welcome-giornata" style="background:linear-gradient(135deg,#1a3a6a,#2a5a9a);border-radius:14px;padding:18px 22px;margin:14px 0 22px;color:#fff"><div style="font-size:13px;opacity:.85;margin-bottom:2px" id="giornataData"></div><div style="font-size:17px;font-weight:700;margin-bottom:14px">La tua giornata</div><div id="giornataCards" style="display:flex;flex-wrap:wrap;gap:12px"></div><button onclick="mostraVicinoModal()" style="margin-top:14px;width:100%;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.35);color:#fff;padding:12px;border-radius:10px;font-size:15px;cursor:pointer;font-weight:600">&#128205; Vicino a me &mdash; chi ho qui intorno</button><button onclick="mostraMappaItalia()" style="margin-top:8px;width:100%;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.35);color:#fff;padding:12px;border-radius:10px;font-size:15px;cursor:pointer;font-weight:600">&#128506; Mappa Italia &mdash; tutti i contatti sulla mappa</button></div>
-      <div style="color:#777;margin-bottom:18px">Guida rapida. Le sezioni in alto sono i pulsanti della barra. Clicca un argomento per saltarci.</div>
-      <div id="welcome-strumenti" style="background:#f4f6fa;border:1px solid #dfe5ee;border-radius:12px;padding:16px 18px;margin-bottom:22px"><div style="font-size:15px;font-weight:700;color:#1a3a6a;margin-bottom:4px">&#128295; Strumenti</div><div style="font-size:12.5px;color:#777;margin-bottom:12px">Backup, esportazioni e viste complete. <b>Backup, Excel e Completo sono riservati al titolare.</b></div><div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center"><button class="btn-u btn-green" onclick="backupCompleto()" title="Scarica una copia di sicurezza di tutti i dati (crm_data.json) sul tuo computer.">&#128190; Backup</button><button class="btn-u btn-blue" onclick="mostraBackupAuto()" title="Vedi e scarica le copie di sicurezza automatiche degli ultimi 60 giorni.">&#128338; Backup automatici</button>
+      <div style="color:#777;margin-bottom:18px">Guida rapida. Le sezioni in alto sono i pulsanti della barra. Clicca un argomento per saltarci.</div><div class="_soloOperatore" style="background:#eef7ee;border:1px solid #cce5cc;border-left:4px solid #2a7a2a;border-radius:8px;padding:12px 14px;margin-bottom:18px;color:#2a5a2a"><b>&#127758; Lavori sulla tua zona.</b> Ricerche, elenchi e agenda ti mostrano <b>solo i contatti delle regioni della tua zona</b>, e l'agenda solo le telefonate e gli appuntamenti registrati da te o dalle tue colleghe di zona. Non &#232; un errore se non trovi un nominativo di un'altra regione: &#232; di un'altra zona.</div><div class="_soloTitolare" style="background:#eef4fc;border:1px solid #cfdcf0;border-left:4px solid #1a3a6a;border-radius:8px;padding:12px 14px;margin-bottom:18px;color:#33506f"><b>&#128273; Accesso titolare.</b> Vedi <b>tutte le zone</b> e tutti i contatti. In pi&#249; rispetto alle telefoniste hai: <b>&#128202; Statistiche</b> (andamento, zone, vendite per regione, accessi), backup ed esportazioni nel riquadro Strumenti, importazione contatti, correzione province, fusione dei doppioni ed eliminazione schede.</div>
+      <div id="welcome-strumenti" style="background:#f4f6fa;border:1px solid #dfe5ee;border-radius:12px;padding:16px 18px;margin-bottom:22px"><div style="font-size:15px;font-weight:700;color:#1a3a6a;margin-bottom:4px">&#128295; Strumenti</div><div style="font-size:12.5px;color:#777;margin-bottom:12px"><span class="_soloTitolare">Backup, esportazioni e viste complete. <b>Backup, Excel e Completo sono riservati al titolare.</b></span><span class="_soloOperatore">Mappa dei contatti, ricerca &quot;vicino a me&quot; e archivio dei deceduti. Gli strumenti di backup ed esportazione sono del titolare e qui non compaiono.</span></div><div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center"><button class="btn-u btn-green" onclick="backupCompleto()" title="Scarica una copia di sicurezza di tutti i dati (crm_data.json) sul tuo computer.">&#128190; Backup</button><button class="btn-u btn-blue _soloTitolare" onclick="mostraBackupAuto()" title="Vedi e scarica le copie di sicurezza automatiche degli ultimi 60 giorni.">&#128338; Backup automatici</button>
           <button onclick="mostraVicinoModal()" class="tool-btn" style="background:#eaf3fb;border:1px solid #c2dcf0;color:#1a5a93;padding:10px 14px;border-radius:9px;font-size:13px;cursor:pointer;font-weight:600">&#128205; Vicino a me</button>
           <button onclick="mostraImportModal()" class="tool-btn _soloTitolare" style="background:#eef7ee;border:1px solid #cce5cc;color:#2a7a2a;padding:10px 14px;border-radius:9px;font-size:13px;cursor:pointer;font-weight:600">&#128229; Importa contatti</button><button onclick="_correggiDati()" class="tool-btn _soloTitolare" style="background:#fdeedd;border:1px solid #f0cfa0;color:#b35900;padding:10px 14px;border-radius:9px;font-size:13px;cursor:pointer;font-weight:600" title="Corregge le province sbagliate (da comune/CAP) e mette gli esteri in categoria Estero. Solo Provincia/Regione.">&#128295; Correggi province/esteri</button><button onclick="_fondiDuplicati()" class="tool-btn _soloTitolare" style="background:#e7f5ec;border:1px solid #a9d8bb;color:#0a6b45;padding:10px 14px;border-radius:9px;font-size:13px;cursor:pointer;font-weight:600" title="Fonde i duplicati sicuri (stesso cognome+nome+citta): tiene la scheda migliore, porta li opere/telefonate/dati, marca gli altri come fuso.">&#128260; Fondi duplicati</button><button class="btn-u pt-mail" onclick="exportExcel(false)" title="Esporta tutti i contatti in un file Excel.">&#128202; Excel</button><button class="btn-u pt-lista" onclick="vistaCompleto()" title="Mostra tutti i contatti, dal piu recente inserito al primo.">&#128203; Completo</button><button class="btn-u" onclick="showTab('deceduti')" title="Contatti segnati come deceduti: tenuti da parte ed esclusi dalle ricerche.">&#9904; Deceduti</button></div></div>
       <div id="welcome-top" style="background:#fdf6e9;border:1px solid #ecd9a8;border-radius:12px;padding:16px 18px;margin-bottom:22px"><div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px"><div style="font-size:15px;font-weight:700;color:#a07810">&#127942; Clienti top</div><div style="display:flex;gap:6px;flex-wrap:wrap"><select id="topRegione" onchange="_topProvince();renderTop()" style="padding:6px 10px;border:1px solid #e0c878;border-radius:7px;font-size:12.5px;color:#8a6810;background:#fff"><option value="">Tutte le regioni</option></select><select id="topProvincia" onchange="renderTop()" style="padding:6px 10px;border:1px solid #e0c878;border-radius:7px;font-size:12.5px;color:#8a6810;background:#fff"><option value="">Tutte le province</option></select><button onclick="_stampaLista('top')" title="Stampa la lista" style="padding:6px 10px;border:1px solid #e0c878;border-radius:7px;font-size:12.5px;color:#8a6810;background:#fff;cursor:pointer">&#128424;</button></div></div><div style="font-size:12px;color:#b09040;margin-bottom:10px">I clienti che hanno acquistato di pi&ugrave; (valori storici in lire convertiti in euro). <span id="topConteggio" style="font-weight:600"></span></div><div id="topLista" style="display:flex;flex-direction:column;gap:4px;max-height:360px;overflow-y:auto"></div></div>
@@ -839,7 +852,7 @@ body[data-ruolo="operatore"] .tab-soloadmin{display:none!important}
         <li><b>Da controllare</b> &#8212; la coda dei casi da sistemare (numeri doppi, anomalie, possibili deceduti...). Vedi sotto.</li>
         <li><b>&#9904; Deceduti</b> &#8212; contatti segnati come deceduti (esclusi dalle ricerche): si aprono dal riquadro <b>Strumenti</b> qui in Welcome.</li>
         <li><b>&#9742; Potenziali</b> &#8212; nominativi di una vecchia lista nazionale, non ancora clienti. Tenuti a parte.</li>
-        <li><b>&#128241; Da controllare cellulare</b> &#8212; clienti senza numero di cellulare, da cercare. Filtrabile per regione e provincia, con stampa.</li>
+        <li><b>&#128241; Da controllare cellulare</b> &#8212; clienti senza numero di cellulare, da cercare. Filtrabile per regione e provincia, con stampa.</li><li class="_soloTitolare"><b>&#128202; Statistiche</b> &#8212; solo titolare: chiamate ed esiti, monitoraggio zone, vendite per regione con l'elenco dei clienti, accessi delle telefoniste.</li>
       </ul>
       <h3 id="w-giorno" style="color:#1a3a6a;border-bottom:2px solid #1a3a6a;padding-bottom:4px;margin:22px 0 8px">&#9728;&#65039; La giornata tipo</h3>
       <ol style="margin-left:18px">
@@ -865,11 +878,11 @@ body[data-ruolo="operatore"] .tab-soloadmin{display:none!important}
         <li>Le <b>opere</b> acquistate e lo storico <b>telefonate</b> sono in fondo alla scheda.</li>
       </ul>
       <h3 id="w-ctrl" style="color:#1a3a6a;border-bottom:2px solid #1a3a6a;padding-bottom:4px;margin:22px 0 8px">&#128270; Da controllare (la coda)</h3>
-      <p style="margin:6px 0">Sono i casi da sistemare. Ogni caso &#232; una scheda con i pulsanti azione: <b>ok</b>, <b>non risponde</b>, <b>numero errato</b>, <b>trasferito</b>, <b>non interessato</b>, <b>Archivia</b>, <b>Apri</b>, <b>Unisci qui</b>, <b>Elimina</b>.</p>
+      <p style="margin:6px 0">Sono i casi da sistemare. Ogni caso &#232; una scheda con i pulsanti azione: <b>ok</b>, <b>non risponde</b>, <b>numero errato</b>, <b>trasferito</b>, <b>non interessato</b>, <b>Archivia</b>, <b>Apri</b><span class="_soloTitolare">, <b>Unisci qui</b>, <b>Elimina</b></span>.<span class="_soloOperatore"> Unire due schede o eliminarle spetta al titolare: se trovi un doppione o una scheda da buttare, segnalala e ci pensa lui.</span></p>
       <ul style="margin-left:18px">
         <li>In alto a destra: <b>CRM generale</b> (solo i tuoi clienti) / <b>UTET da verificare</b> / <b>Tutti</b>. Filtrano restando qui.</li>
         <li>I filtri (Cellulari, Fissi, Anomalie, Prefisso, Segnalati, Numeri in nota) e il menu <b>regione</b> restringono la lista.</li>
-        <li><b>Unisci qui</b>: fonde due schede doppione in una. Trasferisce TUTTO (opere, telefonate, note, appuntamenti) e salva anche il nominativo dell&#39;altra scheda nelle note. Si perde solo il doppione.</li>
+        <li class="_soloTitolare"><b>Unisci qui</b>: fonde due schede doppione in una. Trasferisce TUTTO (opere, telefonate, note, appuntamenti) e salva anche il nominativo dell&#39;altra scheda nelle note. Si perde solo il doppione.</li>
       </ul>
       <h3 id="w-nocell" style="color:#1a3a6a;border-bottom:2px solid #1a3a6a;padding-bottom:4px;margin:22px 0 8px">&#128241; Da controllare cellulare</h3>
       <ul style="margin-left:18px">
@@ -885,11 +898,11 @@ body[data-ruolo="operatore"] .tab-soloadmin{display:none!important}
       <h3 id="w-salva" style="color:#1a3a6a;border-bottom:2px solid #1a3a6a;padding-bottom:4px;margin:22px 0 8px">&#128190; Salvataggi e backup</h3>
       <ul style="margin-left:18px">
         <li>Ogni modifica si <b>salva da sola</b> (conferma verde in basso a destra).</li>
-        <li><b>Backup</b>, <b>Excel</b> e <b>Completo</b> sono qui nella pagina <b>Welcome</b>, nel riquadro Strumenti in alto (riservati al titolare).</li>
+        <li class="_soloTitolare"><b>Backup</b>, <b>Excel</b> e <b>Completo</b> sono qui nella pagina <b>Welcome</b>, nel riquadro Strumenti in alto (riservati al titolare).</li><li class="_soloOperatore">Non devi fare nessun backup: ci pensa il titolare, e il server ne fa uno automatico ogni giorno.</li>
         <li>La <b>versione</b> del programma (es. <i>v. data ora</i>) &#232; in basso nella barra azioni: se non corrisponde, stai usando una cartella vecchia o la cache del browser.</li>
       </ul>
       <div style="margin-top:24px;padding:12px 14px;background:#eef4fc;border-left:4px solid #1a3a6a;border-radius:6px;color:#33506f">
-        <b>In due parole:</b> AGENDA per sapere chi chiamare oggi, la scheda per chiamare e annotare, Da controllare per sistemare i casi dubbi. Il resto sono archivi di servizio.
+        <b>In due parole:</b> AGENDA per sapere chi chiamare oggi, la scheda per chiamare e annotare, Da controllare per sistemare i casi dubbi. Il resto sono archivi di servizio.<span class="_soloOperatore"> Tutto quello che vedi riguarda la tua zona.</span>
       </div>
     </div>
   </div>
@@ -1593,19 +1606,31 @@ function _daTitolare(operatore){
 }
 var _filtroZonaAgenda='tutte';
 function setZonaAgenda(z){_filtroZonaAgenda=z||'tutte';renderAgenda();}
-var _vistaNordCentro=false;
-function toggleAgendaNordCentro(){
-  _vistaNordCentro=!_vistaNordCentro;
-  const btn=document.getElementById('btnNordCentro');
-  if(btn)btn.classList.toggle('active',_vistaNordCentro);
+var _vistaZoneColori=false;
+function toggleAgendaZone(){
+  _vistaZoneColori=!_vistaZoneColori;
+  const btn=document.getElementById('btnZoneColori');
+  if(btn)btn.classList.toggle('active',_vistaZoneColori);
   const sel=document.getElementById('agZonaFiltro');
-  if(sel)sel.disabled=_vistaNordCentro;
+  if(sel)sel.disabled=_vistaZoneColori;
   renderAgenda();
 }
+// Colori dell'agenda "Zone a colori": una sola mappa usata per la classe
+// dell'evento, per la legenda e per il colore del testo in elenco. Per
+// aggiungere una zona domani basta aggiungere una riga qui (e la relativa
+// classe .ev-call-... nel CSS): non ci sono piu' elenchi di zone sparsi.
+var ZONE_AGENDA={
+  Nord:{cls:'ev-call-nord',bg:'#fff2ad',bd:'#edd873',tx:'#7a5d00'},
+  Triveneto:{cls:'ev-call-triveneto',bg:'#cfeee6',bd:'#9ed8c9',tx:'#0a6b58'},
+  Centro:{cls:'ev-call-centro',bg:'#e6d7f7',bd:'#cbaeee',tx:'#5a2f96'},
+  Toscana:{cls:'ev-call-toscana',bg:'#ffe2bf',bd:'#f0c896',tx:'#8a5a10'},
+  Altre:{cls:'ev-call-altre',bg:'#e8e8ec',bd:'#cccccc',tx:'#555555'}
+};
+function _zonaAg(z){return ZONE_AGENDA[z]||ZONE_AGENDA.Altre;}
 function _clsEvento(item,zona){
-  if(_vistaNordCentro){
+  if(_vistaZoneColori){
     if(item.type==='app')return 'ev-app-nc';
-    return zona==='Nord'?'ev-call-nord':'ev-call-centro';
+    return _zonaAg(zona).cls;
   }
   return item.type==='app'?'ev-app':'ev-call';
 }
@@ -1887,14 +1912,14 @@ function renderAgenda(){
   try{
     var _isTitolare=(!window._ruolo||window._ruolo==='titolare');
     var _zw=document.getElementById('agZonaWrap');if(_zw)_zw.style.display=_isTitolare?'inline-flex':'none';
-    var _bnc=document.getElementById('btnNordCentro');if(_bnc)_bnc.style.display=_isTitolare?'':'none';
-    if(!_isTitolare&&_vistaNordCentro)_vistaNordCentro=false;
-    if(_bnc)_bnc.classList.toggle('active',_vistaNordCentro);
+    var _bnc=document.getElementById('btnZoneColori');if(_bnc)_bnc.style.display=_isTitolare?'':'none';
+    if(!_isTitolare&&_vistaZoneColori)_vistaZoneColori=false;
+    if(_bnc)_bnc.classList.toggle('active',_vistaZoneColori);
     var _lg=document.getElementById('calLegend');
     if(_lg){
-      _lg.innerHTML=_vistaNordCentro?
-        '<span><span class="leg-sq" style="background:#fff2ad;border:1px solid #edd873"></span>Richiami Nord</span>'+
-        '<span><span class="leg-sq" style="background:#e6d7f7;border:1px solid #cbaeee"></span>Richiami Centro</span>'+
+      _lg.innerHTML=_vistaZoneColori?
+        Object.keys(ZONE_AGENDA).map(function(z){var k=ZONE_AGENDA[z];
+          return '<span><span class="leg-sq" style="background:'+k.bg+';border:1px solid '+k.bd+'"></span>Richiami '+z+'</span>';}).join('')+
         '<span><span class="leg-sq" style="background:#cdeaf9;border:1px solid #9ed3ee"></span>Appuntamenti</span>'
         :
         '<span><span class="leg-sq" style="background:#ffd6de;border:1px solid #f3b3c1"></span>Richiami</span>'+
@@ -1930,8 +1955,7 @@ function renderAgenda(){
       if(seen.has(key))continue;seen.add(key);
       const c=contactMap[item.t.ID_contatto];if(!c)continue;
       const _zn=_zonaContatto(c);
-      if(_vistaNordCentro){if(_zn!=='Nord'&&_zn!=='Centro')continue;}
-      else if(_filtroZonaAgenda!=='tutte'&&_zn!==_filtroZonaAgenda)continue;
+      if(!_vistaZoneColori&&_filtroZonaAgenda!=='tutte'&&_zn!==_filtroZonaAgenda)continue;
       totalByDay[i]++;
       if(item.h===null)byDayAll[i].push({item,c,zona:_zn});else byDayH[i].push({item,c,zona:_zn});
     }
@@ -2032,8 +2056,7 @@ function renderAgenda(){
         if(seen2.has(key))continue;seen2.add(key);
         const c=contactMap[item.t.ID_contatto];if(!c)continue;
         const _zn2=_zonaContatto(c);
-        if(_vistaNordCentro){if(_zn2!=='Nord'&&_zn2!=='Centro')continue;}
-        else if(_filtroZonaAgenda!=='tutte'&&_zn2!==_filtroZonaAgenda)continue;
+        if(!_vistaZoneColori&&_filtroZonaAgenda!=='tutte'&&_zn2!==_filtroZonaAgenda)continue;
         allEvs.push({iso,item,c,zona:_zn2});
       }
     }
@@ -2061,7 +2084,7 @@ function renderAgenda(){
       const tStr=item.h!==null?`${String(item.h).padStart(2,'0')}:${String(item.m||0).padStart(2,'0')}`:'--';
       const phones=[c.Cellulare,c.Telefono].filter(Boolean).join(' / ');
       const bg=idx%2?'#f0f4f8':'#fff';
-      const _tColor=_vistaNordCentro?(item.type==='app'?'#0c5e82':(zona==='Nord'?'#7a5d00':'#5a2f96')):(item.type==='app'?'#186018':'#901010');
+      const _tColor=_vistaZoneColori?(item.type==='app'?'#0c5e82':_zonaAg(zona).tx):(item.type==='app'?'#186018':'#901010');
       rows+=`<tr onclick="openContact('${esc(c.ID_contatto)}',window._agendaResults)" style="cursor:pointer">
         <td style="padding:5px 8px;border-bottom:1px solid #e8e4dc;white-space:nowrap;background:${bg}">${esc(dStr)}</td>
         <td style="padding:5px 8px;border-bottom:1px solid #e8e4dc;font-family:monospace;font-weight:700;color:${_tColor};background:${bg}">${tStr}</td>
