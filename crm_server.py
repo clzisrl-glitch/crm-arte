@@ -404,6 +404,43 @@ def ordine_schede():
     save_data(data)
     return jsonify({'ok': True, 'ordine': data['ordine_schede']})
 
+# Schede ammesse per "riapri dall'ultima scheda": elenco chiuso, cosi' un
+# valore sbagliato o manomesso non puo' finire nel database.
+SCHEDE_VALIDE = {
+    'agenda','principale','list','provincia','zonalibera','recupero',
+    'controllare','potenziali','nocell','welcome','statistiche','deceduti',
+}
+
+@app.route('/api/ui_stato', methods=['GET','POST'])
+@richiede_login
+def api_ui_stato():
+    """Ultima scheda aperta da ciascun utente.
+
+    NON passa dal blob dei dati: sta in una tabella a parte (crm_ui, vedi
+    crm_db.py), una riga per utente. Cosi' ricordare la scheda non riscrive
+    i ~7MB dell'archivio e non puo' in nessun caso danneggiarlo.
+    E' per utente, non per browser: chi si sposta dal computer al telefono
+    ritrova la stessa scheda."""
+    u = _utente_corrente() or {'nome': 'locale'}
+    nome = u.get('nome') or 'locale'
+    if request.method == 'GET':
+        try:
+            return jsonify({'ok': True, 'stato': crm_db.ui_get(nome)})
+        except Exception as e:
+            return jsonify({'ok': True, 'stato': {}, 'nota': str(e)})
+    body = request.get_json(force=True) or {}
+    scheda = str(body.get('ultima_scheda') or '').strip().lower()
+    if scheda not in SCHEDE_VALIDE:
+        return jsonify({'error': 'Scheda non valida.'}), 400
+    try:
+        stato = crm_db.ui_get(nome)
+        stato['ultima_scheda'] = scheda
+        crm_db.ui_set(nome, stato)
+        return jsonify({'ok': True, 'ultima_scheda': scheda})
+    except Exception as e:
+        # una preferenza non deve MAI far fallire il lavoro dell'operatore
+        return jsonify({'ok': False, 'error': str(e)}), 200
+
 @app.route('/api/status')
 def status():
     data = load_data()

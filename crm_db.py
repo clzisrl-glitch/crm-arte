@@ -349,3 +349,73 @@ def carica_backup(giorno):
     except Exception as e:
         print(f"  (carica_backup: {e})")
     return None
+
+
+# ─────────────────────────────────────────────────────────────
+#  STATO INTERFACCIA PER UTENTE  (ultima scheda aperta)
+# ─────────────────────────────────────────────────────────────
+# Perche' NON sta nel blob dei dati:
+#   • il blob (crm_blob) pesa ~7 MB: riscriverlo a ogni cambio di scheda
+#     sarebbe lentissimo e metterebbe a rischio l'archivio per una
+#     sciocchezza (una preferenza di interfaccia).
+#   • localStorage e' vietato in questo progetto: la preferenza deve
+#     seguire l'utente su tutti i dispositivi, quindi sta sul server.
+# Soluzione: una tabella piccola e separata (crm_ui), una riga per utente.
+# In locale (Mac, senza DATABASE_URL) si usa un file JSON minuscolo.
+UI_FILE = BASE_DIR / 'ui_stato.json'
+UI_MAX_BYTE = 4000          # una preferenza non puo' diventare un archivio
+
+def _ui_db_init():
+    conn = _get_pg()
+    with conn.cursor() as cur:
+        cur.execute("CREATE TABLE IF NOT EXISTS crm_ui ("
+                    "utente TEXT PRIMARY KEY, dati TEXT, "
+                    "aggiornato TIMESTAMP DEFAULT now())")
+
+def _ui_chiave(utente):
+    return ((utente or 'locale').strip().lower() or 'locale')[:80]
+
+def ui_get(utente):
+    """Stato interfaccia salvato per questo utente (dict, mai None)."""
+    u = _ui_chiave(utente)
+    try:
+        if USE_DB:
+            _ui_db_init()
+            conn = _get_pg()
+            with conn.cursor() as cur:
+                cur.execute("SELECT dati FROM crm_ui WHERE utente = %s", (u,))
+                row = cur.fetchone()
+            if row and row[0]:
+                return json.loads(row[0]) or {}
+            return {}
+        if UI_FILE.exists():
+            tutto = json.loads(UI_FILE.read_text(encoding='utf-8')) or {}
+            return tutto.get(u) or {}
+    except Exception as e:
+        print(f"  (ui_get: {e})")
+    return {}
+
+def ui_set(utente, dati):
+    """Salva lo stato interfaccia di questo utente. Non tocca mai i dati CRM."""
+    u = _ui_chiave(utente)
+    testo = json.dumps(dati or {}, ensure_ascii=False)
+    if len(testo.encode('utf-8')) > UI_MAX_BYTE:
+        raise ValueError('stato interfaccia troppo grande')
+    if USE_DB:
+        _ui_db_init()
+        conn = _get_pg()
+        with conn.cursor() as cur:
+            cur.execute(
+                "INSERT INTO crm_ui (utente, dati, aggiornato) VALUES (%s, %s, now()) "
+                "ON CONFLICT (utente) DO UPDATE SET dati = EXCLUDED.dati, aggiornato = now()",
+                (u, testo))
+        return True
+    tutto = {}
+    try:
+        if UI_FILE.exists():
+            tutto = json.loads(UI_FILE.read_text(encoding='utf-8')) or {}
+    except Exception:
+        tutto = {}
+    tutto[u] = dati or {}
+    UI_FILE.write_text(json.dumps(tutto, ensure_ascii=False), encoding='utf-8')
+    return True

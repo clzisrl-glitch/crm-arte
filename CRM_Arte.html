@@ -1379,6 +1379,7 @@ async function buildCRM(){
       document.getElementById('loading').style.display='none';
       document.getElementById('app').style.display='flex';
       renderAgenda();renderList(allContacts);
+      try{_apriUltimaScheda();}catch(e){}
       status.textContent='';
       return; // done - no need to parse CSVs
     }
@@ -1457,6 +1458,7 @@ async function buildCRM(){
     const lastContact=allContacts.slice().sort((a,b)=>parseInt(b.ID_contatto||0)-parseInt(a.ID_contatto||0))[0];
     if(lastContact){currentIdx=currentResults.findIndex(r=>r.ID_contatto===lastContact.ID_contatto);}
     renderAgenda();renderList(allContacts);
+    try{_apriUltimaScheda();}catch(e){}
     // Save full data to server (first load from CSV)
     if(!Array.isArray(contacts)||contacts.length===0){
       // niente da salvare: non mando array vuoti al server (anti-azzeramento)
@@ -1656,6 +1658,49 @@ function showTab(name){
   if(name==='statistiche'){try{renderStatistiche();}catch(e){}}
   if(name==='potenziali')renderPotenziali();
   if(name==='nocell')renderNocell();
+  try{_ricordaScheda(name);}catch(e){}
+}
+
+// ═══════════════════════════════════════════════════
+// RIAPRE IL CRM DALL'ULTIMA SCHEDA APERTA
+// ═══════════════════════════════════════════════════
+// La preferenza sta SUL SERVER (rotta /api/ui_stato -> tabella crm_ui):
+//   • niente localStorage (vietato in questo progetto);
+//   • non passa dal blob dei dati, quindi ricordare la scheda non
+//     riscrive i ~7MB dell'archivio e non puo' danneggiarlo;
+//   • e' legata all'UTENTE, non al browser: chi passa dal computer al
+//     telefono ritrova la stessa scheda.
+// Il salvataggio e' ritardato di 1,5 s: chi sfoglia tre schede di fila
+// fa UNA sola chiamata, non tre.
+var _ultimaSchedaSalvata='', _ultimaSchedaTimer=null;
+function _ricordaScheda(name){
+  if(!name||name===_ultimaSchedaSalvata)return;
+  _ultimaSchedaSalvata=name;
+  clearTimeout(_ultimaSchedaTimer);
+  _ultimaSchedaTimer=setTimeout(function(){
+    fetch('/api/ui_stato',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({ultima_scheda:name})}).catch(function(){});
+  },1500);
+}
+async function _caricaUltimaScheda(){
+  window._schedaDaRiaprire='';
+  try{
+    const r=await fetch('/api/ui_stato');
+    if(!r.ok)return;
+    const j=await r.json();
+    window._schedaDaRiaprire=(j&&j.stato&&j.stato.ultima_scheda)||'';
+  }catch(e){}
+}
+async function _apriUltimaScheda(){
+  if(window._schedaDaRiaprire===undefined)await _caricaUltimaScheda();
+  var name=window._schedaDaRiaprire||'';
+  if(!name)return;
+  var b=document.querySelector('.tab[data-tab="'+name+'"]');
+  if(!b)return;                                       // scheda non esistente
+  try{if(getComputedStyle(b).display==='none')return;}catch(e){}  // non permessa a questo utente
+  _ultimaSchedaSalvata=name;                          // evita un POST inutile all'avvio
+  if(name==='agenda')return;                          // e' gia' quella aperta
+  try{showTab(name);}catch(e){}
 }
 
 // ═══════════════════════════════════════════════════
@@ -2934,7 +2979,95 @@ function renderStatistiche(){
       html+='</div>';
     }
   }catch(e){}
+  try{html+=_sezioneVenditeRegione();}catch(e){}
   box.innerHTML=html;
+}
+
+// ═══════════════════════════════════════════════════
+// VENDITE PER REGIONE (dal 01/08/2026) — SOLO ADMIN
+// ═══════════════════════════════════════════════════
+// Conta quello che e' stato CARICATO nelle opere: ogni opera con
+// Data_acquisto dal giorno scelto in poi vale come vendita e viene
+// attribuita alla regione del cliente a cui e' intestata.
+// La data di partenza si puo' cambiare al volo (parte dal 01/08/2026).
+var _VR_DAL_DEFAULT='2026-08-01';
+var _vrDal=_VR_DAL_DEFAULT;
+function _vrData(s){
+  var m=String(s||'').match(/(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{2,4})/);
+  if(!m)return null;
+  var a=parseInt(m[3],10); if(a<100)a=2000+a;
+  return new Date(a,parseInt(m[2],10)-1,parseInt(m[1],10));
+}
+function _vrCalcola(dalISO){
+  var dal=new Date(dalISO+'T00:00:00');
+  var per={};
+  (typeof opere!=='undefined'?opere:[]).forEach(function(o){
+    var d=_vrData(o.Data_acquisto);
+    if(!d||d<dal)return;
+    var c=(typeof contactMap!=='undefined')?contactMap[String(o.ID_contatto)]:null;
+    var reg=((c&&c.Regione)||'').trim()||'(regione non indicata)';
+    if(!per[reg])per[reg]={n:0,val:0,cli:{}};
+    per[reg].n++;
+    per[reg].val+=parseFloat(String(o.Valore||'').replace(/[^0-9.]/g,''))||0;
+    if(o.ID_contatto)per[reg].cli[String(o.ID_contatto)]=1;
+  });
+  return per;
+}
+function _vrTabella(){
+  var per=_vrCalcola(_vrDal);
+  var regs=Object.keys(per).sort(function(a,b){return per[b].val-per[a].val;});
+  var gg=_vrDal.split('-'); var dalIt=gg[2]+'/'+gg[1]+'/'+gg[0];
+  if(!regs.length){
+    return '<div style="color:#999;font-size:13px;padding:12px;background:#fafafa;border-radius:8px;margin-bottom:22px">'+
+      'Nessuna opera caricata con data dal '+esc(dalIt)+' in poi. Appena verranno registrate le vendite, qui compare il riepilogo regione per regione.</div>';
+  }
+  var tN=0,tV=0,tC=0;
+  regs.forEach(function(r){tN+=per[r].n;tV+=per[r].val;tC+=Object.keys(per[r].cli).length;});
+  var maxV=Math.max.apply(null,regs.map(function(r){return per[r].val;}))||1;
+  var h='<table style="width:100%;border-collapse:collapse;margin-bottom:10px">'+
+    '<tr style="background:#f4f6fa">'+
+    '<th style="text-align:left;padding:8px;font-size:12px;color:#666">Regione</th>'+
+    '<th style="padding:8px;font-size:12px;color:#666">Opere</th>'+
+    '<th style="padding:8px;font-size:12px;color:#666">Clienti</th>'+
+    '<th style="text-align:right;padding:8px;font-size:12px;color:#666">Venduto</th>'+
+    '<th style="padding:8px;font-size:12px;color:#666;width:34%">Peso</th>'+
+    '<th style="padding:8px;font-size:12px;color:#666">%</th></tr>';
+  regs.forEach(function(r){
+    var o=per[r], w=Math.round(o.val/maxV*100), q=tV?Math.round(o.val/tV*100):0;
+    h+='<tr style="border-bottom:1px solid #eee">'+
+      '<td style="padding:8px;font-weight:600;color:#1a3a6a">'+esc(r)+'</td>'+
+      '<td style="text-align:center;padding:8px">'+o.n+'</td>'+
+      '<td style="text-align:center;padding:8px;color:#888">'+Object.keys(o.cli).length+'</td>'+
+      '<td style="text-align:right;padding:8px;font-weight:600;color:#2a7a2a">'+_fmtEuro(o.val)+'</td>'+
+      '<td style="padding:8px"><div style="background:#eef;border-radius:6px;height:16px"><div style="width:'+w+'%;background:#7aa3d6;height:100%;border-radius:6px"></div></div></td>'+
+      '<td style="text-align:center;padding:8px;font-size:12px;color:#888">'+q+'%</td></tr>';
+  });
+  h+='<tr style="background:#f7f9fc;font-weight:700;color:#1a3a6a">'+
+    '<td style="padding:9px">TOTALE ('+regs.length+' regioni)</td>'+
+    '<td style="text-align:center;padding:9px">'+tN+'</td>'+
+    '<td style="text-align:center;padding:9px">'+tC+'</td>'+
+    '<td style="text-align:right;padding:9px;color:#2a7a2a">'+_fmtEuro(tV)+'</td>'+
+    '<td></td><td style="text-align:center;padding:9px">100%</td></tr>';
+  h+='</table>';
+  h+='<div style="font-size:12px;color:#999;margin-bottom:22px">Media per opera: <b>'+_fmtEuro(tN?tV/tN:0)+'</b> &middot; media per cliente: <b>'+_fmtEuro(tC?tV/tC:0)+'</b> &middot; dal '+esc(dalIt)+' a oggi.</div>';
+  return h;
+}
+function _vrAggiorna(){
+  var i=document.getElementById('vrDal');
+  if(i&&i.value)_vrDal=i.value;
+  var b=document.getElementById('vrBody');
+  if(b)b.innerHTML=_vrTabella();
+}
+function _sezioneVenditeRegione(){
+  // doppia sicurezza: la scheda Statistiche e' gia' riservata, ma questa
+  // sezione resta comunque fuori dalla vista di chiunque non sia titolare
+  if(window._ruolo && window._ruolo!=='titolare')return '';
+  var h='<h3 style="color:#1a3a6a;border-bottom:2px solid #eee;padding-bottom:6px;margin-top:26px">&#128506; Vendite per regione</h3>';
+  h+='<div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px;color:#999;font-size:12px;margin-bottom:12px">'+
+     '<span>Opere caricate con data di acquisto dal giorno indicato in poi, attribuite alla regione del cliente.</span>'+
+     '<label style="color:#555;font-size:12.5px;white-space:nowrap">Dal <input type="date" id="vrDal" value="'+_vrDal+'" onchange="_vrAggiorna()" style="padding:4px 6px;border:1px solid #ddd;border-radius:6px;font-size:12.5px"></label></div>';
+  h+='<div id="vrBody">'+_vrTabella()+'</div>';
+  return h;
 }
 
 function renderContactAndMap(c){
@@ -4454,6 +4587,8 @@ document.getElementById('searchModal').addEventListener('click',function(e){if(e
     try{_mostraConteggio(Array.isArray(contacts)?contacts.length:0);}catch(e){}
     // ordine delle schede deciso dal titolare + trascinamento (solo titolare)
     try{await _caricaOrdineSchede();_abilitaTrascinaSchede();}catch(e){}
+    // ultima scheda aperta (per utente, dal server): pronta prima che si prema Avvia
+    try{await _caricaUltimaScheda();}catch(e){}
     const ok=await checkDBHasData();
     const hint=document.getElementById('dbHint');
     const btn=document.getElementById('btnAvvia');
