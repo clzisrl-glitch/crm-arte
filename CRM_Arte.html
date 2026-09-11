@@ -574,7 +574,7 @@ body[data-ruolo="operatore"] .tab-soloadmin{display:none!important}
       <button class="tb-btn filter-btn active" id="fAll" onclick="setFilter('all')">Tutti</button>
       <button class="tb-btn filter-btn" id="fApp" onclick="setFilter('app')">&#128994; Appuntamenti</button>
       <button class="tb-btn filter-btn" id="fCall" onclick="setFilter('call')">&#128308; Richiami</button>
-      <span id="agZonaWrap" style="display:none;align-items:center;gap:4px;margin-left:4px"><span style="width:1px;height:18px;background:#b0a898;margin:0 2px;display:inline-block"></span>&#127758;<select id="agZonaFiltro" onchange="setZonaAgenda(this.value)" style="font-size:12px;padding:3px 6px;border:1px solid #b0a898;border-radius:4px;background:#fff" title="Mostra l'agenda di una zona specifica (solo titolare)"><option value="tutte">Tutte le zone</option><option value="Nord">Nord</option><option value="Centro">Centro</option><option value="Toscana">Toscana</option><option value="Altre">Altre</option></select></span>
+      <span id="agZonaWrap" style="display:none;align-items:center;gap:4px;margin-left:4px"><span style="width:1px;height:18px;background:#b0a898;margin:0 2px;display:inline-block"></span>&#127758;<select id="agZonaFiltro" onchange="setZonaAgenda(this.value)" style="font-size:12px;padding:3px 6px;border:1px solid #b0a898;border-radius:4px;background:#fff" title="Mostra l'agenda di una zona specifica (solo titolare)"><option value="tutte">Tutte le zone</option><option value="Nord">Nord</option><option value="Triveneto">Triveneto</option><option value="Centro">Centro</option><option value="Toscana">Toscana</option><option value="Altre">Altre</option></select></span>
       <button class="tb-btn filter-btn" id="btnNordCentro" onclick="toggleAgendaNordCentro()" style="display:none" title="Mostra insieme le agende di Nord e Centro (solo titolare/admin): appuntamenti in celeste, richiami in giallo (Nord) e viola chiaro (Centro)">&#127758; Nord + Centro</button>
       <span style="width:1px;height:18px;background:#b0a898;margin:0 2px;display:inline-block"></span>
       <label style="font-size:11px;color:#5a5246;display:inline-flex;align-items:center;gap:4px">&#128197; Appuntamenti del giorno:<input type="date" id="agDayPick" style="font-size:12px;padding:2px 5px;border:1px solid #b0a898;border-radius:4px"></label>
@@ -1576,8 +1576,12 @@ function segnaDeceduto(){
   alert(c.Cognome+' '+(c.Nome||'')+' segnato come '+tag+'.\nÈ stato spostato nella scheda Deceduti ed escluso dalle ricerche.');
 }
 function _zonaContatto(c){
-  var ZN={Nord:['Piemonte',"Valle d'Aosta",'Lombardia','Veneto','Trentino-Alto Adige','Friuli-Venezia Giulia','Liguria'],
-          Centro:['Lazio','Umbria','Marche','Sardegna','Sicilia','Campania'],
+  // ATTENZIONE: queste regioni devono restare identiche a ZONE_DEFAULT in
+  // crm_auth.py (filtro del server) e all'elenco dentro _cruscottoZone().
+  // Triveneto staccato dal Nord l'11/09/2026: le zone non si sovrappongono.
+  var ZN={Nord:['Piemonte',"Valle d'Aosta",'Lombardia','Liguria'],
+          Triveneto:['Veneto','Trentino-Alto Adige','Friuli-Venezia Giulia'],
+          Centro:['Lazio','Umbria','Marche','Sardegna','Sicilia','Campania','Calabria'],
           Toscana:['Toscana']};
   var reg=((c&&c.Regione)||'').trim();
   for(var z in ZN){if(ZN[z].indexOf(reg)>=0)return z;}
@@ -2743,8 +2747,9 @@ function apriContattoDaId(id, listaContesto){
 
 function _cruscottoZone(){
   // regioni per zona (coerenti col server)
-  var ZN={Nord:['Piemonte',"Valle d'Aosta",'Lombardia','Veneto','Trentino-Alto Adige','Friuli-Venezia Giulia','Liguria'],
-          Centro:['Lazio','Umbria','Marche','Sardegna','Sicilia','Campania'],
+  var ZN={Nord:['Piemonte',"Valle d'Aosta",'Lombardia','Liguria'],
+          Triveneto:['Veneto','Trentino-Alto Adige','Friuli-Venezia Giulia'],
+          Centro:['Lazio','Umbria','Marche','Sardegna','Sicilia','Campania','Calabria'],
           Toscana:['Toscana']};
   function zonaDi(reg){reg=(reg||'').trim();for(var z in ZN){if(ZN[z].indexOf(reg)>=0)return z;}return 'Altre';}
   // mappa ID_contatto -> zona
@@ -2755,7 +2760,7 @@ function _cruscottoZone(){
   var inizioSett=new Date(oggi);inizioSett.setDate(oggi.getDate()-7);
   var inizioMese=new Date(oggi);inizioMese.setDate(oggi.getDate()-30);
   // init contatori per zona
-  var Z={};['Nord','Centro','Toscana','Altre'].forEach(function(z){Z[z]={chiamate:0,chiamSett:0,chiamMese:0,appunt:0,positivi:0,negativi:0,contatti:0,lavorati:0,daLavorare:0};});
+  var Z={};['Nord','Triveneto','Centro','Toscana','Altre'].forEach(function(z){Z[z]={chiamate:0,chiamSett:0,chiamMese:0,appunt:0,positivi:0,negativi:0,contatti:0,lavorati:0,daLavorare:0};});
   // telefonate per zona
   (typeof telefonate!=='undefined'?telefonate:[]).forEach(function(tel){
     var z=idZona[String(tel.ID_contatto)]; if(!Z[z])return;
@@ -2776,9 +2781,9 @@ function _cruscottoZone(){
     if(es)Z[z].lavorati++; else Z[z].daLavorare++;
   });
   // disegno
-  var col={Nord:'#2a5f93',Centro:'#1aa179',Toscana:'#c0760a'};
+  var col={Nord:'#2a5f93',Triveneto:'#6a4ea8',Centro:'#1aa179',Toscana:'#c0760a'};
   var _tot={contatti:0,chiamate:0,appunt:0,lavorati:0,daLavorare:0};
-  ['Nord','Centro','Toscana','Altre'].forEach(function(z){_tot.contatti+=Z[z].contatti;_tot.chiamate+=Z[z].chiamate;_tot.appunt+=Z[z].appunt;_tot.lavorati+=Z[z].lavorati;_tot.daLavorare+=Z[z].daLavorare;});
+  ['Nord','Triveneto','Centro','Toscana','Altre'].forEach(function(z){_tot.contatti+=Z[z].contatti;_tot.chiamate+=Z[z].chiamate;_tot.appunt+=Z[z].appunt;_tot.lavorati+=Z[z].lavorati;_tot.daLavorare+=Z[z].daLavorare;});
   var _pTot=_tot.contatti?Math.round(_tot.lavorati/_tot.contatti*100):0;
   var h='<h3 style="color:#1a3a6a;border-bottom:2px solid #eee;padding-bottom:6px;margin-top:26px">&#128205; Monitoraggio zone</h3>';
   h+='<div style="background:#1a3a6a;color:#fff;border-radius:12px;padding:16px;margin-bottom:16px;display:flex;flex-wrap:wrap;gap:18px;align-items:center">';
@@ -2791,7 +2796,7 @@ function _cruscottoZone(){
   h+='</div></div>';
   h+='<div style="color:#999;font-size:12px;margin-bottom:14px">Andamento per zona di lavoro. Le chiamate si contano da quando vengono registrate.</div>';
   h+='<div style="display:flex;flex-wrap:wrap;gap:14px;margin-bottom:24px">';
-  ['Nord','Centro','Toscana','Altre'].forEach(function(z){
+  ['Nord','Triveneto','Centro','Toscana','Altre'].forEach(function(z){
     var d=Z[z];var c=col[z]||'#888';
     var perc=d.contatti?Math.round(d.lavorati/d.contatti*100):0;
     h+='<div style="flex:1;min-width:240px;background:#fff;border:1px solid #e6e6ea;border-left:5px solid '+c+';border-radius:12px;padding:16px">';

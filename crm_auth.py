@@ -29,8 +29,14 @@ MAX_UTENTI = 5
 # Esempio: centro=Lazio|Umbria|Marche|Sardegna|Sicilia|Campania
 # Se non impostata, vale la mappa predefinita qui sotto.
 ZONE_DEFAULT = {
-    'centro': ['Lazio', 'Umbria', 'Marche', 'Sardegna', 'Sicilia', 'Campania'],
-    'nord': ['Piemonte', "Valle d'Aosta", 'Lombardia', 'Veneto', 'Trentino-Alto Adige', 'Friuli-Venezia Giulia', 'Liguria'],
+    'centro': ['Lazio', 'Umbria', 'Marche', 'Sardegna', 'Sicilia', 'Campania', 'Calabria'],
+    # 11/09/2026: nasce la zona TRIVENETO (Veneto + Trentino-Alto Adige +
+    # Friuli-Venezia Giulia), staccata dal Nord. Le zone NON si sovrappongono:
+    # se una regione stesse in due zone, due operatori si troverebbero gli
+    # stessi contatti e le stesse agende. Quindi il Nord resta con Piemonte,
+    # Valle d'Aosta, Lombardia e Liguria.
+    'nord': ['Piemonte', "Valle d'Aosta", 'Lombardia', 'Liguria'],
+    'triveneto': ['Veneto', 'Trentino-Alto Adige', 'Friuli-Venezia Giulia'],
 }
 def _parse_zone():
     raw = os.environ.get('CRM_ZONE', '').strip()
