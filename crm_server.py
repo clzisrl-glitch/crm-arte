@@ -171,11 +171,30 @@ def _pwa_sw():
     resp = make_response(send_from_directory(str(BASE_DIR), 'sw.js', mimetype='application/javascript'))
     resp.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
     return resp
+# File pubblici: SOLO quelli che servono prima del login (icone e PWA).
+# 11/09/2026: prima questa rotta serviva QUALSIASI .json della cartella senza
+# chiedere l'accesso. Erano quindi scaricabili da chiunque:
+#   correzioni.json  -> note commerciali sui clienti, con ID contatto
+#   fondi.json       -> telefoni, cellulari, note, valore acquistato
+#   coordinate.json  -> le coordinate di casa di ~88.000 persone, per ID
+# Ora tutto il resto passa dal login.
+PUBBLICI = {'manifest.json', 'sw.js', 'icona-192.png', 'icona-512.png'}
+VIETATI = {'correzioni.json', 'fondi.json'}   # servono solo al server, mai al browser
+
 @app.route('/<path:_fname>')
 def _pwa_static(_fname):
     import os as _os  # STATIC_PWA: servo icone e simili
-    if _fname.endswith(('.png','.ico','.json','.js')) and _os.path.exists(str(BASE_DIR/_fname)):
-        return send_from_directory(str(BASE_DIR), _fname)
+    nome = _fname.strip().lstrip('./')
+    if nome in VIETATI:
+        from flask import abort; abort(404)
+    if not _os.path.exists(str(BASE_DIR/nome)):
+        from flask import abort; abort(404)
+    if nome in PUBBLICI or nome.endswith(('.png', '.ico')):
+        return send_from_directory(str(BASE_DIR), nome)
+    if nome.endswith(('.json', '.js')):
+        if crm_auth.USE_AUTH and not _utente_corrente():
+            return jsonify({"error": "Devi prima accedere."}), 401
+        return send_from_directory(str(BASE_DIR), nome)
     from flask import abort; abort(404)
 
 @app.route("/api/login", methods=["POST"])
@@ -183,7 +202,15 @@ def api_login():
     if not crm_auth.USE_AUTH:
         return jsonify({"ok":True,"ruolo":"titolare","nome":"locale"})
     body=request.get_json(force=True) or {}
-    u=crm_auth.controlla_login(body.get("utente",""), body.get("password",""))
+    _nome_tentato = body.get("utente","")
+    # Blocco dopo 3 tentativi sbagliati (5 minuti). Le funzioni esistevano in
+    # crm_auth.py dall'inizio ma NON venivano chiamate da nessuno: si potevano
+    # provare password all'infinito. Collegate l'11/09/2026.
+    _resta = crm_auth.stato_blocco(_nome_tentato)
+    if _resta > 0:
+        return jsonify({"error": f"Troppi tentativi. Riprova fra {_resta//60+1} minuti."}), 429
+    u=crm_auth.controlla_login(_nome_tentato, body.get("password",""))
+    crm_auth.registra_tentativo(_nome_tentato, bool(u))
     if not u:
         return jsonify({"error":"Utente o password errati."}), 401
     # registro l'accesso (chi, quando) - non deve mai bloccare il login
@@ -203,7 +230,7 @@ def api_login():
     # cosi' alla riapertura le credenziali vengono richieste di nuovo. Il
     # token stesso non ha piu' nessuna scadenza a ore (vedi nota sopra e
     # crm_auth.py): resta valido finche' esiste questo cookie.
-    resp.set_cookie("crm_token", crm_auth.crea_token(u["nome"],u["ruolo"],zona=u.get("zona","")), httponly=True, samesite="Lax")
+    resp.set_cookie("crm_token", crm_auth.crea_token(u["nome"],u["ruolo"],zona=u.get("zona","")), httponly=True, samesite="Lax", secure=True)
     return resp
 @app.route("/api/logout", methods=["POST"])
 def api_logout():
@@ -261,7 +288,10 @@ def api_backup_scarica():
 
 
 @app.route('/api/diag_utenti')
+@solo_titolare('gestione_utenti')
 def api_diag_utenti():
+    # 11/09/2026: era aperta. Elencava nomi utente, ruoli e zone: meta'
+    # delle credenziali servita a chiunque la chiedesse.
     import os as _os
     raw = _os.environ.get('CRM_UTENTI','')
     info = {
@@ -385,6 +415,7 @@ def api_fondi_duplicati():
                     "verifiche_riagganciate":nver,"verifiche_chiuse":nchiuse})
 
 @app.route('/api/ordine_schede', methods=['GET','POST'])
+@richiede_login
 def ordine_schede():
     """Ordine delle schede della barra in alto, deciso dal titolare.
     Sta nel database (non nel browser) cosi' vale su tutti i dispositivi e
@@ -442,6 +473,7 @@ def api_ui_stato():
         return jsonify({'ok': False, 'error': str(e)}), 200
 
 @app.route('/api/status')
+@richiede_login
 def status():
     data = load_data()
     has_data = bool(data.get('contacts') and len(data['contacts']) > 0)
@@ -805,7 +837,11 @@ def api_export():
 
 
 @app.route('/api/pdf', methods=['POST'])
+@richiede_login
 def api_pdf():
+    # 11/09/2026: era senza login. Accetta una lista di ID e restituisce le
+    # schede complete (nome, indirizzo, codice fiscale, telefoni): chiunque
+    # poteva svuotare l'archivio un blocco alla volta.
     """Genera il PDF (layout scheda) per gli ID richiesti. Body: {ids:[...]}.
     Ritorna il PDF pronto da scaricare/allegare. Funziona uguale online."""
     try:
@@ -821,6 +857,9 @@ def api_pdf():
         if len(ids) > 3000:
             ids = ids[:3000]
         data = load_data()
+        _reg = _regioni_utente()
+        if _reg:
+            data = _filtra_per_zona(data, _reg)   # l'operatore stampa solo la sua zona
         by = {str(c.get('ID_contatto')): c for c in data.get('contacts', [])}
         contatti = [by[i] for i in ids if i in by]
         if not contatti:
@@ -896,6 +935,7 @@ def haversine_km(a, b):
     return 2*R*math.asin(math.sqrt(s))
 
 @app.route('/api/zona', methods=['POST'])
+@richiede_login
 def api_zona():
     """Restituisce i contatti vicini all'appuntamento entro un raggio (km),
     geocodificando i comuni della provincia solo se non già in cache."""
@@ -904,6 +944,9 @@ def api_zona():
         center_id = str(body.get('id', ''))
         radius = float(body.get('radius', 10))
         data = load_data()
+        _reg = _regioni_utente()
+        if _reg:
+            data = _filtra_per_zona(data, _reg)
         contacts = data.get('contacts', [])
         cmap = {str(c.get('ID_contatto')): c for c in contacts}
         center = cmap.get(center_id)
@@ -979,6 +1022,7 @@ def geocode_place(q):
     return None
 
 @app.route('/api/zona_libera', methods=['POST'])
+@richiede_login
 def api_zona_libera():
     """Contatti vicini a un LUOGO digitato (zona libera), entro un raggio (km).
     Geocodifica i comuni man mano (cache condivisa con /api/zona)."""
