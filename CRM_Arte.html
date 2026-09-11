@@ -312,6 +312,12 @@ body{background:var(--bg);color:var(--ink);font-size:13px;-webkit-font-smoothing
 .tbl-scroll::-webkit-scrollbar-thumb{background:#c7c7cc;border-radius:5px}
 /* ── Colonna sinistra: note in evidenza, indirizzo compatto, dati secondari ── */
 .note-box{background:#fffaf0;border:1px solid #f0e2c0;border-radius:12px;padding:11px 13px;margin-bottom:13px;max-height:240px;overflow-y:auto}
+/* Note della telefonista: riquadro SEPARATO da quello storico. Le note
+   storiche (gialle) non si toccano; qui si aggiunge, non si sovrascrive. */
+.noteop-box{background:#f2faf4;border:1px solid #cbe6d3;border-radius:12px;padding:11px 13px;margin-bottom:13px;max-height:240px;overflow-y:auto}
+.noteop-lbl{font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:#2a7a4a;font-weight:600;margin-bottom:4px;display:flex;justify-content:space-between;align-items:center}
+.noteop-txt{font-size:12.5px;line-height:1.5;color:var(--ink);white-space:pre-wrap}
+.noteop-add{background:#2a7a4a;color:#fff;border:none;border-radius:7px;padding:3px 9px;font-size:11px;cursor:pointer;font-weight:600}
 .note-lbl{font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:#b08a2e;font-weight:600;margin-bottom:4px}
 .note-txt{font-size:12.5px;line-height:1.5;color:var(--ink);white-space:pre-wrap}
 .addr-box{margin-bottom:12px}
@@ -3170,7 +3176,8 @@ function renderContact(c){
   ${c.Note_telefono?`<div class="numstate"><span class="numstate-lbl">Stato numero</span><span class="numstate-val">${esc(c.Note_telefono)}</span></div>`:''}
   ${(c.Citta||c.Provincia)?`<button class="zona-btn" onclick="openZona('${esc(c.ID_contatto)}')" title="Trova i contatti vicini a questo entro un raggio in km, per riempire i buchi tra appuntamenti.">&#128205; Vicini (km)</button>`:''}
   ${c.Prossima_telefonata?`<div class="next">${(c.Via||c.Citta)?`<a class="vai-app" href="${navHref(c)}" target="_blank" rel="noopener" title="Apre il navigatore con il percorso verso questo appuntamento.">&#10148; VAI</a>`:''}Prossima telefonata · <b>${esc(fd(c.Prossima_telefonata))}</b>${c.Ora_appuntamento?` · ore <b>${esc(ft(c.Ora_appuntamento))}</b>`:''}</div>`:''}
-  ${c.Note?`<div class="note-box"><div class="note-lbl">Note</div><div class="note-txt">${esc(c.Note)}</div></div>`:''}
+  ${c.Note?`<div class="note-box"><div class="note-lbl">Note<span style="float:right;font-weight:400;text-transform:none;letter-spacing:0">storiche</span></div><div class="note-txt">${esc(c.Note)}</div></div>`:''}
+  <div class="noteop-box"><div class="noteop-lbl"><span>&#9998; Note telefonista</span><button class="noteop-add" onclick="aggiungiNotaOperatore('${esc(c.ID_contatto)}')" title="Aggiunge una riga con data e nome di chi scrive. Non cancella quelle gia scritte.">&#43; nota</button></div><div class="noteop-txt">${c.Note_operatore?esc(c.Note_operatore):'<span style="color:#9ab5a4">Nessuna nota. Usa &quot;+ nota&quot; per aggiungerne una: resta scritta con la data e il tuo nome.</span>'}</div></div>
   <div class="addr-box">${c.Via?`<div class="addr-line">${esc(c.Via)}</div>`:''}<div class="addr-line" style="color:#111">${esc(c.CAP||'')} ${esc(c.Citta||'')}${c.Provincia?` (${esc(c.Provincia)})`:''}${c.Regione?` · ${esc(c.Regione)}`:''}</div></div>
   <div class="map-wrap">
     <iframe id="contactMapGmaps" frameborder="0" src="about:blank" allowfullscreen loading="lazy"></iframe>
@@ -3229,6 +3236,27 @@ function initContactMap(c){
 }
 
 // EDIT MODE
+// ═══════════════════════════════════════════════════
+// NOTE TELEFONISTA — si aggiungono, non si sovrascrivono
+// ═══════════════════════════════════════════════════
+// Campo separato (Note_operatore) dalle Note storiche del cliente: queste
+// ultime restano com'erano, e il server rifiuta di farle cambiare a chi non
+// e' titolare. Ogni nota entra come riga nuova con data e nome di chi
+// scrive, cosi' due persone non si cancellano il lavoro a vicenda.
+function aggiungiNotaOperatore(cid){
+  var c=contactMap[String(cid)]; if(!c)return;
+  var testo=prompt('Nuova nota su '+((c.Cognome||'')+' '+(c.Nome||'')).trim()+'\n\nViene aggiunta in fondo con la data e il tuo nome.\nLe note gia scritte non si toccano.');
+  if(testo===null)return;
+  testo=String(testo).trim(); if(!testo)return;
+  var d=new Date();
+  var data=String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+d.getFullYear();
+  var chi=(window._nomeUtente||'').trim();
+  var riga=data+(chi?' '+chi:'')+': '+testo;
+  c.Note_operatore=(c.Note_operatore&&c.Note_operatore.trim()?c.Note_operatore.trim()+'\n':'')+riga;
+  contactMap[String(cid)]=c;
+  renderContact(c);
+  salvaContattoSingolo(c);
+}
 function enterEditMode(){
   if(findMode)exitFindMode();
   editMode=true;
@@ -3253,7 +3281,7 @@ function exitEditMode(){
 function saveEdit(){
   const c=currentResults[currentIdx];if(!c)return;
   ['Cognome','Nome','Titolo','Societa','Cellulare','Cellulare2','Telefono','Telefono2','Tel_Ufficio','Email',
-   'Note_telefono','Note','Via','Citta','Provincia','CAP','Regione','Codice_fiscale','Data_nascita','Luogo_nascita',
+   'Note_telefono','Note','Note_operatore','Via','Citta','Provincia','CAP','Regione','Codice_fiscale','Data_nascita','Luogo_nascita',
    'Valore_acquistato','Esito_ultima_chiamata','Prossima_telefonata','Ora_appuntamento'].forEach(f=>{
     const el=document.getElementById('edit_'+f);if(el)c[f]=el.tagName==='TEXTAREA'?el.value:el.value.trim();});
   contactMap[c.ID_contatto]=c;
@@ -3277,7 +3305,10 @@ function renderEditForm(){
   <div style="border-top:1px solid #ddd;margin:6px 0;padding-top:4px"></div>
   ${inp('Cellulare','Cell',true)}${inp('Cellulare2','Cell. 2',true)}${inp('Telefono','Tel',true)}${inp('Telefono2','Tel. 2')}${inp('Tel_Ufficio','Tel Uff')}${inp('Email','e-mail')}
   ${inp('Note_telefono','Stato n.')}
-  ${ta('Note','Note')}
+  ${(window._ruolo&&window._ruolo!=='titolare')
+      ? `<div class="pr-field" style="flex-direction:column;gap:2px;margin-bottom:5px"><span class="pr-lbl">Note storiche</span><textarea class="edit-inp" id="edit_Note" rows="5" readonly style="width:100%;resize:vertical;background:#f4f4f6;color:#666" title="Le note storiche del cliente le modifica solo il titolare. Per le tue annotazioni usa il riquadro verde Note telefonista.">${esc(c.Note||'')}</textarea></div>`
+      : ta('Note','Note')}
+  ${ta('Note_operatore','Note telefonista')}
   <div class="pr-subtabs"><button class="pr-subtab active">principale</button></div>
   ${inp('Via','Via')}${inp('Citta','Citta')}${inp('Provincia','Provincia')}${inp('CAP','CAP')}${inp('Regione','Regione')}
   ${inp('Codice_fiscale','C.F.')}${inp('Data_nascita','Data nascita')}${inp('Luogo_nascita','Luogo nascita')}

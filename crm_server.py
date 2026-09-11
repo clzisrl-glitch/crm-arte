@@ -592,9 +592,17 @@ def api_salva_contatto():
                 return jsonify({'error': 'contatto fuori dalla tua zona'}), 403
         data = load_data() or {}
         data.setdefault('contacts', [])
+        # Le NOTE STORICHE non si toccano: un operatore puo' correggere
+        # recapiti e indirizzo, ma il campo Note (trent'anni di storia del
+        # cliente) resta com'e'. Per le sue annotazioni ha Note_operatore.
+        # Controllo sul SERVER: nasconderlo solo a schermo non basterebbe.
+        _u = _utente_corrente()
+        _solo_lettura = crm_auth.USE_AUTH and _u and _u.get('ruolo') != 'titolare'
         trovato = False
         for i, x in enumerate(data['contacts']):
             if str(x.get('ID_contatto')) == cid:
+                if _solo_lettura and 'Note' in x:
+                    c['Note'] = x.get('Note')
                 data['contacts'][i] = c
                 trovato = True
                 break
@@ -714,8 +722,13 @@ def api_bulk_assegna_orari():
 
 
 @app.route('/api/elimina_contatto', methods=['POST'])
-@richiede_login
+@solo_titolare('elimina')
 def api_elimina_contatto():
+    # 11/09/2026: prima qui c'era solo @richiede_login. Il pulsante Elimina
+    # era nascosto alle telefoniste dal CSS e bloccato dal JS, ma la rotta
+    # accettava comunque la richiesta: bastava la console del browser per
+    # cancellare un contatto della propria zona. Ora il controllo e' sul
+    # server, dove nessuno puo' aggirarlo.
     """Elimina UN contatto e tutto cio' che gli e' collegato, lato server.
     Evita di rispedire l'intero archivio con /api/save_full."""
     try:
@@ -1106,7 +1119,10 @@ def _merge_into(data, master, losers):
     data['contacts'] = [c for c in data.get('contacts', []) if str(c.get('ID_contatto')) not in lset]
 
 @app.route('/api/verifica', methods=['POST'])
+@richiede_login
 def api_verifica():
+    # 11/09/2026: mancava @richiede_login (rotta aperta a chiunque).
+    # Le azioni 'elimina' e 'unisci' cancellano schede: riservate al titolare.
     try:
         body = request.get_json(force=True)
         vid = body.get('vid'); azione = body.get('azione')
@@ -1118,6 +1134,8 @@ def api_verifica():
             return jsonify({'error': 'caso non trovato'}), 404
         by = {str(c.get('ID_contatto')): c for c in data.get('contacts', [])}
         removed = []
+        if azione in ('elimina', 'unisci') and not _solo_titolare_api():
+            return jsonify({'error': 'Unire o eliminare schede e riservato al titolare.'}), 403
         if azione == 'archivia':
             v['stato'] = 'risolto'
         elif azione == 'elimina':
@@ -1148,6 +1166,7 @@ def api_verifica():
         return jsonify({'error': str(e)}), 500
 
 @app.route('/api/contatto_stato', methods=['POST'])
+@richiede_login
 def api_contatto_stato():
     """Conferma (stato=attivo) o segnala (stato=da_verificare) un contatto."""
     try:
@@ -1164,6 +1183,7 @@ def api_contatto_stato():
         return jsonify({'error': str(e)}), 500
 
 @app.route('/api/segnala', methods=['POST'])
+@richiede_login
 def api_segnala():
     """Aggiunge un contatto alla coda 'Da controllare' e lo mette in stato da_verificare."""
     try:
