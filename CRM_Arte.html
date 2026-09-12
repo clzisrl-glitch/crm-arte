@@ -659,7 +659,7 @@ body:not([data-ruolo="operatore"]) ._soloOperatore{display:none!important}
       <button class="btn-u pt-controllare" title="Manda questa scheda in Da controllare (per ricontrollarla: numero errato, indirizzo vecchio, ecc.)." onclick="segnalaContatto(currentResults[currentIdx]?.ID_contatto)">&#9888; Da controllare</button>
       <button class="btn-u pt-deceduto" title="Segna questo contatto come DECEDUTO: lo esclude da elenco, ricerca e agenda e lo sposta nella scheda Deceduti." onclick="segnaDeceduto()">&#9904; Segna deceduto</button>
       <button class="btn-u btn-blue-soft" id="btnAzzera" onclick="azzeraRicerca()" style="display:none" title="Torna a navigare tutto il database">&#10005; Azzera ricerca</button>
-<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 12/09/2026 18:00</span>
+<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 12/09/2026 19:00</span>
       <div style="flex:1"></div>
       <button class="btn-u btn-del-discreet" onclick="deleteContact()" title="Elimina questo contatto">&#128465;</button>
     </div>
@@ -1004,6 +1004,7 @@ async function _verificaAccesso(){
       _scartoOrarioMs=_s.getTime()-Date.now();}catch(e){}}
     try{_controllaChiusura();}catch(e){}
     try{if(j.online&&j.login)_msgControlla(false);}catch(e){}
+    try{if(j.online&&j.login)_notificheAvvio();}catch(e){}
     // Chi sei e il pulsante per uscire: prima non c'era nessun pulsante
     // che chiamasse faiLogout(), quindi dal CRM non si poteva uscire.
     try{
@@ -3176,6 +3177,104 @@ function renderFatturatoZona(){
   box.innerHTML=H;
 }
 // ═══════════════════════════════════════════════════
+// NOTIFICHE SUL TELEFONO E SUL COMPUTER (anche col CRM chiuso)
+// ═══════════════════════════════════════════════════
+// Il permesso lo si chiede UNA volta sola e solo con un clic dell'utente: i
+// browser rifiutano la richiesta automatica, e chiedere all'avvio fa dire "no"
+// alla gente. Quindi c'e' un pulsante nel riquadro dei messaggi.
+// Se il permesso e' gia' dato, l'iscrizione si rinnova da sola all'avvio: le
+// iscrizioni scadono e vanno rifatte, altrimenti le notifiche smettono di
+// arrivare senza che nessuno capisca perche'.
+function _b64ToUint8(b64){
+  var s=(b64||'').replace(/-/g,'+').replace(/_/g,'/');
+  while(s.length%4)s+='=';
+  var raw=atob(s), out=new Uint8Array(raw.length);
+  for(var i=0;i<raw.length;i++)out[i]=raw.charCodeAt(i);
+  return out;
+}
+function _notificheStato(){
+  if(!('Notification' in window))return 'non-supportate';
+  if(!('serviceWorker' in navigator)||!('PushManager' in window))return 'non-supportate';
+  return Notification.permission;   // 'default' | 'granted' | 'denied'
+}
+async function _iscriviNotifiche(chiediPermesso){
+  var st=_notificheStato();
+  if(st==='non-supportate')return {ok:false, motivo:'Questo browser non gestisce le notifiche.'};
+  if(st==='denied')return {ok:false, motivo:'Le notifiche sono bloccate nelle impostazioni del browser per questo sito. Vanno riattivate da li.'};
+  if(st==='default'){
+    if(!chiediPermesso)return {ok:false, motivo:'permesso non ancora chiesto'};
+    var p=await Notification.requestPermission();
+    if(p!=='granted')return {ok:false, motivo:'Permesso non concesso.'};
+  }
+  try{
+    var reg=await navigator.serviceWorker.ready;
+    var k=await (await fetch('/api/push/chiave')).json();
+    if(!k||!k.pubblica)return {ok:false, motivo:(k&&k.motivo)||'Il server non ha la chiave delle notifiche.'};
+    var sub=await reg.pushManager.getSubscription();
+    if(!sub){
+      sub=await reg.pushManager.subscribe({userVisibleOnly:true,
+        applicationServerKey:_b64ToUint8(k.pubblica)});
+    }
+    var j=sub.toJSON();
+    var r=await fetch('/api/push/iscrivi',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({endpoint:j.endpoint, keys:j.keys||{},
+        dispositivo:(navigator.userAgent||'').slice(0,110)})});
+    var jr=await r.json();
+    if(!jr.ok)return {ok:false, motivo:'Il server non ha registrato l iscrizione.'};
+    return {ok:true};
+  }catch(e){
+    return {ok:false, motivo:(e&&e.message)||'errore'};
+  }
+}
+function _notificheHtml(){
+  var st=_notificheStato();
+  if(st==='non-supportate')
+    return '<span style="color:#999">Le notifiche non funzionano su questo browser.</span>';
+  if(st==='granted')
+    return '<span style="color:#2a7a2a;font-weight:600">&#128276; Notifiche attive</span>'
+      +' <button onclick="provaNotifica()" style="margin-left:8px;background:#eef2f8;border:1px solid #d7e0ec;border-radius:8px;padding:3px 10px;font-size:12px;cursor:pointer">Prova</button>';
+  if(st==='denied')
+    return '<span style="color:#c0392b">&#128277; Notifiche bloccate per questo sito: vanno riattivate dalle impostazioni del browser.</span>';
+  return '<button onclick="attivaNotifiche()" style="background:#1a3a6a;color:#fff;border:none;border-radius:8px;padding:5px 12px;font-size:12.5px;font-weight:600;cursor:pointer">&#128276; Attiva le notifiche su questo dispositivo</button>'
+    +' <span style="color:#888;font-size:12px">arrivano anche col CRM chiuso</span>';
+}
+function _notificheAggiornaRiga(){
+  var r=document.getElementById('msgNotifiche');
+  if(r)r.innerHTML=_notificheHtml();
+}
+async function attivaNotifiche(){
+  var e=await _iscriviNotifiche(true);
+  _notificheAggiornaRiga();
+  if(!e.ok)alert('Notifiche non attivate.\n\n'+(e.motivo||''));
+  else alert('Notifiche attive su questo dispositivo.\n\nProva a premere "Prova": deve arrivarti una notifica anche se chiudi il CRM.');
+}
+async function provaNotifica(){
+  try{
+    var r=await fetch('/api/push/prova',{method:'POST'});
+    var j=await r.json();
+    if(j.ok)alert('Notifica di prova inviata a '+j.dispositivi+' dispositivo'+(j.dispositivi>1?'i':'')+'.\n\nSe non arriva entro un minuto, dimmelo.');
+    else alert('Prova non riuscita: '+(j.error||'errore'));
+  }catch(e){alert('Prova non riuscita: errore di collegamento.');}
+}
+// all'avvio: se il permesso c'e' gia', rinnovo l'iscrizione in silenzio
+async function _notificheAvvio(){
+  try{ if(_notificheStato()==='granted')await _iscriviNotifiche(false); }catch(e){}
+}
+// se si clicca la notifica mentre il CRM e' aperto, apre i messaggi
+try{
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.addEventListener('message',function(ev){
+      if(ev&&ev.data&&ev.data.tipo==='apri-messaggi'){try{apriMessaggi();}catch(e){}}
+    });
+  }
+}catch(e){}
+// se il CRM e' stato aperto DALLA notifica, apre i messaggi da solo
+try{
+  if(location.search.indexOf('messaggi=1')>=0){
+    setTimeout(function(){try{apriMessaggi();}catch(e){}},2500);
+  }
+}catch(e){}
+// ═══════════════════════════════════════════════════
 // MESSAGGI FRA TELEFONISTA E TITOLARE
 // ═══════════════════════════════════════════════════
 // La telefonista non modifica i dati: qui chiede al titolare le correzioni.
@@ -3250,6 +3349,7 @@ async function apriMessaggi(utente, idContatto, testoIniziale){
   if(_msgRif){rif.style.display='block';rif.innerHTML='&#128206; Il messaggio sar&#224; collegato alla scheda <b>'+esc(_msgRif)+'</b>';}
   else rif.style.display='none';
   if(testoIniziale){var t=document.getElementById('msgTesto');if(t)t.value=testoIniziale;}
+  try{_notificheAggiornaRiga();}catch(e){}
   var sonoTitolare=(window._ruolo||'')==='titolare';
   try{
     var url='/api/messaggi'+(sonoTitolare&&utente?('?utente='+encodeURIComponent(utente)):'');
@@ -3278,6 +3378,32 @@ async function apriMessaggi(utente, idContatto, testoIniziale){
           +esc(n)+(q?' <span style="background:#c0392b;color:#fff;border-radius:8px;padding:0 5px;font-size:11px">'+q+'</span>':'')+'</button>';
       }).join('');
       _msgUtenteAperto=utente||'';
+      window._msgAperte=j.aperte||{};
+      if(utente){
+        // su quale scheda sta lavorando lei in questo momento
+        var _ap=null, _k=String(utente).toLowerCase();
+        Object.keys(window._msgAperte).forEach(function(n){
+          if(String(n).toLowerCase()===_k)_ap=window._msgAperte[n];
+        });
+        var _riga=document.getElementById('msgDoveSta');
+        if(_riga){
+          if(_ap&&(_ap.contatto||_ap.scheda)){
+            var _n='';
+            if(_ap.contatto){
+              var _cc=contactMap[String(_ap.contatto)];
+              _n=_cc?((_cc.Cognome||'')+' '+(_cc.Nome||'')).trim():('scheda '+_ap.contatto);
+            }
+            _riga.style.display='block';
+            _riga.innerHTML='&#128064; <b>'+esc(utente)+'</b> sta su: '
+              +(_ap.scheda?'<b>'+esc(_ap.scheda)+'</b>':'')
+              +(_n?' &#183; '+esc(_n):'')
+              +(_ap.contatto?' <span onclick="chiudiMessaggi();apriContattoDaId(\''+esc(_ap.contatto)+'\')" style="cursor:pointer;color:#1a5ab8;text-decoration:underline">vai sulla scheda</span>':'')
+              +(_ap.aggiornato?' <span style="color:#aaa;font-size:11px">('+_oraBreve(_ap.aggiornato)+')</span>':'');
+          }else{
+            _riga.style.display='none';
+          }
+        }
+      }
       if(!utente){
         corpo.innerHTML=msg.length
           ? msg.slice(-60).map(function(x){return '<div style="font-size:11px;color:#8a8a90;margin:6px 0 -4px">'+esc(x.utente)+'</div>'+_msgRigaHtml(x,true);}).join('')
@@ -3289,6 +3415,7 @@ async function apriMessaggi(utente, idContatto, testoIniziale){
     }else{
       box.style.display='none';
       _msgUtenteAperto=j.utente||'';
+      var _ds=document.getElementById('msgDoveSta'); if(_ds)_ds.style.display='none';
     }
     corpo.innerHTML=msg.length ? msg.map(function(x){return _msgRigaHtml(x,sonoTitolare);}).join('')
       : '<div style="color:#999;font-size:13px">Nessun messaggio ancora. Scrivi il primo qui sotto.</div>';
@@ -3310,7 +3437,17 @@ async function inviaMessaggio(){
   if(!testo){alert('Scrivi qualcosa prima di inviare.');return;}
   var sonoTitolare=(window._ruolo||'')==='titolare';
   if(sonoTitolare && !_msgUtenteAperto){alert('Scegli prima a quale persona vuoi scrivere.');return;}
-  var corpo={testo:testo, id_contatto:_msgRif||''};
+  // Se non ho collegato una scheda a mano, ci metto quella che ho aperto
+  // ADESSO: cosi' il titolare, leggendo, sa di chi si sta parlando e ci va
+  // con un clic, senza doverlo chiedere.
+  var rif=_msgRif||'';
+  if(!rif){
+    try{
+      var _c=currentResults&&currentResults[currentIdx];
+      if(_c&&_c.ID_contatto)rif=String(_c.ID_contatto);
+    }catch(e){}
+  }
+  var corpo={testo:testo, id_contatto:rif};
   if(sonoTitolare)corpo.utente=_msgUtenteAperto;
   try{
     var r=await fetch('/api/messaggi',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(corpo)});
@@ -5556,8 +5693,10 @@ const EMBEDDED_APPUNTAMENTI=``
       <div style="font-size:18px;font-weight:700;color:#1a3a6a">&#128172; <span id="msgTitolo">Messaggi</span></div>
       <button onclick="chiudiMessaggi()" style="background:#eee;border:1px solid #ccc;border-radius:8px;padding:4px 12px;cursor:pointer">Chiudi</button>
     </div>
-    <div id="msgSpiega" style="font-size:12.5px;color:#888;margin-bottom:10px"></div>
+    <div id="msgSpiega" style="font-size:12.5px;color:#888;margin-bottom:8px"></div>
+    <div id="msgNotifiche" style="font-size:12.5px;margin-bottom:10px;padding:8px 10px;background:#f7f8fa;border:1px solid #e6e8ee;border-radius:8px"></div>
     <div id="msgPersone" style="display:none;flex-wrap:wrap;gap:6px;margin-bottom:10px"></div>
+    <div id="msgDoveSta" style="display:none;font-size:12.5px;color:#33465e;background:#eef2f8;border:1px solid #d7e0ec;border-radius:8px;padding:7px 10px;margin-bottom:10px"></div>
     <div id="msgCorpo" style="flex:1;overflow-y:auto;min-height:180px;max-height:46vh;background:#f7f8fa;border:1px solid #e6e8ee;border-radius:10px;padding:10px"></div>
     <div id="msgRiferimento" style="display:none;font-size:12px;color:#7a5a10;background:#fdf1d6;border:1px solid #e8c97a;border-radius:8px;padding:6px 10px;margin-top:8px"></div>
     <div style="display:flex;gap:8px;margin-top:10px">

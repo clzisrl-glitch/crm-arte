@@ -2,3 +2,4 @@ flask
 reportlab
 gunicorn
 psycopg[binary]
+cryptography

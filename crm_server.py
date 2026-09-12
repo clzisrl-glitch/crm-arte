@@ -632,6 +632,106 @@ def _registra_attivita(risposta):
     return risposta
 
 # ═══════════════════════════════════════════════════════════════════
+#  NOTIFICHE SUL TELEFONO E SUL COMPUTER (anche col CRM chiuso)
+# ═══════════════════════════════════════════════════════════════════
+# L'invio della notifica va fatto FUORI dalla risposta: se il servizio di
+# Google ci mette 8 secondi, la telefonista non deve aspettare 8 secondi per
+# vedere il suo messaggio inviato. Quindi:
+#   - gli indirizzi si leggono dal database nel thread della richiesta
+#     (la connessione PostgreSQL e' una sola e condivisa: NON va usata da un
+#      altro thread, si corromperebbe);
+#   - la chiamata HTTP va in un thread a parte, che NON tocca il database;
+#   - se un indirizzo risulta scaduto, il thread lo mette in una lista e la
+#     pulizia avviene alla notifica successiva, nel thread giusto.
+import crm_push
+_push_da_pulire = []
+
+def _push_pulisci():
+    global _push_da_pulire
+    if not _push_da_pulire:
+        return
+    scaduti, _push_da_pulire = _push_da_pulire, []
+    for e in scaduti:
+        try:
+            crm_db.push_disiscrivi(e)
+        except Exception:
+            pass
+
+def _push_avvisa(destinatari, titolo='CRM Arte'):
+    """Manda la sveglia alle iscrizioni di questi utenti. Non solleva mai."""
+    try:
+        if not crm_auth.USE_AUTH:
+            return
+        _push_pulisci()
+        priv, pub = crm_db.push_chiavi()
+        if not priv:
+            return
+        indirizzi = []
+        for nome in destinatari:
+            indirizzi.extend(crm_db.push_indirizzi(nome))
+        indirizzi = list(dict.fromkeys(indirizzi))     # senza doppioni
+        if not indirizzi:
+            return
+
+        def _lavora():
+            for e in indirizzi:
+                ok, codice, nota = crm_push.invia_sveglia(e, priv, pub)
+                if codice in (404, 410):
+                    _push_da_pulire.append(e)          # iscrizione morta
+        import threading
+        threading.Thread(target=_lavora, daemon=True).start()
+    except Exception:
+        pass
+
+@app.route('/api/push/chiave')
+@richiede_login
+def api_push_chiave():
+    priv, pub = crm_db.push_chiavi()
+    st = crm_push.stato()
+    return jsonify({'ok': bool(pub), 'pubblica': pub or '',
+                    'pronto': st.get('pronto', False), 'motivo': st.get('motivo', '')})
+
+@app.route('/api/push/iscrivi', methods=['POST'])
+@richiede_login
+def api_push_iscrivi():
+    u = _utente_corrente() or {}
+    b = request.get_json(force=True) or {}
+    endpoint = str(b.get('endpoint') or '').strip()
+    if not endpoint.startswith('https://'):
+        return jsonify({'error': 'indirizzo non valido'}), 400
+    chiavi = b.get('keys') or {}
+    ok = crm_db.push_iscrivi(u.get('nome'), endpoint,
+                             str(chiavi.get('p256dh') or ''), str(chiavi.get('auth') or ''),
+                             str(b.get('dispositivo') or '')[:120])
+    return jsonify({'ok': bool(ok)})
+
+@app.route('/api/push/disiscrivi', methods=['POST'])
+@richiede_login
+def api_push_disiscrivi():
+    b = request.get_json(force=True) or {}
+    crm_db.push_disiscrivi(str(b.get('endpoint') or '').strip())
+    return jsonify({'ok': True})
+
+@app.route('/api/push/prova', methods=['POST'])
+@richiede_login
+def api_push_prova():
+    """Manda una notifica a se stessi: serve a provare che funziona."""
+    u = _utente_corrente() or {}
+    quanti = len(crm_db.push_indirizzi(u.get('nome')))
+    if not quanti:
+        return jsonify({'ok': False, 'error': 'Questo dispositivo non e ancora iscritto alle notifiche.'}), 400
+    _push_avvisa([u.get('nome')])
+    return jsonify({'ok': True, 'dispositivi': quanti})
+
+@app.route('/api/push/stato')
+@solo_titolare('gestione_utenti')
+def api_push_stato():
+    priv, pub = crm_db.push_chiavi(crea_se_manca=False)
+    return jsonify({'ok': True, 'libreria': crm_push.stato(),
+                    'chiavi_presenti': bool(pub),
+                    'iscrizioni': crm_db.push_quanti()})
+
+# ═══════════════════════════════════════════════════════════════════
 #  MESSAGGI FRA TELEFONISTA E TITOLARE
 # ═══════════════════════════════════════════════════════════════════
 # Una conversazione per telefonista. Serve a chiedere al titolare le modifiche
@@ -649,13 +749,27 @@ def api_messaggi():
         return jsonify({'ok': True, 'titolare': False,
                         'da_leggere': crm_db.messaggi_da_leggere(False, u.get('nome'))})
     if titolare:
+        # Su quale scheda sta lavorando ciascuno IN QUESTO MOMENTO: lo sappiamo
+        # gia', perche' il CRM ricorda l'ultima scheda aperta per utente
+        # (tabella crm_ui). Serve al titolare per andare dove e' lei mentre le
+        # risponde, senza chiederglielo.
+        aperte = {}
+        try:
+            for nome, dati in (crm_db.ui_tutti() or {}).items():
+                aperte[nome] = {'scheda': dati.get('ultima_scheda', ''),
+                                'contatto': dati.get('ultimo_contatto', ''),
+                                'aggiornato': dati.get('aggiornato', '')}
+        except Exception:
+            aperte = {}
         chi = (request.args.get('utente') or '').strip()
         if chi:
             crm_db.messaggi_segna_letti(chi, False)   # ho letto quelli di lei
             return jsonify({'ok': True, 'titolare': True, 'utente': chi,
+                            'aperte': aperte,
                             'messaggi': crm_db.messaggi_elenco(chi)})
         return jsonify({'ok': True, 'titolare': True,
                         'da_leggere': crm_db.messaggi_da_leggere(True),
+                        'aperte': aperte,
                         'messaggi': crm_db.messaggi_elenco(None, 300)})
     mio = u.get('nome') or ''
     crm_db.messaggi_segna_letti(mio, True)            # ho letto quelli del titolare
@@ -682,6 +796,13 @@ def api_messaggi_scrivi():
     nuovo = crm_db.messaggio_scrivi(chi, titolare, u.get('nome'), testo, id_contatto)
     if not nuovo:
         return jsonify({'error': 'messaggio non salvato'}), 500
+    # notifica a chi deve leggere: se scrive la telefonista avviso i titolari,
+    # se scrive il titolare avviso lei. Parte in un thread, non rallenta.
+    try:
+        destinatari = [chi] if titolare else crm_auth.nomi_titolari()
+        _push_avvisa([d for d in destinatari if d and d != u.get('nome')])
+    except Exception:
+        pass
     return jsonify({'ok': True, 'id': nuovo})
 
 @app.route('/api/attivita')

@@ -717,3 +717,139 @@ def messaggi_segna_letti(utente, da_titolare):
     except Exception as e:
         print(f"  (messaggi_segna_letti: {e})")
         return False
+
+
+# ═══════════════════════════════════════════════════════════════════
+#  ISCRIZIONI ALLE NOTIFICHE (telefono e computer)
+# ═══════════════════════════════════════════════════════════════════
+# Due tabelle piccole:
+#   crm_push_chiavi = la coppia di chiavi VAPID, generata dal server alla
+#                     prima notifica. Cosi' non c'e' niente da mettere su
+#                     Railway e nessuna chiave segreta passa di mano.
+#   crm_push        = un indirizzo di iscrizione per ogni browser/telefono.
+#                     Un utente puo' averne piu' di uno (telefono + computer).
+def _push_db_init():
+    conn = _get_pg()
+    with conn.cursor() as cur:
+        cur.execute("CREATE TABLE IF NOT EXISTS crm_push_chiavi ("
+                    "id INT PRIMARY KEY, privata TEXT NOT NULL, pubblica TEXT NOT NULL, "
+                    "creato TIMESTAMPTZ DEFAULT now())")
+        cur.execute("CREATE TABLE IF NOT EXISTS crm_push ("
+                    "id BIGSERIAL PRIMARY KEY, utente TEXT NOT NULL, "
+                    "endpoint TEXT NOT NULL UNIQUE, p256dh TEXT, auth TEXT, "
+                    "dispositivo TEXT DEFAULT '', quando TIMESTAMPTZ DEFAULT now())")
+        cur.execute("CREATE INDEX IF NOT EXISTS crm_push_utente ON crm_push (utente)")
+
+def push_chiavi(crea_se_manca=True):
+    """La coppia di chiavi VAPID. La genera al primo uso e la conserva."""
+    if not USE_DB:
+        return None, None
+    try:
+        _push_db_init()
+        conn = _get_pg()
+        with conn.cursor() as cur:
+            cur.execute("SELECT privata, pubblica FROM crm_push_chiavi WHERE id=1")
+            r = cur.fetchone()
+            if r:
+                return r[0], r[1]
+            if not crea_se_manca:
+                return None, None
+            import crm_push
+            priv, pub = crm_push.genera_chiavi()
+            if not priv:
+                return None, None
+            cur.execute("INSERT INTO crm_push_chiavi (id, privata, pubblica) VALUES (1,%s,%s) "
+                        "ON CONFLICT (id) DO NOTHING", (priv, pub))
+            cur.execute("SELECT privata, pubblica FROM crm_push_chiavi WHERE id=1")
+            r = cur.fetchone()
+            return (r[0], r[1]) if r else (None, None)
+    except Exception as e:
+        print(f"  (push_chiavi: {e})")
+        return None, None
+
+def push_iscrivi(utente, endpoint, p256dh='', auth='', dispositivo=''):
+    if not USE_DB or not endpoint:
+        return False
+    try:
+        _push_db_init()
+        conn = _get_pg()
+        with conn.cursor() as cur:
+            cur.execute("INSERT INTO crm_push (utente, endpoint, p256dh, auth, dispositivo) "
+                        "VALUES (%s,%s,%s,%s,%s) ON CONFLICT (endpoint) DO UPDATE SET "
+                        "utente=EXCLUDED.utente, p256dh=EXCLUDED.p256dh, auth=EXCLUDED.auth, "
+                        "dispositivo=EXCLUDED.dispositivo, quando=now()",
+                        (str(utente or '')[:80], str(endpoint)[:900],
+                         str(p256dh or '')[:200], str(auth or '')[:120],
+                         str(dispositivo or '')[:120]))
+        return True
+    except Exception as e:
+        print(f"  (push_iscrivi: {e})")
+        return False
+
+def push_disiscrivi(endpoint):
+    if not USE_DB or not endpoint:
+        return False
+    try:
+        _push_db_init()
+        conn = _get_pg()
+        with conn.cursor() as cur:
+            cur.execute("DELETE FROM crm_push WHERE endpoint=%s", (str(endpoint)[:900],))
+        return True
+    except Exception as e:
+        print(f"  (push_disiscrivi: {e})")
+        return False
+
+def push_indirizzi(utente):
+    """Gli indirizzi di iscrizione di un utente (telefono, computer...)."""
+    if not USE_DB:
+        return []
+    try:
+        _push_db_init()
+        conn = _get_pg()
+        with conn.cursor() as cur:
+            cur.execute("SELECT endpoint FROM crm_push WHERE utente=%s", (str(utente or '')[:80],))
+            return [r[0] for r in cur.fetchall()]
+    except Exception as e:
+        print(f"  (push_indirizzi: {e})")
+        return []
+
+def push_quanti():
+    """Quante iscrizioni per utente: serve alla diagnostica."""
+    if not USE_DB:
+        return {}
+    try:
+        _push_db_init()
+        conn = _get_pg()
+        with conn.cursor() as cur:
+            cur.execute("SELECT utente, COUNT(*) FROM crm_push GROUP BY utente")
+            return {a: int(b) for a, b in cur.fetchall()}
+    except Exception as e:
+        print(f"  (push_quanti: {e})")
+        return {}
+
+
+def ui_tutti():
+    """Stato interfaccia di TUTTI gli utenti: serve al titolare per vedere su
+    quale scheda sta lavorando ciascuna telefonista in questo momento.
+    La chiave e' il nome in minuscolo (come la salva ui_set)."""
+    if not USE_DB:
+        return {}
+    try:
+        _ui_db_init()
+        conn = _get_pg()
+        with conn.cursor() as cur:
+            cur.execute("SELECT utente, dati, aggiornato FROM crm_ui")
+            fuori = {}
+            for utente, dati, agg in cur.fetchall():
+                try:
+                    d = json.loads(dati) if dati else {}
+                except Exception:
+                    d = {}
+                if not isinstance(d, dict):
+                    d = {}
+                d['aggiornato'] = agg.isoformat(timespec='seconds') if agg else ''
+                fuori[utente] = d
+            return fuori
+    except Exception as e:
+        print(f"  (ui_tutti: {e})")
+        return {}
