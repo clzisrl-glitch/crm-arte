@@ -121,6 +121,17 @@ def verifica_token(token):
         nome, ruolo, zona, creato, firma = dati.rsplit('|', 4)
         if _firma(f"{nome}|{ruolo}|{zona}|{creato}") != firma:
             return None
+        # Il token di una TELEFONISTA vale solo per la giornata in cui e' stato
+        # emesso: alle 21 il CRM chiude e la mattina dopo deve rifare l'accesso.
+        # Serve anche a limitare il danno di una password finita a qualcun
+        # altro: una sessione rubata non resta valida per settimane.
+        # Il titolare non ha scadenza (lavora anche di notte).
+        if ruolo != 'titolare':
+            import datetime as _dt
+            nato = _ora_italiana(_dt.datetime.fromtimestamp(int(creato), _dt.timezone.utc))
+            adesso = _ora_italiana()
+            if nato.date() != adesso.date():
+                return None
         return {'nome': nome, 'ruolo': ruolo, 'zona': zona}
     except Exception:
         return None
@@ -215,6 +226,19 @@ def nomi_titolari():
             nomi.add(v['nome'])
     return sorted(nomi)
 
+def aggiorna_da_elenco(u):
+    """Rilegge ruolo e zona dall'elenco utenti. Prima faceva fede il cookie:
+    un'utenza cancellata continuava a lavorare finche' teneva il browser
+    aperto, e cambiarle la zona non aveva effetto sulla sessione in corso.
+    Torna None se l'utenza non esiste piu'."""
+    chiave = (u.get('nome') or '').lower().strip()
+    v = UTENTI_DB.get(chiave) or UTENTI.get(chiave)
+    if not v:
+        return None
+    return {'nome': v.get('nome') or u.get('nome'),
+            'ruolo': (v.get('ruolo') or u.get('ruolo') or 'operatore'),
+            'zona': (v.get('zona') or '')}
+
 def elenco_utenti_visibile():
     """Nomi, ruoli e zone di TUTTI gli utenti (cifrati + variabile), senza
     nessuna password. Serve alla scheda Utenti."""
@@ -270,6 +294,7 @@ AZIONI_SOLO_TITOLARE = {
     'export_massa',     # esportare/stampare elenchi di massa
     'unisci',           # unire schede (potenziale perdita)
     'gestione_utenti',  # creare/cambiare utenti
+    'salva_tutto',      # /api/save e /api/save_full: sostituiscono l'archivio in blocco
 }
 
 # Tutte le azioni che il programma conosce. Un nome fuori da questo elenco e'

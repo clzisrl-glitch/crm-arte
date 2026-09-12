@@ -638,7 +638,7 @@ body:not([data-ruolo="operatore"]) ._soloOperatore{display:none!important}
   </div>
   <div id="page-principale" class="page">
     <div class="pr-actions" id="prActions">
-      <button class="btn-u btn-amber" id="btnModifica" onclick="enterEditMode()" title="Modifica i dati della scheda. Al termine premi Salva.">&#9998; Modifica</button>
+      <button class="btn-u btn-amber _soloTitolare" id="btnModifica" onclick="enterEditMode()" title="Modifica i dati della scheda. Al termine premi Salva.">&#9998; Modifica</button>
       <button class="btn-u btn-green" id="btnSalva" style="display:none" onclick="saveEdit()" title="Salva le modifiche fatte alla scheda.">&#128190; Salva</button>
       <button class="btn-u btn-red-soft" id="btnAnnullaMod" style="display:none" onclick="exitEditMode()" title="Annulla le modifiche senza salvare.">&#215; Annulla</button>
       <button class="btn-u btn-blue" id="btnNuovo" onclick="enterNewMode()" title="Crea una nuova scheda contatto da zero.">&#43; Nuovo</button>
@@ -657,7 +657,7 @@ body:not([data-ruolo="operatore"]) ._soloOperatore{display:none!important}
       <button class="btn-u pt-controllare" title="Manda questa scheda in Da controllare (per ricontrollarla: numero errato, indirizzo vecchio, ecc.)." onclick="segnalaContatto(currentResults[currentIdx]?.ID_contatto)">&#9888; Da controllare</button>
       <button class="btn-u pt-deceduto" title="Segna questo contatto come DECEDUTO: lo esclude da elenco, ricerca e agenda e lo sposta nella scheda Deceduti." onclick="segnaDeceduto()">&#9904; Segna deceduto</button>
       <button class="btn-u btn-blue-soft" id="btnAzzera" onclick="azzeraRicerca()" style="display:none" title="Torna a navigare tutto il database">&#10005; Azzera ricerca</button>
-<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 12/09/2026 15:00</span>
+<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 12/09/2026 17:00</span>
       <div style="flex:1"></div>
       <button class="btn-u btn-del-discreet" onclick="deleteContact()" title="Elimina questo contatto">&#128465;</button>
     </div>
@@ -850,7 +850,7 @@ body:not([data-ruolo="operatore"]) ._soloOperatore{display:none!important}
         <a href="#w-pot" class="tb-btn" style="text-decoration:none">Potenziali / Deceduti</a>
         <a href="#w-salva" class="tb-btn" style="text-decoration:none">Salvataggi e backup</a>
       </div>
-      <h3 id="w-barra" style="color:#1a3a6a;border-bottom:2px solid #1a3a6a;padding-bottom:4px;margin:22px 0 8px">&#128205; I pulsanti in alto</h3><ul style="margin-left:18px"><li><b>AGENDA</b> &#8212; chi devi chiamare oggi e gli appuntamenti.</li><li><b>Principale</b> &#8212; la scheda della persona: numeri, indirizzo, opere comprate, note, mappa.</li><li><b>Elenco</b> &#8212; <span class="_soloTitolare">tutte le persone in una lista, come un foglio Excel.</span><span class="_soloOperatore">le persone della tua zona in una lista, come un foglio Excel.</span></li><li><b>Provincia</b> e <b>Zona</b> &#8212; cerca per citt&#224;, oppure chi sta vicino a un punto.</li><li><b>&#9203; Da Recuperare</b> &#8212; chi va richiamato.</li><li><b>&#128270; Da controllare</b> &#8212; i casi dubbi da sistemare.</li><li><b>&#9742; Potenziali</b> &#8212; vecchi nominativi che non sono ancora clienti.</li><li><b>&#128241; Da controllare cellulare</b> &#8212; clienti di cui manca il numero di cellulare.</li><li class="_soloTitolare"><b>&#9904; Deceduti</b> &#8212; chi &#232; mancato: messo da parte. Si apre dal riquadro <b>Strumenti</b> qui sopra.</li><li class="_soloTitolare"><b>&#128202; Statistiche</b> &#8212; solo per te: numeri delle chiamate, zone, vendite, accessi.</li></ul><h3 id="w-giorno" style="color:#1a3a6a;border-bottom:2px solid #1a3a6a;padding-bottom:4px;margin:22px 0 8px">&#9728;&#65039; Come si lavora, in cinque passi</h3><ol style="margin-left:18px"><li>Apri <b>AGENDA</b>: vedi chi chiamare oggi e gli appuntamenti.</li><li>Clicca il nome: si apre la <b>scheda</b>.</li><li>Premi il <b>tasto verde</b> sul numero per chiamare.</li><li>Dopo la chiamata scrivi <b>com'&#232; andata</b>. Se serve fissa un nuovo richiamo o un appuntamento.</li><li>Passa al prossimo. <b>Non devi salvare niente</b>: si salva da solo.</li></ol><p style="margin:6px 0">Quando riapri il CRM, riparte <b>dalla pagina dove eri rimasto</b>. Vale per il tuo accesso, anche da un altro computer o dal telefono.</p><h3 id="w-agenda2" style="color:#1a3a6a;border-bottom:2px solid #1a3a6a;padding-bottom:4px;margin:22px 0 8px">&#128197; L'agenda</h3><ul style="margin-left:18px"><li>Per spostare un appuntamento, <b>trascinalo</b> nel giorno e nell'ora che vuoi. Si salva da solo.</li><li><b>&#128337; Sistema richiami senza ora</b>: d&#224; un orario, uno dopo l'altro dalle 9:00, ai richiami che non ce l'hanno. Puoi sempre spostarli a mano dopo.</li><li><b>&#128424; Stampa PDF</b>: scegli una data in alto e stampi le schede di tutti gli appuntamenti di quel giorno. <b>&#9993; Invia email</b> apre lo stesso PDF da allegare.</li><li class="_soloTitolare">La tendina <b>&#127758;</b> mostra l'agenda di <b>una zona sola</b>.</li><li class="_soloTitolare">Il pulsante <b>&#127758; Zone a colori</b> mostra <b>tutte le zone insieme</b>, ognuna con un colore: Nord giallo, Triveneto verde acqua, Centro viola, Toscana arancio, Altre grigio. Gli appuntamenti restano celesti. I colori sono spiegati in basso.</li><li class="_soloOperatore">Nella tua agenda ci sono <b>solo le chiamate e gli appuntamenti della tua zona</b>.</li></ul><h3 id="w-cerca" style="color:#1a3a6a;border-bottom:2px solid #1a3a6a;padding-bottom:4px;margin:22px 0 8px">&#128269; Trovare una persona</h3><ul style="margin-left:18px"><li>In <b>Elenco</b> scrivi cognome, nome, citt&#224; o numero: la lista si stringe subito.</li><li>In <b>Provincia</b> e <b>Zona</b> cerchi per citt&#224; o per vicinanza.</li><li>In <b>Principale &#8594; Trova</b> cerchi dentro un campo preciso (note, opere, ID...). Le parole puoi scriverle <b>in qualsiasi ordine</b>: &quot;CLZI 2026&quot; trova anche &quot;2026 CLZI riunione&quot;.</li><li><b>Potenziali</b>, <b>Deceduti</b> e <b>UTET da verificare</b> non escono nelle ricerche normali: hanno la loro pagina.</li></ul><h3 id="w-scheda" style="color:#1a3a6a;border-bottom:2px solid #1a3a6a;padding-bottom:4px;margin:22px 0 8px">&#128203; La scheda</h3><ul style="margin-left:18px"><li><b>Tasto verde</b> sul numero = chiama. Ci sono anche WhatsApp, email e mappa.</li><li><b>Modifica</b> per correggere i dati. Si salva da solo: compare una conferma verde in basso.</li><li><b>creaTel</b> per fissare un richiamo. <b>Ora</b> per un appuntamento con l'orario.</li><li>Quando registri com'&#232; andata la chiamata scegli fra tre esiti: <b>&#128994; Positivo</b>, <b>&#128309; Richiamo</b>, <b>&#128308; Negativo</b>.</li><li>Se aggiungi un'<b>opera</b> con la <b>data di acquisto</b>, il CRM mette da solo in agenda il <b>&#128196; contratto</b> su quella data. Non devi scrivere niente: se correggi la data la voce si sposta, se togli l'opera sparisce. Non diventa una chiamata da richiamare (il cliente ha gi&#224; comprato) e non tocca un richiamo che avevi gi&#224; fissato.</li><li><b>&#9904; Segna deceduto</b> mette la persona tra i Deceduti e la toglie dalle ricerche.</li><li>In fondo trovi le <b>opere comprate</b> e tutte le <b>chiamate fatte</b>.</li></ul><h3 id="w-ctrl" style="color:#1a3a6a;border-bottom:2px solid #1a3a6a;padding-bottom:4px;margin:22px 0 8px">&#128270; Da controllare</h3><p style="margin:6px 0">Sono i casi dubbi: lo stesso numero su due schede, dati strani, possibili doppioni. Guardi il caso e scegli un pulsante: <b>ok</b>, <b>non risponde</b>, <b>numero errato</b>, <b>trasferito</b>, <b>non interessato</b>, <b>Archivia</b>, <b>Apri</b>.</p><ul style="margin-left:18px"><li>In alto a destra scegli cosa guardare: <b>CRM generale</b>, <b>UTET da verificare</b> o <b>Tutti</b>.</li><li>I filtri e il menu <b>regione</b> restringono la lista.</li><li class="_soloTitolare"><b>Unisci qui</b> unisce due schede doppie in una sola: porta tutto nella scheda che tieni (opere, chiamate, note, appuntamenti) e scrive nelle note il nome dell'altra. <b>Elimina</b> cancella la scheda.</li><li class="_soloOperatore">Unire due schede doppie o cancellarne una lo fa il titolare: tu <b>segnala</b> il caso e ci pensa lui.</li></ul><h3 id="w-nocell" style="color:#1a3a6a;border-bottom:2px solid #1a3a6a;padding-bottom:4px;margin:22px 0 8px">&#128241; Da controllare cellulare</h3><ul style="margin-left:18px"><li>Sono i clienti <b>senza numero di cellulare</b>, da cercare.</li><li>Scegli prima la <b>regione</b>, poi la <b>provincia</b>.</li><li>Vedi indirizzo, data di nascita e codice fiscale. Con <b>Stampa</b> ti porti l'elenco su carta.</li></ul><h3 id="w-pot" style="color:#1a3a6a;border-bottom:2px solid #1a3a6a;padding-bottom:4px;margin:22px 0 8px">&#9742; Potenziali<span class="_soloTitolare"> &#183; &#9904; Deceduti</span></h3><ul style="margin-left:18px"><li><b>Potenziali</b>: vecchi nominativi, non ancora clienti. Se uno compra, diventa cliente normale.</li><li class="_soloTitolare"><b>Deceduti</b>: messi da parte e fuori dalle ricerche. Per riportarne uno tra gli attivi, apri la scheda e togli la parola DECEDUTO dalle note.</li><li class="_soloOperatore">Quando segni una persona come <b>deceduta</b>, sparisce dalle ricerche e finisce in un archivio che tiene il titolare.</li></ul><h3 id="w-zone" style="color:#1a3a6a;border-bottom:2px solid #1a3a6a;padding-bottom:4px;margin:22px 0 8px">&#127758; Le zone</h3><p style="margin:6px 0">Una zona &#232; un gruppo di regioni. Serve a dividere il lavoro: chi ha una zona vede <b>solo i contatti di quelle regioni</b>.</p><p class="_soloOperatore" style="margin:6px 0">Tu lavori <b>sulla tua zona</b>. I nominativi delle altre regioni sono di altre colleghe: non ti compaiono e non devi cercarli. Se non trovi qualcuno, non &#232; un errore del programma.</p><ul class="_soloTitolare" style="margin-left:18px"><li><b>Nord</b> &#8212; Piemonte, Valle d'Aosta, Lombardia, Liguria.</li><li><b>Triveneto</b> &#8212; Veneto, Trentino-Alto Adige, Friuli-Venezia Giulia.</li><li><b>Centro</b> &#8212; Lazio, Umbria, Marche, Sardegna, Sicilia, Campania, Calabria.</li><li><b>Toscana</b> &#8212; Toscana.</li><li><b>Altre</b> &#8212; le regioni che non stanno in nessuna zona (Emilia-Romagna, Puglia, Abruzzo, Basilicata, Molise, estero).</li></ul><p class="_soloTitolare" style="margin:6px 0">Tu le vedi tutte. Una regione sta in <b>una zona sola</b>: se stesse in due, due telefoniste si troverebbero gli stessi nominativi.</p><p class="_soloTitolare" style="margin:6px 0">In alto, accanto a <b>Welcome</b>, hai la tendina <b>&#127758; Vedi come...</b>: scegli una zona e il CRM ti mostra <b>solo</b> quella, come la vede la telefonista che ci lavora &#8212; elenchi, ricerche e agenda. Serve a controllare il suo lavoro <b>senza entrare col suo accesso</b>. Non cambia niente nei dati e non toglie niente a te: quando hai finito rimetti <b>Tutte le zone</b>. Riaprendo il CRM riparte comunque da tutte le zone. Finch&#233; la vista &#232; attiva, in alto resta scritto quale zona stai guardando.</p><div class="_soloTitolare"><h3 id="w-stat" style="color:#1a3a6a;border-bottom:2px solid #1a3a6a;padding-bottom:4px;margin:22px 0 8px">&#128202; Statistiche (solo tu)</h3><ul style="margin-left:18px"><li><b>Chiamate</b>: oggi, ultimi 7 giorni, ultimi 30, totale. E come sono andate.</li><li><b>Monitoraggio zone</b>: per ogni zona quanti contatti, quante chiamate, quanti appuntamenti e quanto &#232; gi&#224; stato lavorato.</li><li><b>Per telefonista</b>: quante chiamate ha fatto ciascuna.</li><li><b>&#128506; Vendite per regione</b>: conta le opere con data di acquisto <b>dal 01/08/2026</b> in poi (la data si cambia nel campo &quot;Dal&quot;) e le mette sotto la regione del cliente. <b>Clicca una regione</b> e vedi l'elenco delle vendite; il pulsante <b>Apri scheda</b> ti porta sul cliente.</li><li>Se un'opera ha una data di acquisto <b>nel futuro</b> &#232; un errore di scrittura: non viene contata e la trovi segnalata in un riquadro giallo, da correggere nella scheda.</li><li><b>Accessi</b>: chi si &#232; collegato e quando.</li></ul></div><h3 id="w-salva" style="color:#1a3a6a;border-bottom:2px solid #1a3a6a;padding-bottom:4px;margin:22px 0 8px">&#128190; Si salva da solo</h3><ul style="margin-left:18px"><li>Ogni modifica <b>si salva da sola</b>: compare una conferma verde in basso a destra.</li><li class="_soloTitolare"><b>Backup</b>, <b>Excel</b> e <b>Completo</b> sono nel riquadro <b>Strumenti</b> qui in alto: sono riservati a te.</li><li class="_soloOperatore">Non devi fare nessun backup: ci pensa il titolare, e il server ne fa uno da solo ogni giorno.</li><li>In basso nella barra c'&#232; la <b>versione</b> del programma (data e ora). Serve se qualcosa non torna: vuol dire che il browser sta mostrando una copia vecchia.</li></ul><div style="margin-top:24px;padding:12px 14px;background:#eef4fc;border-left:4px solid #1a3a6a;border-radius:6px;color:#33506f"><b>In due parole:</b> <b>AGENDA</b> per sapere chi chiamare oggi, la <b>scheda</b> per chiamare e scrivere com'&#232; andata, <b>Da controllare</b> per i casi dubbi. Il resto sono elenchi di servizio.<span class="_soloOperatore"> Tutto quello che vedi riguarda la tua zona.</span></div>
+      <h3 id="w-barra" style="color:#1a3a6a;border-bottom:2px solid #1a3a6a;padding-bottom:4px;margin:22px 0 8px">&#128205; I pulsanti in alto</h3><ul style="margin-left:18px"><li><b>AGENDA</b> &#8212; chi devi chiamare oggi e gli appuntamenti.</li><li><b>Principale</b> &#8212; la scheda della persona: numeri, indirizzo, opere comprate, note, mappa.</li><li><b>Elenco</b> &#8212; <span class="_soloTitolare">tutte le persone in una lista, come un foglio Excel.</span><span class="_soloOperatore">le persone della tua zona in una lista, come un foglio Excel.</span></li><li><b>Provincia</b> e <b>Zona</b> &#8212; cerca per citt&#224;, oppure chi sta vicino a un punto.</li><li><b>&#9203; Da Recuperare</b> &#8212; chi va richiamato.</li><li><b>&#128270; Da controllare</b> &#8212; i casi dubbi da sistemare.</li><li><b>&#9742; Potenziali</b> &#8212; vecchi nominativi che non sono ancora clienti.</li><li><b>&#128241; Da controllare cellulare</b> &#8212; clienti di cui manca il numero di cellulare.</li><li class="_soloTitolare"><b>&#9904; Deceduti</b> &#8212; chi &#232; mancato: messo da parte. Si apre dal riquadro <b>Strumenti</b> qui sopra.</li><li class="_soloTitolare"><b>&#128202; Statistiche</b> &#8212; solo per te: numeri delle chiamate, zone, vendite, accessi.</li></ul><h3 id="w-giorno" style="color:#1a3a6a;border-bottom:2px solid #1a3a6a;padding-bottom:4px;margin:22px 0 8px">&#9728;&#65039; Come si lavora, in cinque passi</h3><ol style="margin-left:18px"><li>Apri <b>AGENDA</b>: vedi chi chiamare oggi e gli appuntamenti.</li><li>Clicca il nome: si apre la <b>scheda</b>.</li><li>Premi il <b>tasto verde</b> sul numero per chiamare.</li><li>Dopo la chiamata scrivi <b>com'&#232; andata</b>. Se serve fissa un nuovo richiamo o un appuntamento.</li><li>Passa al prossimo. <b>Non devi salvare niente</b>: si salva da solo.</li></ol><p style="margin:6px 0">Quando riapri il CRM, riparte <b>dalla pagina dove eri rimasto</b>. Vale per il tuo accesso, anche da un altro computer o dal telefono.</p><h3 id="w-agenda2" style="color:#1a3a6a;border-bottom:2px solid #1a3a6a;padding-bottom:4px;margin:22px 0 8px">&#128197; L'agenda</h3><ul style="margin-left:18px"><li>Per spostare un appuntamento, <b>trascinalo</b> nel giorno e nell'ora che vuoi. Si salva da solo.</li><li><b>&#128337; Sistema richiami senza ora</b>: d&#224; un orario, uno dopo l'altro dalle 9:00, ai richiami che non ce l'hanno. Puoi sempre spostarli a mano dopo.</li><li><b>&#128424; Stampa PDF</b>: scegli una data in alto e stampi le schede di tutti gli appuntamenti di quel giorno. <b>&#9993; Invia email</b> apre lo stesso PDF da allegare.</li><li class="_soloTitolare">La tendina <b>&#127758;</b> mostra l'agenda di <b>una zona sola</b>.</li><li class="_soloTitolare">Il pulsante <b>&#127758; Zone a colori</b> mostra <b>tutte le zone insieme</b>, ognuna con un colore: Nord giallo, Triveneto verde acqua, Centro viola, Toscana arancio, Altre grigio. Gli appuntamenti restano celesti. I colori sono spiegati in basso.</li><li class="_soloOperatore">Nella tua agenda ci sono <b>solo le chiamate e gli appuntamenti della tua zona</b>.</li></ul><h3 id="w-cerca" style="color:#1a3a6a;border-bottom:2px solid #1a3a6a;padding-bottom:4px;margin:22px 0 8px">&#128269; Trovare una persona</h3><ul style="margin-left:18px"><li>In <b>Elenco</b> scrivi cognome, nome, citt&#224; o numero: la lista si stringe subito.</li><li>In <b>Provincia</b> e <b>Zona</b> cerchi per citt&#224; o per vicinanza.</li><li>In <b>Principale &#8594; Trova</b> cerchi dentro un campo preciso (note, opere, ID...). Le parole puoi scriverle <b>in qualsiasi ordine</b>: &quot;CLZI 2026&quot; trova anche &quot;2026 CLZI riunione&quot;.</li><li><b>Potenziali</b>, <b>Deceduti</b> e <b>UTET da verificare</b> non escono nelle ricerche normali: hanno la loro pagina.</li></ul><h3 id="w-scheda" style="color:#1a3a6a;border-bottom:2px solid #1a3a6a;padding-bottom:4px;margin:22px 0 8px">&#128203; La scheda</h3><ul style="margin-left:18px"><li><b>Tasto verde</b> sul numero = chiama. Ci sono anche WhatsApp, email e mappa.</li><li class="_soloTitolare"><b>Modifica</b> per correggere i dati. Si salva da solo: compare una conferma verde in basso.</li><li class="_soloOperatore">I dati del cliente (nome, indirizzo, recapiti, note storiche, opere) sono in <b>sola lettura</b>: li corregge il titolare. Se al telefono scopri un dato sbagliato, <b>scrivilo nelle tue note</b> oppure usa <b>&#128270; Segnala</b>: ci pensa lui.</li><li class="_soloOperatore">Quello che <b>tu</b> scrivi: com'&#232; andata la chiamata, i richiami e gli appuntamenti, e le <b>Note telefonista</b>. Questo &#232; il tuo lavoro e si salva da solo.</li><li><b>creaTel</b> per fissare un richiamo. <b>Ora</b> per un appuntamento con l'orario.</li><li>Quando registri com'&#232; andata la chiamata scegli fra tre esiti: <b>&#128994; Positivo</b>, <b>&#128309; Richiamo</b>, <b>&#128308; Negativo</b>.</li><li>Se aggiungi un'<b>opera</b> con la <b>data di acquisto</b>, il CRM mette da solo in agenda il <b>&#128196; contratto</b> su quella data. Non devi scrivere niente: se correggi la data la voce si sposta, se togli l'opera sparisce. Non diventa una chiamata da richiamare (il cliente ha gi&#224; comprato) e non tocca un richiamo che avevi gi&#224; fissato.</li><li class="_soloTitolare"><b>&#9904; Segna deceduto</b> mette la persona tra i Deceduti e la toglie dalle ricerche.</li><li class="_soloOperatore"><b>&#9904; Segna deceduto</b> manda una <b>segnalazione al titolare</b>, che sposta la scheda. Da quel momento non richiamare quel nominativo.</li><li>In fondo trovi le <b>opere comprate</b> e tutte le <b>chiamate fatte</b>.</li></ul><h3 id="w-ctrl" style="color:#1a3a6a;border-bottom:2px solid #1a3a6a;padding-bottom:4px;margin:22px 0 8px">&#128270; Da controllare</h3><p style="margin:6px 0">Sono i casi dubbi: lo stesso numero su due schede, dati strani, possibili doppioni. Guardi il caso e scegli un pulsante: <b>ok</b>, <b>non risponde</b>, <b>numero errato</b>, <b>trasferito</b>, <b>non interessato</b>, <b>Archivia</b>, <b>Apri</b>.</p><ul style="margin-left:18px"><li>In alto a destra scegli cosa guardare: <b>CRM generale</b>, <b>UTET da verificare</b> o <b>Tutti</b>.</li><li>I filtri e il menu <b>regione</b> restringono la lista.</li><li class="_soloTitolare"><b>Unisci qui</b> unisce due schede doppie in una sola: porta tutto nella scheda che tieni (opere, chiamate, note, appuntamenti) e scrive nelle note il nome dell'altra. <b>Elimina</b> cancella la scheda.</li><li class="_soloOperatore">Unire due schede doppie o cancellarne una lo fa il titolare: tu <b>segnala</b> il caso e ci pensa lui.</li></ul><h3 id="w-nocell" style="color:#1a3a6a;border-bottom:2px solid #1a3a6a;padding-bottom:4px;margin:22px 0 8px">&#128241; Da controllare cellulare</h3><ul style="margin-left:18px"><li>Sono i clienti <b>senza numero di cellulare</b>, da cercare.</li><li>Scegli prima la <b>regione</b>, poi la <b>provincia</b>.</li><li>Vedi indirizzo, data di nascita e codice fiscale. Con <b>Stampa</b> ti porti l'elenco su carta.</li></ul><h3 id="w-pot" style="color:#1a3a6a;border-bottom:2px solid #1a3a6a;padding-bottom:4px;margin:22px 0 8px">&#9742; Potenziali<span class="_soloTitolare"> &#183; &#9904; Deceduti</span></h3><ul style="margin-left:18px"><li><b>Potenziali</b>: vecchi nominativi, non ancora clienti. Se uno compra, diventa cliente normale.</li><li class="_soloTitolare"><b>Deceduti</b>: messi da parte e fuori dalle ricerche. Per riportarne uno tra gli attivi, apri la scheda e togli la parola DECEDUTO dalle note.</li><li class="_soloOperatore">Quando segni una persona come <b>deceduta</b>, sparisce dalle ricerche e finisce in un archivio che tiene il titolare.</li></ul><h3 id="w-zone" style="color:#1a3a6a;border-bottom:2px solid #1a3a6a;padding-bottom:4px;margin:22px 0 8px">&#127758; Le zone</h3><p style="margin:6px 0">Una zona &#232; un gruppo di regioni. Serve a dividere il lavoro: chi ha una zona vede <b>solo i contatti di quelle regioni</b>.</p><p class="_soloOperatore" style="margin:6px 0">Tu lavori <b>sulla tua zona</b>. I nominativi delle altre regioni sono di altre colleghe: non ti compaiono e non devi cercarli. Se non trovi qualcuno, non &#232; un errore del programma.</p><ul class="_soloTitolare" style="margin-left:18px"><li><b>Nord</b> &#8212; Piemonte, Valle d'Aosta, Lombardia, Liguria.</li><li><b>Triveneto</b> &#8212; Veneto, Trentino-Alto Adige, Friuli-Venezia Giulia.</li><li><b>Centro</b> &#8212; Lazio, Umbria, Marche, Sardegna, Sicilia, Campania, Calabria.</li><li><b>Toscana</b> &#8212; Toscana.</li><li><b>Altre</b> &#8212; le regioni che non stanno in nessuna zona (Emilia-Romagna, Puglia, Abruzzo, Basilicata, Molise, estero).</li></ul><p class="_soloTitolare" style="margin:6px 0">Tu le vedi tutte. Una regione sta in <b>una zona sola</b>: se stesse in due, due telefoniste si troverebbero gli stessi nominativi.</p><p class="_soloTitolare" style="margin:6px 0">In alto, accanto a <b>Welcome</b>, hai la tendina <b>&#127758; Vedi come...</b>: scegli una zona e il CRM ti mostra <b>solo</b> quella, come la vede la telefonista che ci lavora &#8212; elenchi, ricerche e agenda. Serve a controllare il suo lavoro <b>senza entrare col suo accesso</b>. Non cambia niente nei dati e non toglie niente a te: quando hai finito rimetti <b>Tutte le zone</b>. Riaprendo il CRM riparte comunque da tutte le zone. Finch&#233; la vista &#232; attiva, in alto resta scritto quale zona stai guardando.</p><div class="_soloTitolare"><h3 id="w-stat" style="color:#1a3a6a;border-bottom:2px solid #1a3a6a;padding-bottom:4px;margin:22px 0 8px">&#128202; Statistiche (solo tu)</h3><ul style="margin-left:18px"><li><b>Chiamate</b>: oggi, ultimi 7 giorni, ultimi 30, totale. E come sono andate.</li><li><b>Monitoraggio zone</b>: per ogni zona quanti contatti, quante chiamate, quanti appuntamenti e quanto &#232; gi&#224; stato lavorato.</li><li><b>Per telefonista</b>: quante chiamate ha fatto ciascuna.</li><li><b>&#128506; Vendite per regione</b>: conta le opere con data di acquisto <b>dal 01/08/2026</b> in poi (la data si cambia nel campo &quot;Dal&quot;) e le mette sotto la regione del cliente. <b>Clicca una regione</b> e vedi l'elenco delle vendite; il pulsante <b>Apri scheda</b> ti porta sul cliente.</li><li>Se un'opera ha una data di acquisto <b>nel futuro</b> &#232; un errore di scrittura: non viene contata e la trovi segnalata in un riquadro giallo, da correggere nella scheda.</li><li><b>Accessi</b>: chi si &#232; collegato e quando.</li></ul></div><h3 id="w-salva" style="color:#1a3a6a;border-bottom:2px solid #1a3a6a;padding-bottom:4px;margin:22px 0 8px">&#128190; Si salva da solo</h3><ul style="margin-left:18px"><li>Ogni modifica <b>si salva da sola</b>: compare una conferma verde in basso a destra.</li><li class="_soloTitolare"><b>Backup</b>, <b>Excel</b> e <b>Completo</b> sono nel riquadro <b>Strumenti</b> qui in alto: sono riservati a te.</li><li class="_soloOperatore">Non devi fare nessun backup: ci pensa il titolare, e il server ne fa uno da solo ogni giorno.</li><li class="_soloOperatore">Ogni mattina devi <b>rifare l'accesso</b>: la sera alle 21 il CRM chiude e l'accesso del giorno prima non vale pi&#249;.</li><li>In basso nella barra c'&#232; la <b>versione</b> del programma (data e ora). Serve se qualcosa non torna: vuol dire che il browser sta mostrando una copia vecchia.</li></ul><div style="margin-top:24px;padding:12px 14px;background:#eef4fc;border-left:4px solid #1a3a6a;border-radius:6px;color:#33506f"><b>In due parole:</b> <b>AGENDA</b> per sapere chi chiamare oggi, la <b>scheda</b> per chiamare e scrivere com'&#232; andata, <b>Da controllare</b> per i casi dubbi. Il resto sono elenchi di servizio.<span class="_soloOperatore"> Tutto quello che vedi riguarda la tua zona.</span></div>
     </div>
   </div>
 </div>
@@ -1596,6 +1596,28 @@ function stampaPotenziali(){
 function segnaDeceduto(){
   const c=currentResults[currentIdx];if(!c)return;
   if(_isDeceduto(c)){alert('Questo contatto è già segnato come deceduto.');return;}
+  // Segnare deceduto scrive nelle NOTE STORICHE, che per la telefonista sono
+  // in sola lettura (il server le rimette come stanno). Invece di farla
+  // premere un pulsante che non ha effetto, la sua segnalazione va in coda al
+  // titolare, che sposta la scheda.
+  if(window._ruolo && window._ruolo!=='titolare'){
+    const _n=prompt('Segnalare '+((c.Cognome||'')+' '+(c.Nome||'')).trim()+' come DECEDUTO.\n\n'
+      +'La scheda la sposta il titolare. Scrivi qui cosa ti hanno detto:','DECEDUTO');
+    if(_n===null)return;
+    fetch('/api/segnala',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({id:String(c.ID_contatto),tipo:'deceduto',nota:_n||'DECEDUTO'})})
+      .then(function(r){return r.json();})
+      .then(function(j){
+        if(j&&j.ok){
+          c.Stato='da_verificare';
+          if(typeof _rimuoviDaNavigazione==='function')_rimuoviDaNavigazione(c.ID_contatto);
+          alert('Segnalato al titolare. Nel frattempo non richiamare questo nominativo.');
+        }else{
+          alert('Segnalazione non riuscita: '+((j&&j.error)||'errore'));
+        }
+      }).catch(function(){alert('Segnalazione non riuscita: errore di collegamento.');});
+    return;
+  }
   const d=prompt('Segna come DECEDUTO.\n\nData del decesso (facoltativa, gg/mm/aaaa) — lascia vuoto se non la sai:','');
   if(d===null)return;
   const tag='DECEDUTO'+(d.trim()?' '+d.trim():'');
@@ -3044,6 +3066,129 @@ function _cruscottoZone(){
 }
 
 
+// ═══════════════════════════════════════════════════
+// ATTIVITA' DELLE TELEFONISTE E TEMPO DI CONNESSIONE (solo titolare)
+// ═══════════════════════════════════════════════════
+// I dati arrivano da /api/attivita, che legge due tabelle piccole e separate
+// (crm_attivita e crm_sessioni): registrare un'operazione non riscrive
+// l'archivio. Una sessione si chiude dopo 15 minuti di fermo, cosi' il tempo
+// collegato non conta le ore in cui il CRM era solo aperto sullo schermo.
+function _durata(min){
+  min=Math.max(0,Math.round(min||0));
+  if(min<60)return min+' min';
+  var o=Math.floor(min/60), m=min%60;
+  return o+'h'+(m?' '+m+'min':'');
+}
+function _oraBreve(iso){
+  try{var d=new Date(iso);if(isNaN(d))return '';
+    return ('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2);}catch(e){return '';}
+}
+function _giornoBreve(iso){
+  try{var d=new Date(iso);if(isNaN(d))return '';
+    return ('0'+d.getDate()).slice(-2)+'/'+('0'+(d.getMonth()+1)).slice(-2);}catch(e){return '';}
+}
+async function _sezioneAttivita(){
+  if((window._ruolo||'')!=='titolare')return '';
+  var j=null;
+  try{ j=await (await fetch('/api/attivita?giorni=7')).json(); }catch(e){ return ''; }
+  if(!j||!j.ok)return '';
+  var ses=j.sessioni||[], att=j.attivita||[];
+  var H='<h3 style="color:#1a3a6a;border-bottom:2px solid #eee;padding-bottom:6px;margin-top:26px">'
+       +'&#128100; Attivit&#224; e tempo di connessione</h3>'
+       +'<div style="color:#999;font-size:12px;margin-bottom:10px">Ultimi 7 giorni. Una sessione si chiude dopo 15 minuti di inattivit&#224;: il tempo qui sotto &#232; tempo di lavoro vero, non CRM aperto e lasciato l&#236;.</div>';
+  if(!ses.length&&!att.length){
+    return H+'<div style="color:#999;font-size:13px">Ancora nessuna attivit&#224; registrata. Il registro parte da adesso: si riempie man mano che si lavora.</div>';
+  }
+  var oggi=new Date(); oggi.setHours(0,0,0,0);
+  // ── chi e collegato adesso ──
+  var vivi=ses.filter(function(s){return s.collegato;});
+  if(vivi.length){
+    H+='<div style="background:#eef7ee;border:1px solid #cce5cc;border-left:4px solid #2a7a2a;border-radius:8px;padding:10px 14px;margin-bottom:14px">'
+      +'<b style="color:#2a5a2a">&#128994; Collegati adesso:</b> '
+      +vivi.map(function(s){return esc(s.nome)+(s.zona?' <span style="color:#888">('+esc(s.zona)+')</span>':'')
+        +' <span style="color:#666">da '+_durata(s.minuti)+'</span>';}).join(' &nbsp;&#183;&nbsp; ')
+      +'</div>';
+  }else{
+    H+='<div style="color:#999;font-size:12.5px;margin-bottom:14px">Nessuno collegato in questo momento.</div>';
+  }
+  // ── riepilogo per persona ──
+  var per={};
+  function riga(n,r,z){ if(!per[n])per[n]={ruolo:r||'',zona:z||'',minOggi:0,minSett:0,sesOggi:0,
+    opOggi:0,opSett:0,chiamate:0,appunt:0,note:0,ultimo:''}; return per[n]; }
+  ses.forEach(function(s){
+    var p=riga(s.nome,s.ruolo,s.zona);
+    var d=new Date(s.inizio);
+    p.minSett+=s.minuti;
+    if(!isNaN(d)&&d>=oggi){p.minOggi+=s.minuti;p.sesOggi++;}
+    if(!p.ultimo||s.ultimo>p.ultimo)p.ultimo=s.ultimo;
+  });
+  att.forEach(function(a){
+    var p=riga(a.nome,a.ruolo,a.zona);
+    var d=new Date(a.quando);
+    p.opSett++;
+    if(!isNaN(d)&&d>=oggi)p.opOggi++;
+    var az=(a.azione||'');
+    if(az.indexOf('telefonata')>=0)p.chiamate++;
+    if((a.dettaglio||'').toLowerCase().indexOf('positiv')>=0||(a.dettaglio||'').toLowerCase().indexOf('appunt')>=0)p.appunt++;
+    if(az.indexOf('scheda salvata')>=0)p.note++;
+    if(!p.ultimo||a.quando>p.ultimo)p.ultimo=a.quando;
+  });
+  var nomi=Object.keys(per).sort(function(a,b){return per[b].minSett-per[a].minSett;});
+  H+='<table style="width:100%;border-collapse:collapse;margin-bottom:20px">'
+    +'<tr style="background:#f4f6fa">'
+    +['Persona','Zona','Collegata oggi','Collegata 7gg','Operazioni oggi','Operazioni 7gg','Telefonate','Ultima volta']
+      .map(function(t,i){return '<th style="text-align:'+(i<2?'left':'center')+';padding:8px;font-size:12px;color:#666">'+t+'</th>';}).join('')
+    +'</tr>';
+  nomi.forEach(function(n){
+    var p=per[n];
+    H+='<tr style="border-bottom:1px solid #eee">'
+      +'<td style="padding:8px;font-weight:600;color:#1a3a6a">'+esc(n)
+        +(p.ruolo==='titolare'?' <span style="font-size:10px;color:#888">(titolare)</span>':'')+'</td>'
+      +'<td style="padding:8px;font-size:12px;color:#666">'+esc(p.zona||'-')+'</td>'
+      +'<td style="text-align:center;padding:8px;font-weight:600">'+(p.minOggi?_durata(p.minOggi):'&#8211;')+'</td>'
+      +'<td style="text-align:center;padding:8px;color:#666">'+(p.minSett?_durata(p.minSett):'&#8211;')+'</td>'
+      +'<td style="text-align:center;padding:8px;font-weight:600;color:#2a7a2a">'+(p.opOggi||'&#8211;')+'</td>'
+      +'<td style="text-align:center;padding:8px;color:#666">'+(p.opSett||'&#8211;')+'</td>'
+      +'<td style="text-align:center;padding:8px;color:#666">'+(p.chiamate||'&#8211;')+'</td>'
+      +'<td style="text-align:center;padding:8px;font-size:12px;color:#888">'+_giornoBreve(p.ultimo)+' '+_oraBreve(p.ultimo)+'</td>'
+      +'</tr>';
+  });
+  H+='</table>';
+  // ── sessioni, giorno per giorno ──
+  H+='<div style="font-size:13px;font-weight:700;color:#1a3a6a;margin:6px 0 6px">&#128337; Sessioni di collegamento</div>'
+    +'<div style="max-height:240px;overflow:auto;border:1px solid #eee;border-radius:8px">'
+    +'<table style="width:100%;border-collapse:collapse;font-size:12.5px">';
+  ses.slice(0,80).forEach(function(s){
+    H+='<tr style="border-bottom:1px solid #f2f2f4">'
+      +'<td style="padding:6px 8px;color:#888;white-space:nowrap">'+_giornoBreve(s.inizio)+'</td>'
+      +'<td style="padding:6px 8px;font-weight:600;color:#1a3a6a">'+esc(s.nome)+'</td>'
+      +'<td style="padding:6px 8px;color:#666;white-space:nowrap">'+_oraBreve(s.inizio)+' &rarr; '+_oraBreve(s.ultimo)+'</td>'
+      +'<td style="padding:6px 8px;text-align:right;white-space:nowrap">'+_durata(s.minuti)
+        +(s.collegato?' <span style="color:#2a7a2a">&#128994;</span>':'')+'</td>'
+      +'</tr>';
+  });
+  H+='</table></div>';
+  // ── registro delle operazioni ──
+  H+='<div style="font-size:13px;font-weight:700;color:#1a3a6a;margin:18px 0 6px">&#128203; Registro delle operazioni</div>'
+    +'<div style="color:#999;font-size:12px;margin-bottom:6px">Le ultime 400. Clicca un ID per aprire la scheda.</div>'
+    +'<div style="max-height:300px;overflow:auto;border:1px solid #eee;border-radius:8px">'
+    +'<table style="width:100%;border-collapse:collapse;font-size:12.5px">';
+  att.forEach(function(a){
+    var forte=(a.azione||'').indexOf('ELIMIN')>=0||(a.azione||'').indexOf('AZZERA')>=0
+              ||(a.azione||'').indexOf('blocco')>=0||(a.azione||'').indexOf('importazione')>=0;
+    H+='<tr style="border-bottom:1px solid #f2f2f4'+(forte?';background:#fdecea':'')+'">'
+      +'<td style="padding:6px 8px;color:#888;white-space:nowrap">'+_giornoBreve(a.quando)+' '+_oraBreve(a.quando)+'</td>'
+      +'<td style="padding:6px 8px;font-weight:600;color:#1a3a6a;white-space:nowrap">'+esc(a.nome||'?')+'</td>'
+      +'<td style="padding:6px 8px'+(forte?';color:#c0392b;font-weight:700':'')+'">'+esc(a.azione||'')+'</td>'
+      +'<td style="padding:6px 8px">'+(a.id_contatto
+          ? '<span onclick="apriContattoDaId(\''+esc(a.id_contatto)+'\')" style="cursor:pointer;color:#1a5ab8;text-decoration:underline">'+esc(a.id_contatto)+'</span>'
+          : '')+'</td>'
+      +'<td style="padding:6px 8px;color:#666">'+esc(a.dettaglio||'')+'</td>'
+      +'</tr>';
+  });
+  H+='</table></div>';
+  return H;
+}
 async function _sezioneAccessi(){
   // solo titolare
   if((window._ruolo||'')!=='titolare')return '';
@@ -3122,6 +3267,7 @@ function renderStatistiche(){
   html+='<div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:22px">'+card('Chiamate oggi',oggiC)+card('Ultimi 7 giorni',sett)+card('Ultimi 30 giorni',mese)+card('Totale registrate',tot,'#666')+'</div>';
   try{html+=_cruscottoZone();}catch(e){}
   // sezione accessi (async, solo titolare) - aggiunta dopo il render
+  try{ _sezioneAttivita().then(function(htmlAtt){ if(htmlAtt){ var c2=document.getElementById('statBody'); if(c2){ var pre2=document.getElementById('attivitaSection'); if(pre2)pre2.remove(); var dv2=document.createElement('div'); dv2.id='attivitaSection'; dv2.innerHTML=htmlAtt; c2.appendChild(dv2);} } }); }catch(e){}
   try{ _sezioneAccessi().then(function(htmlAcc){ if(htmlAcc){ var cont=document.getElementById('statBody'); if(cont){ var pre=document.getElementById('accessiSection'); if(pre)pre.remove(); var dv=document.createElement('div'); dv.id='accessiSection'; dv.innerHTML=htmlAcc; cont.appendChild(dv);} } }); }catch(e){}
   // esiti
   var esitiArr=Object.keys(esiti).map(function(k){return [k,esiti[k]];}).sort(function(a,b){return b[1]-a[1];});
@@ -3439,9 +3585,9 @@ function renderContact(c){
     <div class="tbl-footer"><span>${tels.length} chiamate</span></div>
   </div>
   <div class="tbl-section">
-    <div class="tbl-hdr"><span>Opere Acquistate <button onclick="addOpera('${esc(c.ID_contatto)}')" style="margin-left:6px;padding:1px 7px;background:#1a7a30;color:#fff;border:none;border-radius:3px;font-size:11px;cursor:pointer" title="Aggiungi opera">+</button></span><span>${ops.length} opere</span></div>
+    <div class="tbl-hdr"><span>Opere Acquistate <button class="_soloTitolare" onclick="addOpera('${esc(c.ID_contatto)}')" style="margin-left:6px;padding:1px 7px;background:#1a7a30;color:#fff;border:none;border-radius:3px;font-size:11px;cursor:pointer" title="Aggiungi opera">+</button></span><span>${ops.length} opere</span></div>
     <div class="tbl-scroll opere"><table class="dtbl"><thead><tr><th>Data acq.</th><th>Editore</th><th>Artista</th><th>Opera</th><th>Categoria</th><th>Valore</th><th>Tipo</th><th style="width:46px">Rate</th><th style="width:30px"></th></tr></thead>
-    <tbody>${ops.map((o,oi)=>`<tr><td style="white-space:nowrap">${esc(fd(o.Data_acquisto))}</td><td style="color:#888">${esc(o.Editore||'')}</td><td>${esc(o.Artista||'')}</td><td>${esc(o.Opera||'')}</td><td>${_catBadge(o)}</td><td style="text-align:right">${esc(o.Valore||'')}</td><td>${esc(o.Pagamento||'')}</td><td style="text-align:center">${esc(o.Rate||'')}</td><td style="text-align:center"><span onclick="editOpera('${esc(c.ID_contatto)}',${oi})" style="cursor:pointer;color:#1a5ab8" title="Modifica">&#9998;</span> <span onclick="delOpera('${esc(c.ID_contatto)}',${oi})" style="cursor:pointer;color:#c03030" title="Elimina">&#215;</span></td></tr>`).join('')}
+    <tbody>${ops.map((o,oi)=>`<tr><td style="white-space:nowrap">${esc(fd(o.Data_acquisto))}</td><td style="color:#888">${esc(o.Editore||'')}</td><td>${esc(o.Artista||'')}</td><td>${esc(o.Opera||'')}</td><td>${_catBadge(o)}</td><td style="text-align:right">${esc(o.Valore||'')}</td><td>${esc(o.Pagamento||'')}</td><td style="text-align:center">${esc(o.Rate||'')}</td><td style="text-align:center"><span class="_soloTitolare" onclick="editOpera('${esc(c.ID_contatto)}',${oi})" style="cursor:pointer;color:#1a5ab8" title="Modifica">&#9998;</span> <span class="_soloTitolare" onclick="delOpera('${esc(c.ID_contatto)}',${oi})" style="cursor:pointer;color:#c03030" title="Elimina">&#215;</span></td></tr>`).join('')}
     ${ops.length===0?'<tr><td colspan="7" style="text-align:center;color:#aaa;padding:8px">Nessuna opera</td></tr>':''}
     </tbody></table></div>
     <div class="tbl-footer"><span>${ops.length}</span><span>${totVal?fMoney(String(Math.round(totVal))):''}</span></div>
@@ -3489,6 +3635,16 @@ function aggiungiNotaOperatore(cid){
   salvaContattoSingolo(c);
 }
 function enterEditMode(){
+  // La telefonista non modifica la scheda: consulta, telefona, fissa
+  // appuntamenti e scrive nelle sue note. Il pulsante non ce l'ha, e questo
+  // blocco evita che ci si arrivi per altre strade. La protezione vera resta
+  // sul server (CAMPI_OPERATORE in crm_server.py).
+  if(window._ruolo && window._ruolo!=='titolare'){
+    alert('I dati della scheda li modifica il titolare.\n\n'
+      +'Tu puoi: registrare la chiamata, fissare richiami e appuntamenti, '
+      +'scrivere nelle tue note e segnalare un dato sbagliato.');
+    return;
+  }
   if(findMode)exitFindMode();
   editMode=true;
   document.getElementById('editBanner').style.display='flex';

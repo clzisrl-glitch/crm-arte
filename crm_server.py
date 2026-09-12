@@ -106,7 +106,21 @@ PORT = int(os.environ.get("PORT","8080"))
 def _utente_corrente():
     if not crm_auth.USE_AUTH:
         return {"nome":"locale","ruolo":"titolare"}
-    return crm_auth.verifica_token(request.cookies.get("crm_token",""))
+    u = crm_auth.verifica_token(request.cookies.get("crm_token",""))
+    if not u:
+        return None
+    # Ruolo e zona si rileggono a ogni richiesta dall'elenco utenti, non dal
+    # cookie. Se l'utenza non si trova puo' essere stata creata dall'altro
+    # worker: si ricarica l'elenco e si riprova UNA volta, altrimenti si
+    # butterebbe fuori un utente legittimo.
+    agg = crm_auth.aggiorna_da_elenco(u)
+    if agg is None:
+        try:
+            _ricarica_utenti()
+        except Exception:
+            return u          # elenco non leggibile: non blocco il lavoro
+        agg = crm_auth.aggiorna_da_elenco(u)
+    return agg
 def solo_titolare(azione):
     def deco(f):
         @wraps(f)
@@ -477,6 +491,9 @@ def ordine_schede():
 
 # Schede ammesse per "riapri dall'ultima scheda": elenco chiuso, cosi' un
 # valore sbagliato o manomesso non puo' finire nel database.
+# Stati ammessi per un contatto: elenco chiuso, come SCHEDE_VALIDE.
+STATI_VALIDI = {'attivo', 'da_verificare', 'potenziale', 'deceduto', 'fuso', ''}
+
 SCHEDE_VALIDE = {
     'agenda','principale','list','provincia','zonalibera','recupero',
     'controllare','potenziali','nocell','welcome','statistiche','deceduti',
@@ -517,6 +534,117 @@ def api_ui_stato():
     except Exception as e:
         # una preferenza non deve MAI far fallire il lavoro dell'operatore
         return jsonify({'ok': False, 'error': str(e)}), 200
+
+# ═══════════════════════════════════════════════════════════════════
+#  REGISTRO ATTIVITA' E PRESENZA
+# ═══════════════════════════════════════════════════════════════════
+# Un solo punto: dopo ogni richiesta andata a buon fine, se era una
+# operazione di scrittura la scrivo nel registro. Cosi' non serve ricordarsi
+# di aggiungere la riga in ognuna delle 15 rotte (e quelle di domani sono
+# coperte da sole, basta che stiano in ROTTE_CHE_SCRIVONO).
+AZIONI_LEGGIBILI = {
+    '/api/aggiungi_telefonata': 'telefonata registrata',
+    '/api/salva_contatto':      'scheda salvata',
+    '/api/salva_scheda':        'scheda salvata',
+    '/api/bulk_assegna_orari':  'richiami sistemati',
+    '/api/contatto_stato':      'stato cambiato',
+    '/api/segnala':             'segnalazione',
+    '/api/verifica':            'caso da controllare',
+    '/api/elimina_contatto':    'scheda ELIMINATA',
+    '/api/save':                'salvataggio in blocco',
+    '/api/save_full':           'salvataggio in blocco',
+    '/api/importa':             'importazione contatti',
+    '/api/correggi_dati':       'correzione province',
+    '/api/fondi_duplicati':     'fusione duplicati',
+    '/api/reset':               'AZZERAMENTO archivio',
+    '/api/ordine_schede':       'ordine schede',
+    '/api/utenti':              'gestione utenti',
+    '/api/utenti_elimina':      'utente eliminato',
+    '/api/login':               'accesso',
+    '/api/logout':              'uscita',
+}
+# Non scrivo la presenza a ogni singola richiesta: basta ogni 2 minuti.
+_ultimo_tocco = {}
+TOCCO_OGNI_SEC = 120
+
+def _id_dal_corpo():
+    try:
+        b = request.get_json(silent=True) or {}
+        for k in ('id_contatto', 'ID_contatto', 'id'):
+            v = b.get(k)
+            if v not in (None, ''):
+                return str(v)[:40]
+    except Exception:
+        pass
+    return ''
+
+def _dettaglio_dal_corpo(percorso):
+    try:
+        b = request.get_json(silent=True) or {}
+        if percorso == '/api/aggiungi_telefonata':
+            t = b.get('telefonata') or {}
+            e = str(t.get('Esito') or '').strip()
+            d = str(t.get('Data_appuntamento') or '').strip()
+            return (e + (' ' + d if d else '')).strip()[:200]
+        if percorso == '/api/contatto_stato':
+            return str(b.get('stato') or '')[:60]
+        if percorso == '/api/segnala':
+            return str(b.get('nota') or '')[:200]
+    except Exception:
+        pass
+    return ''
+
+@app.after_request
+def _registra_attivita(risposta):
+    try:
+        if not crm_auth.USE_AUTH:
+            return risposta
+        percorso = request.path
+        if risposta.status_code >= 400:
+            return risposta
+        u = _utente_corrente()
+        if percorso == '/api/login':
+            # al login l'utente non e' ancora nel cookie: lo prendo dal corpo
+            try:
+                nome = str((request.get_json(silent=True) or {}).get('utente') or '')[:80]
+            except Exception:
+                nome = ''
+            if nome:
+                crm_db.attivita_registra(nome, '', '', 'accesso')
+                crm_db.presenza_tocca(nome, '', '')
+            return risposta
+        if not u:
+            return risposta
+        nome = u.get('nome') or ''
+        # presenza: al massimo una scrittura ogni 2 minuti per utente
+        import time as _t
+        ora = _t.time()
+        if ora - _ultimo_tocco.get(nome, 0) > TOCCO_OGNI_SEC:
+            _ultimo_tocco[nome] = ora
+            crm_db.presenza_tocca(nome, u.get('ruolo', ''), u.get('zona', ''))
+        # registro: solo le operazioni che cambiano qualcosa
+        if request.method == 'POST' and percorso in AZIONI_LEGGIBILI:
+            crm_db.attivita_registra(nome, u.get('ruolo', ''), u.get('zona', ''),
+                                     AZIONI_LEGGIBILI[percorso],
+                                     _id_dal_corpo(), _dettaglio_dal_corpo(percorso))
+    except Exception:
+        pass          # il registro non deve mai disturbare il lavoro
+    return risposta
+
+@app.route('/api/attivita')
+@solo_titolare('accessi')
+def api_attivita():
+    """Cosa hanno fatto le telefoniste e quanto sono state collegate.
+    Solo titolare."""
+    try:
+        giorni = int(request.args.get('giorni', 7))
+    except Exception:
+        giorni = 7
+    giorni = min(max(giorni, 1), 60)
+    return jsonify({'ok': True, 'giorni': giorni,
+                    'sessioni': crm_db.sessioni_elenco(giorni),
+                    'attivita': crm_db.attivita_elenco(giorni, 400),
+                    'adesso': crm_auth._ora_italiana().isoformat(timespec='seconds')})
 
 @app.route('/api/utenti', methods=['GET'])
 @solo_titolare('gestione_utenti')
@@ -599,6 +727,13 @@ def _filtra_per_zona(data, regioni):
     opere=[o for o in data.get('opere',[]) if str(o.get('ID_contatto')) in ids]
     tel=[t for t in data.get('telefonate',[]) if str(t.get('ID_contatto')) in ids]
     out=dict(data); out['contacts']=contatti; out['opere']=opere; out['telefonate']=tel
+    # Mancavano queste due. 'verifiche' contiene numeri di telefono e note dei
+    # casi da controllare di TUTTE le zone; 'accessi' e' il registro di chi si
+    # collega, che e' riservato al titolare. Arrivavano entrambi al browser
+    # della telefonista dentro /api/load.
+    out['verifiche']=[v for v in data.get('verifiche',[])
+                      if str(v.get('id') or v.get('ID_contatto') or '') in ids]
+    out.pop('accessi', None)
     return out
 def _merge_zona(existing, incoming, regioni):
     regset=set(r.strip().lower() for r in regioni)
@@ -610,6 +745,40 @@ def _merge_zona(existing, incoming, regioni):
     tel_fuori=[t for t in existing.get('telefonate',[]) if str(t.get('ID_contatto')) in ids_fuori]
     tel_in=[t for t in incoming.get('telefonate',[]) if str(t.get('ID_contatto')) in ids_zona]
     return merged_contacts, tel_fuori+tel_in
+# ══════════════════════════════════════════════════════════════════
+#  COSA PUO' CAMBIARE UNA TELEFONISTA
+# ══════════════════════════════════════════════════════════════════
+# Il suo lavoro: consultare, telefonare, fissare richiami e appuntamenti,
+# gestire l'agenda per i venditori, scrivere nelle PROPRIE note.
+# Tutto il resto della scheda e' in sola lettura: anagrafica, recapiti, note
+# storiche, opere, stato del contatto.
+#
+# E' un elenco CHIUSO, non una lista di divieti: si riparte dal record che sta
+# nell'archivio e si applicano SOLO questi campi. Cosi' un campo aggiunto
+# domani e' protetto da subito, invece di restare scoperto finche' qualcuno se
+# ne accorge. E' l'errore che abbiamo gia' pagato con i nomi delle azioni.
+CAMPI_OPERATORE = {
+    'Esito_ultima_chiamata',   # com'e' andata la chiamata
+    'Prossima_telefonata',     # data del richiamo o dell'appuntamento
+    'Ora_appuntamento',        # orario
+    'Note_operatore',          # le SUE note: quelle storiche restano intatte
+}
+
+def _ruolo_corrente():
+    u = _utente_corrente() if crm_auth.USE_AUTH else None
+    return (u or {}).get('ruolo', 'titolare')
+
+def _scheda_consentita(nuovo, vecchio, ruolo):
+    """Filtra la scheda che arriva dal browser: per una telefonista tiene il
+    record a disco e ci applica solo i campi che le competono."""
+    if ruolo == 'titolare' or not isinstance(vecchio, dict):
+        return nuovo
+    fuori = dict(vecchio)
+    for k in CAMPI_OPERATORE:
+        if k in (nuovo or {}):
+            fuori[k] = nuovo[k]
+    return fuori
+
 def _regioni_utente():
     """Regioni che l'utente puo' vedere. None = nessun limite (titolare).
 
@@ -634,7 +803,7 @@ def api_load():
     return jsonify(data)
 
 @app.route('/api/save', methods=['POST'])
-@richiede_login
+@solo_titolare('salva_tutto')
 def api_save():
     try:
         incoming = request.get_json(force=True)
@@ -659,7 +828,7 @@ def api_save():
         return jsonify({'error': str(e)}), 500
 
 @app.route('/api/save_full', methods=['POST'])
-@richiede_login
+@solo_titolare('salva_tutto')
 def api_save_full():
     """Called on first load to save everything. Preserves verifiche (and any
     other keys already on disk) so a full re-save never wipes the queue."""
@@ -705,6 +874,15 @@ def api_aggiungi_telefonata():
         if not tel or not cid:
             return jsonify({'error': 'dati mancanti'}), 400
         data = load_data() or {}
+        # Controllo di zona: mancava, mentre le rotte sorelle lo hanno. Si
+        # potevano alterare esito e appuntamenti di qualsiasi contatto.
+        _reg = _regioni_utente()
+        if _reg:
+            _suo = next((x for x in data.get('contacts', [])
+                         if str(x.get('ID_contatto')) == cid), None)
+            if not _suo or (_suo.get('Regione') or '').strip().lower() \
+                    not in set(r.strip().lower() for r in _reg):
+                return jsonify({'error': 'contatto fuori dalla tua zona'}), 403
         data.setdefault('telefonate', [])
         data.setdefault('contacts', [])
         # aggiungo la telefonata in testa
@@ -742,18 +920,19 @@ def api_salva_contatto():
                 return jsonify({'error': 'contatto fuori dalla tua zona'}), 403
         data = load_data() or {}
         data.setdefault('contacts', [])
-        # Le NOTE STORICHE non si toccano: un operatore puo' correggere
-        # recapiti e indirizzo, ma il campo Note (trent'anni di storia del
-        # cliente) resta com'e'. Per le sue annotazioni ha Note_operatore.
-        # Controllo sul SERVER: nasconderlo solo a schermo non basterebbe.
-        _u = _utente_corrente()
-        _solo_lettura = crm_auth.USE_AUTH and _u and _u.get('ruolo') != 'titolare'
+        # La scheda di una telefonista passa dall'elenco chiuso CAMPI_OPERATORE:
+        # anagrafica, recapiti, note storiche e opere restano come sono a
+        # disco. Controllo sul SERVER: nasconderlo a schermo non basterebbe.
+        _ruolo = _ruolo_corrente()
         trovato = False
         for i, x in enumerate(data['contacts']):
             if str(x.get('ID_contatto')) == cid:
-                if _solo_lettura and 'Note' in x:
-                    c['Note'] = x.get('Note')
-                data['contacts'][i] = c
+                # il controllo di zona va fatto sul record A DISCO, non su
+                # quello che arriva: altrimenti basta dichiarare una regione
+                # propria per lavorare su un contatto di un'altra zona.
+                if _reg and (x.get('Regione') or '').strip().lower() not in regset:
+                    return jsonify({'error': 'contatto fuori dalla tua zona'}), 403
+                data['contacts'][i] = _scheda_consentita(c, x, _ruolo)
                 trovato = True
                 break
         if not trovato:
@@ -785,10 +964,13 @@ def api_salva_scheda():
                         if str(c.get('ID_contatto')) == cid), None)
             if not suo or (suo.get('Regione') or '').strip().lower() not in regset:
                 return jsonify({'error': 'contatto fuori dalla tua zona'}), 403
+        _ruolo = _ruolo_corrente()
         fatti = {}
         for chiave, campo in (('telefonate', 'telefonate'), ('opere', 'opere')):
             if chiave not in body:
                 continue                      # assente = non toccare
+            if chiave == 'opere' and _ruolo != 'titolare':
+                continue   # le opere le registra il titolare, non la telefonista
             nuove = body.get(chiave) or []
             if not isinstance(nuove, list):
                 return jsonify({'error': chiave + ' deve essere una lista'}), 400
@@ -803,7 +985,7 @@ def api_salva_scheda():
         if c and str(c.get('ID_contatto', '')).strip() == cid:
             for i, x in enumerate(data.get('contacts', [])):
                 if str(x.get('ID_contatto')) == cid:
-                    data['contacts'][i] = c
+                    data['contacts'][i] = _scheda_consentita(c, x, _ruolo)
                     break
         save_data(data)
         return jsonify({'ok': True, 'salvati': fatti})
@@ -974,6 +1156,14 @@ def api_pdf():
             return jsonify({'error': 'nessun contatto da stampare'}), 400
         if len(ids) > 3000:
             ids = ids[:3000]
+        # Niente stampe di massa per le telefoniste: la soglia era dichiarata
+        # in crm_auth (LIMITE_STAMPA_MASSA) e non veniva applicata da nessuno,
+        # cosi' si potevano estrarre 3.000 schede complete con indirizzo, data
+        # di nascita e codice fiscale.
+        if _ruolo_corrente() != 'titolare' and len(ids) > crm_auth.LIMITE_STAMPA_MASSA:
+            return jsonify({'error': 'Puoi stampare al massimo %d schede alla volta. '
+                                     'Le stampe di massa sono riservate al titolare.'
+                                     % crm_auth.LIMITE_STAMPA_MASSA}), 403
         data = load_data()
         _reg = _regioni_utente()
         if _reg:
@@ -1341,11 +1531,20 @@ def api_contatto_stato():
     """Conferma (stato=attivo) o segnala (stato=da_verificare) un contatto."""
     try:
         body = request.get_json(force=True)
-        cid = str(body.get('id', '')); stato = body.get('stato', 'attivo')
+        cid = str(body.get('id', '')); stato = str(body.get('stato', 'attivo')).strip()
+        # Elenco CHIUSO: 'Stato' e' il campo che toglie un contatto dalla
+        # lavorazione. Prima accettava qualunque valore, anche un oggetto.
+        if stato not in STATI_VALIDI:
+            return jsonify({'error': 'stato non valido'}), 400
         data = load_data()
         c = next((x for x in data.get('contacts', []) if str(x.get('ID_contatto')) == cid), None)
         if not c:
             return jsonify({'error': 'contatto non trovato'}), 404
+        # Controllo di zona: mancava del tutto, si poteva "spegnere" qualunque
+        # contatto d'Italia.
+        _reg = _regioni_utente()
+        if _reg and (c.get('Regione') or '').strip().lower() not in set(r.strip().lower() for r in _reg):
+            return jsonify({'error': 'contatto fuori dalla tua zona'}), 403
         c['Stato'] = stato
         save_data(data)
         return jsonify({'ok': True, 'id': cid, 'stato': stato})
@@ -1358,7 +1557,11 @@ def api_segnala():
     """Aggiunge un contatto alla coda 'Da controllare' e lo mette in stato da_verificare."""
     try:
         body = request.get_json(force=True)
-        cid = str(body.get('id', '')); tipo = body.get('tipo', 'segnalato'); nota = body.get('nota', '')
+        cid = str(body.get('id', ''))
+        # testo libero, ma non illimitato: prima si potevano accodare voci
+        # enormi dentro l'archivio
+        tipo = str(body.get('tipo', 'segnalato')).strip()[:60]
+        nota = str(body.get('nota', ''))[:500]
         data = load_data()
         c = next((x for x in data.get('contacts', []) if str(x.get('ID_contatto')) == cid), None)
         if not c:

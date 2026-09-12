@@ -499,3 +499,116 @@ def utenti_elimina(nome):
     elenco = [u for u in utenti_lista() if u['nome'].lower() != nome.lower()]
     UTENTI_FILE.write_text(json.dumps(elenco, ensure_ascii=False), encoding='utf-8')
     return True
+
+
+# ═══════════════════════════════════════════════════════════════════
+#  REGISTRO ATTIVITA' E TEMPO DI CONNESSIONE
+# ═══════════════════════════════════════════════════════════════════
+# Due tabelle PICCOLE e separate, come crm_ui e crm_utenti. NON dentro il
+# blob dei dati: registrare un'operazione non deve riscrivere i ~7 MB
+# dell'archivio (e' l'errore che avrebbe reso il CRM inutilizzabile).
+#   crm_attivita  = cosa e' stato fatto, da chi, quando, su quale scheda
+#   crm_sessioni  = da quando a quando ciascuno e' stato collegato
+ATTIVITA_MAX = 30000        # righe conservate nel registro
+SESSIONE_PAUSA_MIN = 15     # dopo tanti minuti di fermo la sessione e' chiusa
+
+def _att_db_init():
+    conn = _get_pg()
+    with conn.cursor() as cur:
+        cur.execute("CREATE TABLE IF NOT EXISTS crm_attivita ("
+                    "id BIGSERIAL PRIMARY KEY, nome TEXT, ruolo TEXT, zona TEXT, "
+                    "azione TEXT, id_contatto TEXT, dettaglio TEXT, "
+                    "quando TIMESTAMPTZ DEFAULT now())")
+        cur.execute("CREATE INDEX IF NOT EXISTS crm_attivita_quando ON crm_attivita (quando DESC)")
+        cur.execute("CREATE TABLE IF NOT EXISTS crm_sessioni ("
+                    "id BIGSERIAL PRIMARY KEY, nome TEXT, ruolo TEXT, zona TEXT, "
+                    "inizio TIMESTAMPTZ DEFAULT now(), ultimo TIMESTAMPTZ DEFAULT now())")
+        cur.execute("CREATE INDEX IF NOT EXISTS crm_sessioni_nome ON crm_sessioni (nome, ultimo DESC)")
+
+def attivita_registra(nome, ruolo, zona, azione, id_contatto='', dettaglio=''):
+    """Scrive una riga nel registro. Non deve MAI far fallire l'operazione
+    dell'utente: se il registro non si scrive, pazienza."""
+    if not USE_DB:
+        return False
+    try:
+        _att_db_init()
+        conn = _get_pg()
+        with conn.cursor() as cur:
+            cur.execute("INSERT INTO crm_attivita (nome, ruolo, zona, azione, id_contatto, dettaglio) "
+                        "VALUES (%s,%s,%s,%s,%s,%s)",
+                        (str(nome or '')[:80], str(ruolo or '')[:20], str(zona or '')[:40],
+                         str(azione or '')[:60], str(id_contatto or '')[:40],
+                         str(dettaglio or '')[:200]))
+            # potatura: tengo le ultime ATTIVITA_MAX righe
+            cur.execute("DELETE FROM crm_attivita WHERE id < "
+                        "(SELECT COALESCE(MIN(id),0) FROM (SELECT id FROM crm_attivita "
+                        " ORDER BY id DESC LIMIT %s) t)", (ATTIVITA_MAX,))
+        return True
+    except Exception as e:
+        print(f"  (attivita_registra: {e})")
+        return False
+
+def presenza_tocca(nome, ruolo, zona):
+    """Segna che l'utente e' vivo adesso. Se la sua ultima attivita' e' di
+    piu' di SESSIONE_PAUSA_MIN minuti, apre una sessione NUOVA: cosi' il
+    tempo di connessione non conta le ore in cui il CRM era solo aperto."""
+    if not USE_DB:
+        return False
+    try:
+        _att_db_init()
+        conn = _get_pg()
+        with conn.cursor() as cur:
+            cur.execute("SELECT id FROM crm_sessioni WHERE nome=%s "
+                        "AND ultimo > now() - (%s || ' minutes')::interval "
+                        "ORDER BY ultimo DESC LIMIT 1",
+                        (str(nome or '')[:80], str(SESSIONE_PAUSA_MIN)))
+            r = cur.fetchone()
+            if r:
+                cur.execute("UPDATE crm_sessioni SET ultimo=now() WHERE id=%s", (r[0],))
+            else:
+                cur.execute("INSERT INTO crm_sessioni (nome, ruolo, zona) VALUES (%s,%s,%s)",
+                            (str(nome or '')[:80], str(ruolo or '')[:20], str(zona or '')[:40]))
+        return True
+    except Exception as e:
+        print(f"  (presenza_tocca: {e})")
+        return False
+
+def attivita_elenco(giorni=7, limite=400):
+    """Ultime operazioni registrate, dalla piu' recente."""
+    if not USE_DB:
+        return []
+    try:
+        _att_db_init()
+        conn = _get_pg()
+        with conn.cursor() as cur:
+            cur.execute("SELECT nome, ruolo, zona, azione, id_contatto, dettaglio, quando "
+                        "FROM crm_attivita WHERE quando > now() - (%s || ' days')::interval "
+                        "ORDER BY id DESC LIMIT %s", (str(int(giorni)), int(limite)))
+            return [{'nome': a, 'ruolo': b, 'zona': c, 'azione': d, 'id_contatto': e,
+                     'dettaglio': f, 'quando': g.isoformat(timespec='seconds') if g else ''}
+                    for a, b, c, d, e, f, g in cur.fetchall()]
+    except Exception as e:
+        print(f"  (attivita_elenco: {e})")
+        return []
+
+def sessioni_elenco(giorni=7):
+    """Sessioni di collegamento, dalla piu' recente, con la durata in minuti."""
+    if not USE_DB:
+        return []
+    try:
+        _att_db_init()
+        conn = _get_pg()
+        with conn.cursor() as cur:
+            cur.execute("SELECT nome, ruolo, zona, inizio, ultimo, "
+                        "  GREATEST(1, ROUND(EXTRACT(EPOCH FROM (ultimo-inizio))/60)::int), "
+                        "  (ultimo > now() - interval '5 minutes') "
+                        "FROM crm_sessioni WHERE inizio > now() - (%s || ' days')::interval "
+                        "ORDER BY inizio DESC LIMIT 500", (str(int(giorni)),))
+            return [{'nome': a, 'ruolo': b, 'zona': c,
+                     'inizio': d.isoformat(timespec='seconds') if d else '',
+                     'ultimo': e.isoformat(timespec='seconds') if e else '',
+                     'minuti': int(f or 0), 'collegato': bool(g)}
+                    for a, b, c, d, e, f, g in cur.fetchall()]
+    except Exception as e:
+        print(f"  (sessioni_elenco: {e})")
+        return []
