@@ -280,7 +280,7 @@ def api_chisono():
     # registrati dal titolare/admin su contatti della loro stessa zona
     # (l'operatore deve vedere SOLO la propria agenda, non quella dell'admin
     # ne' quella di un'altra zona).
-    titolari=sorted(set(v['nome'] for v in crm_auth.UTENTI.values() if v.get('ruolo')=='titolare'))
+    titolari=crm_auth.nomi_titolari()
     return jsonify({"login":True,"nome":u["nome"],"ruolo":u["ruolo"],"online":crm_auth.USE_AUTH,
                     "zona":zona,"regioni":regioni,"titolari":titolari,
                     "ora_italiana":crm_auth._ora_italiana().strftime('%H:%M'),

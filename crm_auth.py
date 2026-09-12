@@ -199,6 +199,21 @@ def controlla_login(nome, password):
         return {'nome': v['nome'], 'ruolo': v['ruolo'], 'zona': v.get('zona', '')}
     return None
 
+def nomi_titolari():
+    """Nomi di TUTTI gli account titolare, cifrati e da variabile. Serve al
+    frontend per nascondere dall'agenda delle telefoniste le telefonate e gli
+    appuntamenti registrati dal titolare. Prima si leggeva solo la variabile
+    CRM_UTENTI: spostando Admin fra le password cifrate era sparito da questa
+    lista e le sue telefonate ricomparivano nelle agende di zona."""
+    nomi = set()
+    for u in UTENTI_DB.values():
+        if u.get('ruolo') == 'titolare':
+            nomi.add(u['nome'])
+    for k, v in UTENTI.items():
+        if v.get('ruolo') == 'titolare' and k not in UTENTI_DB:
+            nomi.add(v['nome'])
+    return sorted(nomi)
+
 def elenco_utenti_visibile():
     """Nomi, ruoli e zone di TUTTI gli utenti (cifrati + variabile), senza
     nessuna password. Serve alla scheda Utenti."""
