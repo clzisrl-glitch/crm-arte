@@ -602,7 +602,7 @@ body:not([data-ruolo="operatore"]) ._soloOperatore{display:none!important}
       <label style="font-size:11px;color:#5a5246;display:inline-flex;align-items:center;gap:4px">&#128197; Appuntamenti del giorno:<input type="date" id="agDayPick" style="font-size:12px;padding:2px 5px;border:1px solid #b0a898;border-radius:4px"></label>
       <button class="tb-btn" style="background:#1a3a6a;color:#fff;border-color:#1a3a6a" onclick="stampaAppDelGiorno()" title="Stampa (o salva in PDF) tutti gli appuntamenti del giorno scelto.">&#128424; Stampa PDF</button>
       <button class="tb-btn" style="background:#1a7a30;color:#fff;border-color:#1a7a30" onclick="inviaAppDelGiorno()" title="Apri una email con il riepilogo degli appuntamenti del giorno (il PDF va allegato a mano dopo averlo salvato).">&#9993; Invia email</button>
-      <button class="tb-btn" id="btnBulkOrari" style="background:#8a5a10;color:#fff;border-color:#8a5a10" onclick="bulkAssignaOrari()" title="Assegna in automatico un orario (progressivo, dalle 9:00) a TUTTI i richiami/appuntamenti ancora nella barra &quot;Tutto il giorno&quot; senza ora, in un colpo solo. Restano comunque spostabili singolarmente dopo.">&#128337; Sistema richiami senza ora</button>
+      <button class="tb-btn _soloTitolare" id="btnBulkOrari" style="background:#8a5a10;color:#fff;border-color:#8a5a10" onclick="bulkAssignaOrari()" title="Assegna in automatico un orario (progressivo, dalle 9:00) a TUTTI i richiami/appuntamenti ancora nella barra &quot;Tutto il giorno&quot; senza ora, in un colpo solo. Restano comunque spostabili singolarmente dopo.">&#128337; Sistema richiami senza ora</button>
       <div class="cal-legend" id="calLegend">
         <span><span class="leg-sq" style="background:#ffd6de;border:1px solid #f3b3c1"></span>Richiami</span>
         <span><span class="leg-sq" style="background:#d9f5de;border:1px solid #abe2b8"></span>Appuntamenti</span>
@@ -659,7 +659,7 @@ body:not([data-ruolo="operatore"]) ._soloOperatore{display:none!important}
       <button class="btn-u pt-controllare" title="Manda questa scheda in Da controllare (per ricontrollarla: numero errato, indirizzo vecchio, ecc.)." onclick="segnalaContatto(currentResults[currentIdx]?.ID_contatto)">&#9888; Da controllare</button>
       <button class="btn-u pt-deceduto" title="Segna questo contatto come DECEDUTO: lo esclude da elenco, ricerca e agenda e lo sposta nella scheda Deceduti." onclick="segnaDeceduto()">&#9904; Segna deceduto</button>
       <button class="btn-u btn-blue-soft" id="btnAzzera" onclick="azzeraRicerca()" style="display:none" title="Torna a navigare tutto il database">&#10005; Azzera ricerca</button>
-<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 12/09/2026 20:00</span>
+<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 12/09/2026 21:00</span>
       <div style="flex:1"></div>
       <button class="btn-u btn-del-discreet" onclick="deleteContact()" title="Elimina questo contatto">&#128465;</button>
     </div>
@@ -1977,6 +1977,14 @@ async function _salvaSchedaContattoSilenzioso(cid,cosa){
   }
 }
 async function bulkAssignaOrari(){
+  // Riservato al titolare: e' un'operazione di massa sull'agenda (assegna
+  // l'orario a centinaia di richiami in un colpo). Nascondere il pulsante non
+  // basta: da qui si blocca anche chi ci arrivasse per altre strade.
+  if(window._ruolo && window._ruolo!=='titolare'){
+    alert('Questa sistemazione in blocco la fa il titolare.\n\n'
+      +'Tu puoi spostare i tuoi appuntamenti uno per uno, trascinandoli nell agenda.');
+    return;
+  }
   const piano=_elencoSenzaOra();
   if(!piano.length){alert('Nessun richiamo/appuntamento senza ora da sistemare: sono tutti gia\' orari.');return;}
   const daSalvare=[...new Set(piano.map(p=>p.cid))];
@@ -3117,14 +3125,62 @@ function _fatturatoPerZona(dalISO){
     var c=(typeof contactMap!=='undefined')?contactMap[String(o.ID_contatto)]:null;
     if(!c)return;
     var z=_zonaContatto(c)||'Altre';
-    if(!per[z])per[z]={n:0,val:0,cli:{}};
+    if(!per[z])per[z]={n:0,val:0,cli:{},righe:[]};
     var v=parseFloat(String(o.Valore||'').replace(/[^0-9.]/g,''))||0;
     per[z].n++; per[z].val+=v; per[z].cli[String(o.ID_contatto)]=1;
+    // le righe servono all'elenco "schede che hanno fatturato"
+    per[z].righe.push({id:String(o.ID_contatto||''),
+      cli:(((c.Cognome||'')+' '+(c.Nome||'')).trim())||'(scheda non trovata)',
+      citta:(c.Citta||''), prov:(c.Provincia||''), reg:(c.Regione||''),
+      data:o.Data_acquisto||'', opera:o.Opera||'', val:v, ord:d.getTime()});
     totale.n++; totale.val+=v; totale.cli[String(o.ID_contatto)]=1;
   });
   return {per:per, totale:totale};
 }
 function _eur(v){return '€ ' + Math.round(v||0).toLocaleString('it');}
+
+// Le schede che hanno fatto il fatturato. Cliccabili: si apre il cliente.
+// Vale per la telefonista (la sua zona) e per il titolare (la zona scelta).
+var _fzZonaAperta='';
+function fzApriElenco(zona){
+  _fzZonaAperta=(_fzZonaAperta===zona)?'':zona;
+  renderFatturatoZona();
+  try{
+    var e=document.getElementById('fzElenco');
+    if(e&&_fzZonaAperta)e.scrollIntoView({block:'nearest',behavior:'smooth'});
+  }catch(e){}
+}
+function fzVaiScheda(id){
+  try{ apriContattoDaId(String(id), (window._fzNav||[]).slice()); }
+  catch(e){ try{apriContattoDaId(String(id));}catch(e2){} }
+}
+function _fzElencoHtml(zona, righe){
+  if(!righe||!righe.length)return '';
+  var ord=righe.slice().sort(function(a,b){return b.ord-a.ord;});
+  window._fzNav=ord.map(function(r){return contactMap[r.id];}).filter(Boolean);
+  var H='<div id="fzElenco" style="margin-top:12px;border:1px solid #cce5cc;border-radius:10px;overflow:hidden">'
+    +'<div style="background:#dff0df;padding:7px 10px;font-size:12.5px;font-weight:700;color:#2a5a2a">'
+    +'&#128203; Schede che hanno fatturato'+(zona?' &#8212; '+esc(zona):'')+' ('+ord.length+')'
+    +'<span onclick="fzApriElenco(\''+esc(zona)+'\')" style="float:right;cursor:pointer;color:#2a7a2a">&#10005; chiudi</span></div>'
+    +'<div style="max-height:300px;overflow:auto"><table style="width:100%;border-collapse:collapse;font-size:12.5px;background:#fff">'
+    +'<tr style="background:#f4f6fa"><th style="text-align:left;padding:6px 8px;color:#666">Cliente</th>'
+    +'<th style="text-align:left;padding:6px 8px;color:#666">Citt&#224;</th>'
+    +'<th style="text-align:left;padding:6px 8px;color:#666">Data</th>'
+    +'<th style="text-align:left;padding:6px 8px;color:#666">Opera</th>'
+    +'<th style="text-align:right;padding:6px 8px;color:#666">Valore</th>'
+    +'<th style="padding:6px 8px"></th></tr>';
+  ord.forEach(function(r){
+    H+='<tr style="border-bottom:1px solid #f0f0f2">'
+      +'<td style="padding:6px 8px;font-weight:600;color:#1a3a6a">'+esc(r.cli)+'</td>'
+      +'<td style="padding:6px 8px;color:#666">'+esc(r.citta)+(r.prov?' ('+esc(r.prov)+')':'')+'</td>'
+      +'<td style="padding:6px 8px;color:#666;white-space:nowrap">'+esc(fd(r.data)||r.data)+'</td>'
+      +'<td style="padding:6px 8px">'+esc(r.opera)+'</td>'
+      +'<td style="padding:6px 8px;text-align:right;font-weight:700;color:#1a7a30;white-space:nowrap">'+_eur(r.val)+'</td>'
+      +'<td style="padding:6px 8px;text-align:right"><button onclick="fzVaiScheda(\''+esc(r.id)+'\')" style="background:#eef2f8;border:1px solid #d7e0ec;border-radius:7px;padding:3px 9px;font-size:12px;cursor:pointer;white-space:nowrap">Apri scheda</button></td>'
+      +'</tr>';
+  });
+  return H+'</table></div></div>';
+}
 
 // Riquadro in Welcome. Per la telefonista: solo la sua zona. Per il titolare:
 // tutte le zone, come riepilogo veloce prima di aprire le Statistiche.
@@ -3153,7 +3209,10 @@ function renderFatturatoZona(){
       +'<div style="flex:1;min-width:110px;background:#fff;border:1px solid #e6e6ea;border-radius:12px;padding:12px 14px">'
         +'<div style="font-size:24px;font-weight:700;color:#1a3a6a">'+Object.keys(p.cli).length+'</div>'
         +'<div style="font-size:12px;color:#888">clienti</div></div>'
-      +'</div>';
+      +'</div>'
+      +'<div style="margin-top:10px"><button onclick="fzApriElenco(\''+esc(z)+'\')" style="background:#2a7a2a;color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:12.5px;font-weight:600;cursor:pointer">'
+        +(_fzZonaAperta===z?'&#10005; Chiudi l\'elenco':'&#128203; Vedi le schede che hanno fatturato')+'</button></div>'
+      +(_fzZonaAperta===z?_fzElencoHtml(z,p.righe):'');
   }else{
     H='<table style="width:100%;border-collapse:collapse">'
       +'<tr style="background:#f4f6fa"><th style="text-align:left;padding:7px;font-size:12px;color:#666">Zona</th>'
@@ -3162,8 +3221,8 @@ function renderFatturatoZona(){
       +'<th style="text-align:right;padding:7px;font-size:12px;color:#666">Fatturato</th></tr>';
     zone.forEach(function(z){
       var p=r.per[z];
-      H+='<tr style="border-bottom:1px solid #eee">'
-        +'<td style="padding:7px;font-weight:600;color:#1a3a6a">'+esc(z)+'</td>'
+      H+='<tr onclick="fzApriElenco(\''+esc(z)+'\')" style="border-bottom:1px solid #eee;cursor:pointer;background:'+(_fzZonaAperta===z?'#eef7ee':'transparent')+'" title="Clicca per vedere le schede che hanno fatturato">'
+        +'<td style="padding:7px;font-weight:600;color:#1a3a6a">'+(_fzZonaAperta===z?'&#9662; ':'&#9656; ')+esc(z)+'</td>'
         +'<td style="text-align:center;padding:7px;color:#666">'+p.n+'</td>'
         +'<td style="text-align:center;padding:7px;color:#666">'+Object.keys(p.cli).length+'</td>'
         +'<td style="text-align:right;padding:7px;font-weight:700;color:#1a7a30">'+_eur(p.val)+'</td></tr>';
@@ -3172,7 +3231,8 @@ function renderFatturatoZona(){
       +'<td style="text-align:center;padding:7px;font-weight:700">'+r.totale.n+'</td>'
       +'<td style="text-align:center;padding:7px;font-weight:700">'+Object.keys(r.totale.cli).length+'</td>'
       +'<td style="text-align:right;padding:7px;font-weight:700;color:#1a7a30">'+_eur(r.totale.val)+'</td></tr>'
-      +'</table>';
+      +'</table>'
+      +(_fzZonaAperta&&r.per[_fzZonaAperta]?_fzElencoHtml(_fzZonaAperta,r.per[_fzZonaAperta].righe):'');
   }
   box.innerHTML=H;
 }
