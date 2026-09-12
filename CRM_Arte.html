@@ -657,7 +657,7 @@ body:not([data-ruolo="operatore"]) ._soloOperatore{display:none!important}
       <button class="btn-u pt-controllare" title="Manda questa scheda in Da controllare (per ricontrollarla: numero errato, indirizzo vecchio, ecc.)." onclick="segnalaContatto(currentResults[currentIdx]?.ID_contatto)">&#9888; Da controllare</button>
       <button class="btn-u pt-deceduto" title="Segna questo contatto come DECEDUTO: lo esclude da elenco, ricerca e agenda e lo sposta nella scheda Deceduti." onclick="segnaDeceduto()">&#9904; Segna deceduto</button>
       <button class="btn-u btn-blue-soft" id="btnAzzera" onclick="azzeraRicerca()" style="display:none" title="Torna a navigare tutto il database">&#10005; Azzera ricerca</button>
-<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 12/09/2026 13:00</span>
+<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 12/09/2026 14:00</span>
       <div style="flex:1"></div>
       <button class="btn-u btn-del-discreet" onclick="deleteContact()" title="Elimina questo contatto">&#128465;</button>
     </div>
@@ -1706,6 +1706,7 @@ function _esitoRichiamo(e){
 function _esitoInAgenda(e){return _esitoPositivo(e)||_esitoRichiamo(e);}
 
 function buildAgendaIndex(){
+  try{_azzeraMappaContratti();}catch(e){}   // i contratti possono essere cambiati
   telByDate={};
   for(const t of telefonate){
     const df=t.Data_appuntamento;if(!df||!df.trim())continue;
@@ -4492,17 +4493,31 @@ let _recuperoData=[];
 // vendita gia' conclusa, messa sulla data del contratto. Deve vedersi in
 // agenda, ma NON deve finire fra le chiamate scadute da recuperare: il
 // cliente ha gia' comprato, non c'e' niente da richiamare.
-function _isContrattoInAgenda(idContatto, iso){
+// ATTENZIONE ALLA VELOCITA'. La prima versione di questa funzione scorreva
+// TUTTE le telefonate (85.000) per OGNI cliente da richiamare (11.000):
+// ~23 secondi di blocco a ogni apertura di Welcome e Da Recuperare, che da
+// fuori sembravano problemi di linea. Ora l'elenco dei contratti si prepara
+// UNA volta sola in una mappa "id|data" e poi si guarda a colpo d'occhio.
+// La mappa si azzera in buildAgendaIndex, che gira dopo ogni modifica.
+var _mappaContratti=null;
+function _azzeraMappaContratti(){_mappaContratti=null;}
+function _costruisciMappaContratti(){
+  var m=Object.create(null);
   try{
-    if(typeof telefonate==='undefined'||!telefonate)return false;
-    for(const t of telefonate){
-      if(String(t.ID_contatto)!==String(idContatto))continue;
-      if(!/^contratto/i.test(String(t.Note_appuntamento||'').trim()))continue;
-      const d=pd(t.Data_appuntamento);
-      if(d&&d.iso===iso)return true;
+    var lista=(typeof telefonate!=='undefined'&&telefonate)?telefonate:[];
+    for(const t of lista){
+      var n=String(t.Note_appuntamento||'').trim();
+      if(n.length<9||n.slice(0,9).toLowerCase()!=='contratto')continue;
+      var d=pd(t.Data_appuntamento);
+      if(d)m[String(t.ID_contatto)+'|'+d.iso]=1;
     }
   }catch(e){}
-  return false;
+  _mappaContratti=m;
+  return m;
+}
+function _isContrattoInAgenda(idContatto, iso){
+  var m=_mappaContratti||_costruisciMappaContratti();
+  return !!m[String(idContatto)+'|'+iso];
 }
 function _evIcona(item){
   try{
@@ -4520,8 +4535,9 @@ function getRecuperoList(){
     if(!_esitoInAgenda(esito))continue;
     const dt=pd(c.Prossima_telefonata);if(!dt)continue;
     const d=new Date(dt.iso+'T00:00:00');
+    if(d>=today)continue;                                     // non e' scaduto
     if(_isContrattoInAgenda(c.ID_contatto,dt.iso))continue;   // vendita gia' fatta
-    if(d<today)list.push({c,date:dt,daysAgo:Math.floor((today-d)/(86400000))});
+    list.push({c,date:dt,daysAgo:Math.floor((today-d)/(86400000))});
   }
   return list;
 }
