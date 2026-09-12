@@ -656,7 +656,7 @@ body:not([data-ruolo="operatore"]) ._soloOperatore{display:none!important}
       <button class="btn-u pt-controllare" title="Manda questa scheda in Da controllare (per ricontrollarla: numero errato, indirizzo vecchio, ecc.)." onclick="segnalaContatto(currentResults[currentIdx]?.ID_contatto)">&#9888; Da controllare</button>
       <button class="btn-u pt-deceduto" title="Segna questo contatto come DECEDUTO: lo esclude da elenco, ricerca e agenda e lo sposta nella scheda Deceduti." onclick="segnaDeceduto()">&#9904; Segna deceduto</button>
       <button class="btn-u btn-blue-soft" id="btnAzzera" onclick="azzeraRicerca()" style="display:none" title="Torna a navigare tutto il database">&#10005; Azzera ricerca</button>
-<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 12/09/2026 07:00</span>
+<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 12/09/2026 10:00</span>
       <div style="flex:1"></div>
       <button class="btn-u btn-del-discreet" onclick="deleteContact()" title="Elimina questo contatto">&#128465;</button>
     </div>
@@ -934,11 +934,67 @@ function _soloTitolare(cosa){
   }
   return true;
 }
+/* ── ORARIO DI LAVORO DELLE TELEFONISTE ───────────────────────────────────
+   Il blocco vero e' sul server (crm_auth.fuori_orario): qui si mostra solo un
+   messaggio comprensibile al posto di un errore, e si avvisa prima della
+   chiusura cosi' nessuno resta a meta' di una nota. Ore ITALIANE: lo scarto
+   fra l'orologio del computer e l'ora di Roma arriva da /api/chisono. */
+var _oraApertura=8,_oraChiusura=21,_scartoOrarioMs=0,_avvisiDati={};
+function _mostraFuoriOrario(msg){
+  if(document.getElementById('fuoriOrarioBox'))return;
+  var d=document.createElement('div');
+  d.id='fuoriOrarioBox';
+  d.style.cssText='position:fixed;inset:0;z-index:99999;background:rgba(20,24,33,.95);color:#fff;display:flex;align-items:center;justify-content:center;padding:24px;text-align:center;font-size:17px;line-height:1.6';
+  d.innerHTML='<div style="max-width:460px"><div style="font-size:44px;margin-bottom:14px">&#128336;</div>'
+    +'<div style="font-size:21px;font-weight:700;margin-bottom:12px">CRM chiuso</div>'
+    +'<div style="margin-bottom:18px">'+(msg||'')+'</div>'
+    +'<div style="font-size:14px;opacity:.75;margin-bottom:20px">Quello che hai gi&#224; salvato non si perde: ogni modifica viene registrata subito.</div>'
+    +'<button onclick="location.reload()" style="background:#fff;color:#1a3a6a;border:0;border-radius:9px;padding:11px 20px;font-size:15px;font-weight:700;cursor:pointer">Riprova</button></div>';
+  document.body.appendChild(d);
+}
+(function(){
+  var _f=window.fetch;
+  window.fetch=function(){
+    return _f.apply(this,arguments).then(function(r){
+      if(r&&r.status===403){
+        try{r.clone().json().then(function(j){if(j&&j.fuori_orario)_mostraFuoriOrario(j.error);}).catch(function(){});}catch(e){}
+      }
+      return r;
+    });
+  };
+})();
+function _bannerChiusura(minuti){
+  var id='bannerChiusura',v=document.getElementById(id);
+  if(!v){
+    v=document.createElement('div'); v.id=id;
+    v.style.cssText='position:fixed;left:50%;transform:translateX(-50%);top:10px;z-index:9998;background:#fdf1d6;border:1px solid #e8c97a;color:#7a5a10;padding:11px 16px;border-radius:10px;font-size:14px;font-weight:600;box-shadow:0 4px 14px rgba(0,0,0,.15);max-width:92vw';
+    document.body.appendChild(v);
+  }
+  v.innerHTML='&#9200; Il CRM si chiude alle '+_oraChiusura+':00, fra '+minuti+' minuti. Finisci di scrivere le note in corso. '
+    +'<span onclick="this.parentNode.remove()" style="cursor:pointer;margin-left:8px;opacity:.6">&#10005;</span>';
+}
+function _controllaChiusura(){
+  if(!window._ruolo||window._ruolo==='titolare')return;
+  var t=new Date(Date.now()+_scartoOrarioMs);
+  var min=t.getHours()*60+t.getMinutes(), chiusura=_oraChiusura*60, manca=chiusura-min;
+  [30,10].forEach(function(q){
+    if(manca<=q&&manca>0&&!_avvisiDati[q]){_avvisiDati[q]=1;_bannerChiusura(manca);}
+  });
+}
+setInterval(_controllaChiusura,60000);
 async function _verificaAccesso(){
   try{const r=await fetch("/api/chisono");const j=await r.json();
     if(j.online&&!j.login){document.getElementById("loginOverlay").style.display="flex";return false;}
     if(j.ruolo){window._ruolo=j.ruolo;document.body.setAttribute("data-ruolo",j.ruolo);}
     if(j.nome){window._nomeUtente=j.nome;}
+    // Orario di lavoro: allineo l'orologio del browser all'ora ITALIANA del
+    // server, cosi' l'avviso di chiusura e' giusto anche se il computer ha
+    // il fuso o l'ora sbagliati.
+    if(j.ora_chiusura!=null){_oraApertura=j.ora_apertura;_oraChiusura=j.ora_chiusura;}
+    if(j.ora_italiana){try{var _p=j.ora_italiana.split(":"),_s=new Date();
+      _s.setHours(parseInt(_p[0],10),parseInt(_p[1],10),0,0);
+      _scartoOrarioMs=_s.getTime()-Date.now();}catch(e){}}
+    try{_controllaChiusura();}catch(e){}
     // Chi sei e il pulsante per uscire: prima non c'era nessun pulsante
     // che chiamasse faiLogout(), quindi dal CRM non si poteva uscire.
     try{

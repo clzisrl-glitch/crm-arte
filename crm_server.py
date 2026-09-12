@@ -115,8 +115,15 @@ def solo_titolare(azione):
 def richiede_login(f):
     @wraps(f)
     def w(*a, **k):
-        if crm_auth.USE_AUTH and not _utente_corrente():
-            return jsonify({"error":"Devi prima accedere."}), 401
+        if crm_auth.USE_AUTH:
+            u = _utente_corrente()
+            if not u:
+                return jsonify({"error":"Devi prima accedere."}), 401
+            # Orario di lavoro: le telefoniste entrano solo nella fascia
+            # prevista (ore italiane). Il titolare non ha limiti.
+            if crm_auth.fuori_orario(u["ruolo"]):
+                return jsonify({"error": crm_auth.messaggio_fuori_orario(),
+                                "fuori_orario": True}), 403
         return f(*a, **k)
     return w
 
@@ -208,8 +215,12 @@ def _pwa_static(_fname):
     if nome in PUBBLICI or nome.endswith(('.png', '.ico')):
         return send_from_directory(str(BASE_DIR), nome)
     if nome.endswith(('.json', '.js')):
-        if crm_auth.USE_AUTH and not _utente_corrente():
+        _u = _utente_corrente() if crm_auth.USE_AUTH else None
+        if crm_auth.USE_AUTH and not _u:
             return jsonify({"error": "Devi prima accedere."}), 401
+        if crm_auth.USE_AUTH and crm_auth.fuori_orario(_u["ruolo"]):
+            return jsonify({"error": crm_auth.messaggio_fuori_orario(),
+                            "fuori_orario": True}), 403
         return send_from_directory(str(BASE_DIR), nome)
     from flask import abort; abort(404)
 
@@ -229,6 +240,10 @@ def api_login():
     crm_auth.registra_tentativo(_nome_tentato, bool(u))
     if not u:
         return jsonify({"error":"Utente o password errati."}), 401
+    # Password giusta ma fuori dall'orario di lavoro: niente accesso.
+    if crm_auth.fuori_orario(u["ruolo"]):
+        return jsonify({"error": crm_auth.messaggio_fuori_orario(),
+                        "fuori_orario": True}), 403
     # registro l'accesso (chi, quando) - non deve mai bloccare il login
     try:
         from datetime import datetime as _dt
@@ -266,7 +281,11 @@ def api_chisono():
     # (l'operatore deve vedere SOLO la propria agenda, non quella dell'admin
     # ne' quella di un'altra zona).
     titolari=sorted(set(v['nome'] for v in crm_auth.UTENTI.values() if v.get('ruolo')=='titolare'))
-    return jsonify({"login":True,"nome":u["nome"],"ruolo":u["ruolo"],"online":crm_auth.USE_AUTH,"zona":zona,"regioni":regioni,"titolari":titolari})
+    return jsonify({"login":True,"nome":u["nome"],"ruolo":u["ruolo"],"online":crm_auth.USE_AUTH,
+                    "zona":zona,"regioni":regioni,"titolari":titolari,
+                    "ora_italiana":crm_auth._ora_italiana().strftime('%H:%M'),
+                    "ora_apertura":crm_auth.ORA_APERTURA,
+                    "ora_chiusura":crm_auth.ORA_CHIUSURA})
 
 def _solo_titolare_api():
     u=_utente_corrente()

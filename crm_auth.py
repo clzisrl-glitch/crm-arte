@@ -259,3 +259,45 @@ def puo_fare(ruolo, azione):
     if ruolo == 'titolare':
         return True
     return azione not in AZIONI_SOLO_TITOLARE
+
+
+# ── ORARIO DI LAVORO DEGLI OPERATORI ────────────────────────────────────────
+# Le telefoniste possono usare il CRM solo dentro questa fascia; il titolare
+# non ha limiti. Le ore sono quelle ITALIANE, calcolate qui e non prese dal
+# fuso del server (Railway lavora in UTC: sarebbero 2 ore indietro d'estate e
+# 1 d'inverno). Modificabili da Railway con le variabili CRM_ORA_APERTURA e
+# CRM_ORA_CHIUSURA, senza toccare il codice.
+ORA_APERTURA = int(os.environ.get('CRM_ORA_APERTURA', '8'))
+ORA_CHIUSURA = int(os.environ.get('CRM_ORA_CHIUSURA', '21'))
+
+def _ora_italiana(adesso=None):
+    """Ora locale italiana. Usa i dati dei fusi se il sistema li ha, altrimenti
+    applica a mano la regola europea: ora legale dall'ultima domenica di marzo
+    all'ultima domenica di ottobre (cambio alle 01:00 UTC)."""
+    import datetime as _dt
+    t = adesso or _dt.datetime.now(_dt.timezone.utc)
+    if t.tzinfo is None:
+        t = t.replace(tzinfo=_dt.timezone.utc)
+    try:
+        from zoneinfo import ZoneInfo
+        return t.astimezone(ZoneInfo('Europe/Rome'))
+    except Exception:
+        pass
+    def _ultima_domenica(anno, mese):
+        d = _dt.datetime(anno, mese, 31, 1, tzinfo=_dt.timezone.utc)
+        while d.weekday() != 6:          # 6 = domenica
+            d -= _dt.timedelta(days=1)
+        return d
+    legale = _ultima_domenica(t.year, 3) <= t < _ultima_domenica(t.year, 10)
+    return t + _dt.timedelta(hours=2 if legale else 1)
+
+def fuori_orario(ruolo, adesso=None):
+    """True se un operatore sta usando il CRM fuori dall'orario di lavoro."""
+    if ruolo == 'titolare':
+        return False
+    return not (ORA_APERTURA <= _ora_italiana(adesso).hour < ORA_CHIUSURA)
+
+def messaggio_fuori_orario(adesso=None):
+    return ('Il CRM e aperto dalle %02d:00 alle %02d:00. In Italia adesso sono '
+            'le %s: riprova durante l\'orario di lavoro.'
+            % (ORA_APERTURA, ORA_CHIUSURA, _ora_italiana(adesso).strftime('%H:%M')))
