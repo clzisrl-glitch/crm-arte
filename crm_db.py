@@ -853,3 +853,30 @@ def ui_tutti():
     except Exception as e:
         print(f"  (ui_tutti: {e})")
         return {}
+
+
+def messaggio_ultimo_non_letto(per_titolare, utente=None):
+    """L'ultimo messaggio non letto, per l'anteprima nella notifica.
+    per_titolare=True: l'ultimo scritto da una telefonista (lo deve leggere il
+    titolare); False: l'ultimo scritto dal titolare per quella telefonista."""
+    if not USE_DB:
+        return None
+    try:
+        _msg_db_init()
+        conn = _get_pg()
+        with conn.cursor() as cur:
+            if per_titolare:
+                cur.execute("SELECT autore, testo, utente, id_contatto FROM crm_messaggi "
+                            "WHERE NOT da_titolare AND NOT letto ORDER BY id DESC LIMIT 1")
+            else:
+                cur.execute("SELECT autore, testo, utente, id_contatto FROM crm_messaggi "
+                            "WHERE utente=%s AND da_titolare AND NOT letto "
+                            "ORDER BY id DESC LIMIT 1", (str(utente or '')[:80],))
+            r = cur.fetchone()
+        if not r:
+            return None
+        return {'autore': r[0] or '', 'testo': (r[1] or '')[:140],
+                'utente': r[2] or '', 'id_contatto': r[3] or ''}
+    except Exception as e:
+        print(f"  (messaggio_ultimo_non_letto: {e})")
+        return None

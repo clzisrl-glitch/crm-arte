@@ -659,7 +659,7 @@ body:not([data-ruolo="operatore"]) ._soloOperatore{display:none!important}
       <button class="btn-u pt-controllare" title="Manda questa scheda in Da controllare (per ricontrollarla: numero errato, indirizzo vecchio, ecc.)." onclick="segnalaContatto(currentResults[currentIdx]?.ID_contatto)">&#9888; Da controllare</button>
       <button class="btn-u pt-deceduto" title="Segna questo contatto come DECEDUTO: lo esclude da elenco, ricerca e agenda e lo sposta nella scheda Deceduti." onclick="segnaDeceduto()">&#9904; Segna deceduto</button>
       <button class="btn-u btn-blue-soft" id="btnAzzera" onclick="azzeraRicerca()" style="display:none" title="Torna a navigare tutto il database">&#10005; Azzera ricerca</button>
-<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 12/09/2026 19:00</span>
+<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 12/09/2026 20:00</span>
       <div style="flex:1"></div>
       <button class="btn-u btn-del-discreet" onclick="deleteContact()" title="Elimina questo contatto">&#128465;</button>
     </div>
@@ -3264,14 +3264,28 @@ async function _notificheAvvio(){
 try{
   if('serviceWorker' in navigator){
     navigator.serviceWorker.addEventListener('message',function(ev){
-      if(ev&&ev.data&&ev.data.tipo==='apri-messaggi'){try{apriMessaggi();}catch(e){}}
+      if(!ev||!ev.data)return;
+      if(ev.data.tipo==='apri-messaggi'){try{apriMessaggi();}catch(e){}}
+      // arrivata una notifica mentre l'app e' viva: suono NOSTRO + pallino
+      if(ev.data.tipo==='suona-messaggio'){
+        try{_msgSuono();}catch(e){}
+        try{if(navigator.vibrate)navigator.vibrate([220,120,220]);}catch(e){}
+        try{_msgControlla(false);}catch(e){}
+      }
     });
   }
 }catch(e){}
 // se il CRM e' stato aperto DALLA notifica, apre i messaggi da solo
 try{
   if(location.search.indexOf('messaggi=1')>=0){
-    setTimeout(function(){try{apriMessaggi();}catch(e){}},2500);
+    setTimeout(function(){
+      try{
+        // se la notifica parlava di una scheda, la apro anche
+        var m=location.search.match(/[?&]scheda=([^&]+)/);
+        if(m){try{apriContattoDaId(decodeURIComponent(m[1]));}catch(e){}}
+        apriMessaggi();
+      }catch(e){}
+    },2500);
   }
 }catch(e){}
 // ═══════════════════════════════════════════════════

@@ -742,12 +742,20 @@ def api_messaggi():
     u = _utente_corrente() or {}
     titolare = u.get('ruolo') == 'titolare'
     if request.args.get('conteggio'):
-        # chiamata leggera, per il pallino dei non letti
+        # Chiamata leggera: serve al pallino dei non letti e all'anteprima
+        # nella notifica (il service worker la chiama appena si sveglia).
+        # L'anteprima si manda SOLO se chi chiede e' collegato: e' la sessione
+        # a decidere, non la notifica. Se il cookie non c'e' piu', la notifica
+        # resta generica invece di mostrare il testo a chi passa di la'.
+        anteprima = crm_db.messaggio_ultimo_non_letto(titolare, u.get('nome')) \
+            if request.args.get('anteprima') else None
         if titolare:
             return jsonify({'ok': True, 'titolare': True,
-                            'da_leggere': crm_db.messaggi_da_leggere(True)})
+                            'da_leggere': crm_db.messaggi_da_leggere(True),
+                            'anteprima': anteprima})
         return jsonify({'ok': True, 'titolare': False,
-                        'da_leggere': crm_db.messaggi_da_leggere(False, u.get('nome'))})
+                        'da_leggere': crm_db.messaggi_da_leggere(False, u.get('nome')),
+                        'anteprima': anteprima})
     if titolare:
         # Su quale scheda sta lavorando ciascuno IN QUESTO MOMENTO: lo sappiamo
         # gia', perche' il CRM ricorda l'ultima scheda aperta per utente
