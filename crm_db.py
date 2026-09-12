@@ -612,3 +612,108 @@ def sessioni_elenco(giorni=7):
     except Exception as e:
         print(f"  (sessioni_elenco: {e})")
         return []
+
+
+# ═══════════════════════════════════════════════════════════════════
+#  MESSAGGI FRA TELEFONISTA E TITOLARE
+# ═══════════════════════════════════════════════════════════════════
+# Una conversazione per ogni telefonista, con il titolare. Serve a chiedere le
+# modifiche che lei non puo' fare (un indirizzo sbagliato, una nota da
+# correggere) senza telefonate o messaggi che si perdono.
+# Tabella piccola e separata, come le altre: NON dentro il blob dei dati.
+#   utente     = di chi e' la conversazione (sempre il nome della telefonista)
+#   da_titolare= chi ha scritto: vero = titolare, falso = la telefonista
+#   id_contatto= la scheda di cui si parla (facoltativo, cliccabile)
+MESSAGGI_MAX = 5000
+
+def _msg_db_init():
+    conn = _get_pg()
+    with conn.cursor() as cur:
+        cur.execute("CREATE TABLE IF NOT EXISTS crm_messaggi ("
+                    "id BIGSERIAL PRIMARY KEY, utente TEXT NOT NULL, "
+                    "da_titolare BOOLEAN DEFAULT false, autore TEXT, "
+                    "testo TEXT NOT NULL, id_contatto TEXT DEFAULT '', "
+                    "letto BOOLEAN DEFAULT false, quando TIMESTAMPTZ DEFAULT now())")
+        cur.execute("CREATE INDEX IF NOT EXISTS crm_messaggi_utente "
+                    "ON crm_messaggi (utente, id DESC)")
+
+def messaggio_scrivi(utente, da_titolare, autore, testo, id_contatto=''):
+    if not USE_DB:
+        return 0
+    try:
+        _msg_db_init()
+        conn = _get_pg()
+        with conn.cursor() as cur:
+            cur.execute("INSERT INTO crm_messaggi (utente, da_titolare, autore, testo, id_contatto) "
+                        "VALUES (%s,%s,%s,%s,%s) RETURNING id",
+                        (str(utente or '')[:80], bool(da_titolare), str(autore or '')[:80],
+                         str(testo or '')[:2000], str(id_contatto or '')[:40]))
+            nuovo = cur.fetchone()[0]
+            cur.execute("DELETE FROM crm_messaggi WHERE id < "
+                        "(SELECT COALESCE(MIN(id),0) FROM (SELECT id FROM crm_messaggi "
+                        " ORDER BY id DESC LIMIT %s) t)", (MESSAGGI_MAX,))
+            return int(nuovo)
+    except Exception as e:
+        print(f"  (messaggio_scrivi: {e})")
+        return 0
+
+def messaggi_elenco(utente=None, limite=200):
+    """Se utente e' indicato, la sua conversazione. Altrimenti tutte."""
+    if not USE_DB:
+        return []
+    try:
+        _msg_db_init()
+        conn = _get_pg()
+        with conn.cursor() as cur:
+            if utente:
+                cur.execute("SELECT id, utente, da_titolare, autore, testo, id_contatto, letto, quando "
+                            "FROM crm_messaggi WHERE utente=%s ORDER BY id DESC LIMIT %s",
+                            (str(utente)[:80], int(limite)))
+            else:
+                cur.execute("SELECT id, utente, da_titolare, autore, testo, id_contatto, letto, quando "
+                            "FROM crm_messaggi ORDER BY id DESC LIMIT %s", (int(limite),))
+            righe = cur.fetchall()
+        return [{'id': int(a), 'utente': b, 'da_titolare': bool(c), 'autore': d, 'testo': e,
+                 'id_contatto': f, 'letto': bool(g),
+                 'quando': h.isoformat(timespec='seconds') if h else ''}
+                for a, b, c, d, e, f, g, h in reversed(righe)]
+    except Exception as e:
+        print(f"  (messaggi_elenco: {e})")
+        return []
+
+def messaggi_da_leggere(per_titolare, utente=None):
+    """Quanti messaggi non letti. per_titolare=True conta quelli scritti dalle
+    telefoniste (li deve leggere il titolare); False quelli scritti dal
+    titolare per quella telefonista."""
+    if not USE_DB:
+        return {} if per_titolare else 0
+    try:
+        _msg_db_init()
+        conn = _get_pg()
+        with conn.cursor() as cur:
+            if per_titolare:
+                cur.execute("SELECT utente, COUNT(*) FROM crm_messaggi "
+                            "WHERE NOT da_titolare AND NOT letto GROUP BY utente")
+                return {a: int(b) for a, b in cur.fetchall()}
+            cur.execute("SELECT COUNT(*) FROM crm_messaggi "
+                        "WHERE utente=%s AND da_titolare AND NOT letto", (str(utente or '')[:80],))
+            return int(cur.fetchone()[0])
+    except Exception as e:
+        print(f"  (messaggi_da_leggere: {e})")
+        return {} if per_titolare else 0
+
+def messaggi_segna_letti(utente, da_titolare):
+    """Segna letti i messaggi della conversazione scritti dall'altra parte."""
+    if not USE_DB:
+        return False
+    try:
+        _msg_db_init()
+        conn = _get_pg()
+        with conn.cursor() as cur:
+            cur.execute("UPDATE crm_messaggi SET letto=true WHERE utente=%s "
+                        "AND da_titolare=%s AND NOT letto",
+                        (str(utente or '')[:80], bool(da_titolare)))
+        return True
+    except Exception as e:
+        print(f"  (messaggi_segna_letti: {e})")
+        return False

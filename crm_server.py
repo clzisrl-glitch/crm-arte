@@ -631,6 +631,59 @@ def _registra_attivita(risposta):
         pass          # il registro non deve mai disturbare il lavoro
     return risposta
 
+# ═══════════════════════════════════════════════════════════════════
+#  MESSAGGI FRA TELEFONISTA E TITOLARE
+# ═══════════════════════════════════════════════════════════════════
+# Una conversazione per telefonista. Serve a chiedere al titolare le modifiche
+# che lei non puo' fare. Una telefonista vede e scrive SOLO nella propria.
+@app.route('/api/messaggi', methods=['GET'])
+@richiede_login
+def api_messaggi():
+    u = _utente_corrente() or {}
+    titolare = u.get('ruolo') == 'titolare'
+    if request.args.get('conteggio'):
+        # chiamata leggera, per il pallino dei non letti
+        if titolare:
+            return jsonify({'ok': True, 'titolare': True,
+                            'da_leggere': crm_db.messaggi_da_leggere(True)})
+        return jsonify({'ok': True, 'titolare': False,
+                        'da_leggere': crm_db.messaggi_da_leggere(False, u.get('nome'))})
+    if titolare:
+        chi = (request.args.get('utente') or '').strip()
+        if chi:
+            crm_db.messaggi_segna_letti(chi, False)   # ho letto quelli di lei
+            return jsonify({'ok': True, 'titolare': True, 'utente': chi,
+                            'messaggi': crm_db.messaggi_elenco(chi)})
+        return jsonify({'ok': True, 'titolare': True,
+                        'da_leggere': crm_db.messaggi_da_leggere(True),
+                        'messaggi': crm_db.messaggi_elenco(None, 300)})
+    mio = u.get('nome') or ''
+    crm_db.messaggi_segna_letti(mio, True)            # ho letto quelli del titolare
+    return jsonify({'ok': True, 'titolare': False, 'utente': mio,
+                    'messaggi': crm_db.messaggi_elenco(mio)})
+
+@app.route('/api/messaggi', methods=['POST'])
+@richiede_login
+def api_messaggi_scrivi():
+    u = _utente_corrente() or {}
+    titolare = u.get('ruolo') == 'titolare'
+    body = request.get_json(force=True) or {}
+    testo = str(body.get('testo') or '').strip()[:2000]
+    if not testo:
+        return jsonify({'error': 'messaggio vuoto'}), 400
+    id_contatto = str(body.get('id_contatto') or '').strip()[:40]
+    if titolare:
+        # il titolare deve dire a CHI scrive
+        chi = str(body.get('utente') or '').strip()[:80]
+        if not chi:
+            return jsonify({'error': 'manca il destinatario'}), 400
+    else:
+        chi = u.get('nome') or ''      # la telefonista scrive solo a se stessa
+    nuovo = crm_db.messaggio_scrivi(chi, titolare, u.get('nome'), testo, id_contatto)
+    if not nuovo:
+        return jsonify({'error': 'messaggio non salvato'}), 500
+    return jsonify({'ok': True, 'id': nuovo})
+
 @app.route('/api/attivita')
 @solo_titolare('accessi')
 def api_attivita():
