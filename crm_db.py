@@ -419,3 +419,83 @@ def ui_set(utente, dati):
     tutto[u] = dati or {}
     UI_FILE.write_text(json.dumps(tutto, ensure_ascii=False), encoding='utf-8')
     return True
+
+
+# ─────────────────────────────────────────────────────────────
+#  UTENTI DEL CRM (password cifrate)
+# ─────────────────────────────────────────────────────────────
+# Tabella piccola e separata dall'archivio, come crm_ui: gli utenti non
+# stanno nel blob dei dati, cosi' crearne uno non riscrive i ~7MB e un
+# guasto qui non tocca i contatti.
+# Nella colonna "impronta" NON c'e' la password: c'e' il risultato di un
+# calcolo a senso unico (PBKDF2, vedi crm_auth.py). Dall'impronta non si
+# risale alla password.
+UTENTI_FILE = BASE_DIR / 'utenti_crm.json'
+
+def _utenti_db_init():
+    conn = _get_pg()
+    with conn.cursor() as cur:
+        cur.execute("CREATE TABLE IF NOT EXISTS crm_utenti ("
+                    "nome TEXT PRIMARY KEY, impronta TEXT NOT NULL, "
+                    "ruolo TEXT NOT NULL, zona TEXT DEFAULT '', "
+                    "aggiornato TIMESTAMP DEFAULT now())")
+
+def utenti_lista():
+    """Tutti gli utenti gestiti dal CRM. Ritorna [] se non ce n'e' nessuno."""
+    try:
+        if USE_DB:
+            _utenti_db_init()
+            conn = _get_pg()
+            with conn.cursor() as cur:
+                cur.execute("SELECT nome, impronta, ruolo, zona FROM crm_utenti ORDER BY nome")
+                righe = cur.fetchall()
+            return [{'nome': r[0], 'impronta': r[1], 'ruolo': r[2], 'zona': r[3] or ''}
+                    for r in righe]
+        if UTENTI_FILE.exists():
+            return json.loads(UTENTI_FILE.read_text(encoding='utf-8')) or []
+    except Exception as e:
+        print(f"  (utenti_lista: {e})")
+    return []
+
+def utenti_salva(nome, impronta, ruolo, zona=''):
+    """Crea o aggiorna un utente. Se impronta e' None tiene quella esistente
+    (serve per cambiare solo ruolo o zona senza toccare la password)."""
+    nome = (nome or '').strip()
+    if not nome:
+        raise ValueError('nome utente mancante')
+    if impronta is None:
+        esistente = next((u for u in utenti_lista() if u['nome'].lower() == nome.lower()), None)
+        if not esistente:
+            raise ValueError('utente non trovato: serve una password')
+        impronta = esistente['impronta']
+    ruolo = (ruolo or 'operatore').lower()
+    zona = (zona or '').lower()
+    if USE_DB:
+        _utenti_db_init()
+        conn = _get_pg()
+        with conn.cursor() as cur:
+            cur.execute(
+                "INSERT INTO crm_utenti (nome, impronta, ruolo, zona, aggiornato) "
+                "VALUES (%s, %s, %s, %s, now()) "
+                "ON CONFLICT (nome) DO UPDATE SET impronta = EXCLUDED.impronta, "
+                "ruolo = EXCLUDED.ruolo, zona = EXCLUDED.zona, aggiornato = now()",
+                (nome, impronta, ruolo, zona))
+        return True
+    elenco = [u for u in utenti_lista() if u['nome'].lower() != nome.lower()]
+    elenco.append({'nome': nome, 'impronta': impronta, 'ruolo': ruolo, 'zona': zona})
+    UTENTI_FILE.write_text(json.dumps(elenco, ensure_ascii=False), encoding='utf-8')
+    return True
+
+def utenti_elimina(nome):
+    nome = (nome or '').strip()
+    if not nome:
+        return False
+    if USE_DB:
+        _utenti_db_init()
+        conn = _get_pg()
+        with conn.cursor() as cur:
+            cur.execute("DELETE FROM crm_utenti WHERE lower(nome) = lower(%s)", (nome,))
+        return True
+    elenco = [u for u in utenti_lista() if u['nome'].lower() != nome.lower()]
+    UTENTI_FILE.write_text(json.dumps(elenco, ensure_ascii=False), encoding='utf-8')
+    return True

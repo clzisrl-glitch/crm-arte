@@ -834,7 +834,7 @@ body:not([data-ruolo="operatore"]) ._soloOperatore{display:none!important}
       <div style="color:#777;margin-bottom:18px">Guida rapida. Le sezioni in alto sono i pulsanti della barra. Clicca un argomento per saltarci.</div><div class="_soloOperatore" style="background:#eef7ee;border:1px solid #cce5cc;border-left:4px solid #2a7a2a;border-radius:8px;padding:12px 14px;margin-bottom:18px;color:#2a5a2a"><b>&#127758; Lavori sulla tua zona.</b> Ricerche, elenchi e agenda ti mostrano <b>solo i contatti delle regioni della tua zona</b>, e l'agenda solo le telefonate e gli appuntamenti registrati da te o dalle tue colleghe di zona. Non &#232; un errore se non trovi un nominativo di un'altra regione: &#232; di un'altra zona.</div><div class="_soloTitolare" style="background:#eef4fc;border:1px solid #cfdcf0;border-left:4px solid #1a3a6a;border-radius:8px;padding:12px 14px;margin-bottom:18px;color:#33506f"><b>&#128273; Accesso titolare.</b> Vedi <b>tutte le zone</b> e tutti i contatti. In pi&#249; rispetto alle telefoniste hai: <b>&#128202; Statistiche</b> (andamento, zone, vendite per regione, accessi), backup ed esportazioni nel riquadro Strumenti, importazione contatti, correzione province, fusione dei doppioni ed eliminazione schede.</div>
       <div id="welcome-strumenti" style="background:#f4f6fa;border:1px solid #dfe5ee;border-radius:12px;padding:16px 18px;margin-bottom:22px"><div style="font-size:15px;font-weight:700;color:#1a3a6a;margin-bottom:4px">&#128295; Strumenti</div><div style="font-size:12.5px;color:#777;margin-bottom:12px"><span class="_soloTitolare">Backup, esportazioni e viste complete. <b>Backup, Excel e Completo sono riservati al titolare.</b></span><span class="_soloOperatore">Mappa dei contatti, ricerca &quot;vicino a me&quot; e archivio dei deceduti. Gli strumenti di backup ed esportazione sono del titolare e qui non compaiono.</span></div><div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center"><button class="btn-u btn-green" onclick="backupCompleto()" title="Scarica una copia di sicurezza di tutti i dati (crm_data.json) sul tuo computer.">&#128190; Backup</button><button class="btn-u btn-blue _soloTitolare" onclick="mostraBackupAuto()" title="Vedi e scarica le copie di sicurezza automatiche degli ultimi 60 giorni.">&#128338; Backup automatici</button>
           <button onclick="mostraVicinoModal()" class="tool-btn" style="background:#eaf3fb;border:1px solid #c2dcf0;color:#1a5a93;padding:10px 14px;border-radius:9px;font-size:13px;cursor:pointer;font-weight:600">&#128205; Vicino a me</button>
-          <button onclick="mostraImportModal()" class="tool-btn _soloTitolare" style="background:#eef7ee;border:1px solid #cce5cc;color:#2a7a2a;padding:10px 14px;border-radius:9px;font-size:13px;cursor:pointer;font-weight:600">&#128229; Importa contatti</button><button onclick="_correggiDati()" class="tool-btn _soloTitolare" style="background:#fdeedd;border:1px solid #f0cfa0;color:#b35900;padding:10px 14px;border-radius:9px;font-size:13px;cursor:pointer;font-weight:600" title="Corregge le province sbagliate (da comune/CAP) e mette gli esteri in categoria Estero. Solo Provincia/Regione.">&#128295; Correggi province/esteri</button><button onclick="_fondiDuplicati()" class="tool-btn _soloTitolare" style="background:#e7f5ec;border:1px solid #a9d8bb;color:#0a6b45;padding:10px 14px;border-radius:9px;font-size:13px;cursor:pointer;font-weight:600" title="Fonde i duplicati sicuri (stesso cognome+nome+citta): tiene la scheda migliore, porta li opere/telefonate/dati, marca gli altri come fuso.">&#128260; Fondi duplicati</button><button class="btn-u pt-mail" onclick="exportExcel(false)" title="Esporta tutti i contatti in un file Excel.">&#128202; Excel</button><button class="btn-u pt-lista" onclick="vistaCompleto()" title="Mostra tutti i contatti, dal piu recente inserito al primo.">&#128203; Completo</button><button class="btn-u" onclick="showTab('deceduti')" title="Contatti segnati come deceduti: tenuti da parte ed esclusi dalle ricerche.">&#9904; Deceduti</button></div></div>
+          <button onclick="apriUtenti()" class="tool-btn _soloTitolare" style="background:#eef0fb;border:1px solid #ccd2f0;color:#3a45a0;padding:10px 14px;border-radius:9px;font-size:13px;cursor:pointer;font-weight:600" title="Crea e modifica gli accessi al CRM. Le password vengono cifrate: nessuno puo rileggerle, nemmeno tu.">&#128100; Utenti e password</button><button onclick="mostraImportModal()" class="tool-btn _soloTitolare" style="background:#eef7ee;border:1px solid #cce5cc;color:#2a7a2a;padding:10px 14px;border-radius:9px;font-size:13px;cursor:pointer;font-weight:600">&#128229; Importa contatti</button><button onclick="_correggiDati()" class="tool-btn _soloTitolare" style="background:#fdeedd;border:1px solid #f0cfa0;color:#b35900;padding:10px 14px;border-radius:9px;font-size:13px;cursor:pointer;font-weight:600" title="Corregge le province sbagliate (da comune/CAP) e mette gli esteri in categoria Estero. Solo Provincia/Regione.">&#128295; Correggi province/esteri</button><button onclick="_fondiDuplicati()" class="tool-btn _soloTitolare" style="background:#e7f5ec;border:1px solid #a9d8bb;color:#0a6b45;padding:10px 14px;border-radius:9px;font-size:13px;cursor:pointer;font-weight:600" title="Fonde i duplicati sicuri (stesso cognome+nome+citta): tiene la scheda migliore, porta li opere/telefonate/dati, marca gli altri come fuso.">&#128260; Fondi duplicati</button><button class="btn-u pt-mail" onclick="exportExcel(false)" title="Esporta tutti i contatti in un file Excel.">&#128202; Excel</button><button class="btn-u pt-lista" onclick="vistaCompleto()" title="Mostra tutti i contatti, dal piu recente inserito al primo.">&#128203; Completo</button><button class="btn-u" onclick="showTab('deceduti')" title="Contatti segnati come deceduti: tenuti da parte ed esclusi dalle ricerche.">&#9904; Deceduti</button></div></div>
       <div id="welcome-top" style="background:#fdf6e9;border:1px solid #ecd9a8;border-radius:12px;padding:16px 18px;margin-bottom:22px"><div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px"><div style="font-size:15px;font-weight:700;color:#a07810">&#127942; Clienti top</div><div style="display:flex;gap:6px;flex-wrap:wrap"><select id="topRegione" onchange="_topProvince();renderTop()" style="padding:6px 10px;border:1px solid #e0c878;border-radius:7px;font-size:12.5px;color:#8a6810;background:#fff"><option value="">Tutte le regioni</option></select><select id="topProvincia" onchange="renderTop()" style="padding:6px 10px;border:1px solid #e0c878;border-radius:7px;font-size:12.5px;color:#8a6810;background:#fff"><option value="">Tutte le province</option></select><button onclick="_stampaLista('top')" title="Stampa la lista" style="padding:6px 10px;border:1px solid #e0c878;border-radius:7px;font-size:12.5px;color:#8a6810;background:#fff;cursor:pointer">&#128424;</button></div></div><div style="font-size:12px;color:#b09040;margin-bottom:10px">I clienti che hanno acquistato di pi&ugrave; (valori storici in lire convertiti in euro). <span id="topConteggio" style="font-weight:600"></span></div><div id="topLista" style="display:flex;flex-direction:column;gap:4px;max-height:360px;overflow-y:auto"></div></div>
       <div id="welcome-compleanni" style="background:#fff8ee;border:1px solid #f0e0c0;border-radius:12px;padding:16px 18px;margin-bottom:22px"><div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px"><div style="font-size:15px;font-weight:700;color:#9a6500">&#127874; Prossimi compleanni</div><div style="display:flex;gap:6px;flex-wrap:wrap"><select id="complRegione" onchange="_complProvince();renderCompleanni()" style="padding:6px 10px;border:1px solid #e0cba0;border-radius:7px;font-size:12.5px;color:#7a5500;background:#fff"><option value="">Tutte le regioni</option></select><select id="complProvincia" onchange="renderCompleanni()" style="padding:6px 10px;border:1px solid #e0cba0;border-radius:7px;font-size:12.5px;color:#7a5500;background:#fff"><option value="">Tutte le province</option></select><button onclick="_stampaLista('compleanni')" title="Stampa la lista" style="padding:6px 10px;border:1px solid #e0cba0;border-radius:7px;font-size:12.5px;color:#7a5500;background:#fff;cursor:pointer">&#128424;</button></div></div><div style="font-size:12px;color:#a08040;margin-bottom:10px">Clienti che compiono gli anni nei prossimi 30 giorni. Un'occasione per una telefonata di auguri.</div><div id="complLista" style="display:flex;flex-direction:column;gap:4px;max-height:320px;overflow-y:auto"></div></div>
       <div id="welcome-anziani" style="background:#f3f0fa;border:1px solid #ddd0ee;border-radius:12px;padding:16px 18px;margin-bottom:22px"><div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px"><div style="font-size:15px;font-weight:700;color:#5b3a8a">&#128081; Clienti dai 90 anni in su</div><div style="display:flex;gap:6px;flex-wrap:wrap"><select id="anzRegione" onchange="_anzProvince();renderAnziani()" style="padding:6px 10px;border:1px solid #cdb8e6;border-radius:7px;font-size:12.5px;color:#5b3a8a;background:#fff"><option value="">Tutte le regioni</option></select><select id="anzProvincia" onchange="renderAnziani()" style="padding:6px 10px;border:1px solid #cdb8e6;border-radius:7px;font-size:12.5px;color:#5b3a8a;background:#fff"><option value="">Tutte le province</option></select><button onclick="_stampaLista('anziani')" title="Stampa la lista" style="padding:6px 10px;border:1px solid #cdb8e6;border-radius:7px;font-size:12.5px;color:#5b3a8a;background:#fff;cursor:pointer">&#128424;</button></div></div><div style="font-size:12px;color:#8a72b0;margin-bottom:10px">Elenco aggiornato automaticamente in base all'et&agrave; (calcolata dal codice fiscale). <span id="anzConteggio" style="font-weight:600"></span></div><div id="anzLista" style="display:flex;flex-direction:column;gap:4px;max-height:360px;overflow-y:auto"></div></div>
@@ -4884,6 +4884,30 @@ const EMBEDDED_APPUNTAMENTI=``
 
 <div id="backupAutoModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;align-items:center;justify-content:center"><div style="background:#fff;border-radius:14px;padding:22px;max-width:520px;width:90%;max-height:80vh;overflow-y:auto"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><div style="font-size:18px;font-weight:700;color:#1a3a6a">&#128338; Backup automatici</div><button onclick="document.getElementById('backupAutoModal').style.display='none'" style="background:none;border:none;font-size:22px;cursor:pointer;color:#999">&times;</button></div><div style="font-size:12.5px;color:#888;margin-bottom:14px">Copie di sicurezza automatiche giornaliere (ultimi 60 giorni). Clicca per scaricare quella che vuoi sul tuo computer.</div><div id="backupAutoLista" style="display:flex;flex-direction:column;gap:5px"></div></div></div>
 
+<div id="utentiModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;align-items:center;justify-content:center">
+  <div style="background:#fff;border-radius:14px;padding:22px 24px;max-width:780px;width:92%;max-height:88vh;overflow-y:auto;box-shadow:0 10px 40px rgba(0,0,0,.3)">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+      <div style="font-size:18px;font-weight:700;color:#1a3a6a">&#128100; Utenti e password</div>
+      <button onclick="chiudiUtenti()" style="background:none;border:none;font-size:22px;cursor:pointer;color:#888;line-height:1">&#215;</button>
+    </div>
+    <div style="font-size:12.5px;color:#777;margin-bottom:14px">
+      Qui crei gli accessi al CRM. La password che scrivi <b>non viene salvata</b>: il programma ne conserva solo un&#39;impronta,
+      da cui la password non si puo&#39; ricavare. Nemmeno tu potrai rileggerla: se una telefonista la dimentica, gliene metti una nuova.
+    </div>
+    <div id="utentiElenco"></div>
+    <div style="border-top:1px solid #eee;margin:16px 0 12px"></div>
+    <div style="font-size:14px;font-weight:700;color:#1a3a6a;margin-bottom:8px" id="utFormTitolo">Nuovo utente</div>
+    <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end">
+      <label style="font-size:11px;color:#666">Nome utente<br><input id="utNome" style="padding:7px 9px;border:1px solid #ccc;border-radius:7px;font-size:13px;width:150px" placeholder="es. triveneto"></label>
+      <label style="font-size:11px;color:#666">Ruolo<br><select id="utRuolo" style="padding:7px 9px;border:1px solid #ccc;border-radius:7px;font-size:13px"><option value="operatore">operatore (telefonista)</option><option value="titolare">titolare (accesso completo)</option></select></label>
+      <label style="font-size:11px;color:#666">Zona<br><select id="utZona" style="padding:7px 9px;border:1px solid #ccc;border-radius:7px;font-size:13px"></select></label>
+      <label style="font-size:11px;color:#666">Password<br><input id="utPwd" type="password" autocomplete="new-password" style="padding:7px 9px;border:1px solid #ccc;border-radius:7px;font-size:13px;width:180px" placeholder="almeno 8 caratteri"></label>
+      <button onclick="salvaUtente()" style="background:#1a5ab8;color:#fff;border:none;border-radius:8px;padding:9px 16px;font-size:13px;font-weight:600;cursor:pointer">Salva</button>
+      <button onclick="_utNuovo()" style="background:#eee;color:#555;border:none;border-radius:8px;padding:9px 14px;font-size:13px;cursor:pointer">Pulisci</button>
+    </div>
+    <div id="utEsito" style="margin-top:12px;font-size:13px"></div>
+  </div>
+</div>
 <div id="importModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;align-items:center;justify-content:center">
   <div style="background:#fff;border-radius:14px;padding:24px;max-width:520px;width:90%;max-height:85vh;overflow-y:auto">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
@@ -4903,6 +4927,100 @@ const EMBEDDED_APPUNTAMENTI=``
 </div>
 <script>
 var _importData=null;
+// ═══════════════════════════════════════════════════
+// UTENTI E PASSWORD (password cifrate, mai in chiaro)
+// ═══════════════════════════════════════════════════
+// La password viaggia dal browser al server e li' diventa subito
+// un'impronta (PBKDF2). Non viene salvata da nessuna parte in chiaro e
+// non torna mai indietro: l'elenco mostra solo nome, ruolo e zona.
+async function apriUtenti(){
+  if(!_soloTitolare('Gestione utenti'))return;
+  document.getElementById('utentiModal').style.display='flex';
+  document.getElementById('utEsito').innerHTML='';
+  _utNuovo();
+  await _caricaUtenti();
+}
+function chiudiUtenti(){document.getElementById('utentiModal').style.display='none';}
+function _utNuovo(){
+  document.getElementById('utFormTitolo').textContent='Nuovo utente';
+  var n=document.getElementById('utNome'); if(n){n.value='';n.readOnly=false;}
+  var p=document.getElementById('utPwd'); if(p)p.value='';
+  var r=document.getElementById('utRuolo'); if(r)r.value='operatore';
+  var z=document.getElementById('utZona'); if(z)z.value='';
+}
+async function _caricaUtenti(){
+  var box=document.getElementById('utentiElenco');
+  box.innerHTML='<div style="color:#999;font-size:13px">Carico...</div>';
+  try{
+    const r=await fetch('/api/utenti');
+    const j=await r.json();
+    if(!r.ok){box.innerHTML='<div style="color:#c00;font-size:13px">'+esc(j.error||'errore')+'</div>';return;}
+    window._utZone=j.zone||[];
+    var sel=document.getElementById('utZona');
+    if(sel)sel.innerHTML='<option value="">nessuna (vede tutto)</option>'+(j.zone||[]).map(function(z){return '<option value="'+esc(z)+'">'+esc(z)+'</option>';}).join('');
+    var u=j.utenti||[];
+    var h='<table style="width:100%;border-collapse:collapse;font-size:13px">'+
+      '<tr style="background:#f4f6fa"><th style="text-align:left;padding:7px;font-size:11.5px;color:#666">Utente</th>'+
+      '<th style="text-align:left;padding:7px;font-size:11.5px;color:#666">Ruolo</th>'+
+      '<th style="text-align:left;padding:7px;font-size:11.5px;color:#666">Zona</th>'+
+      '<th style="text-align:left;padding:7px;font-size:11.5px;color:#666">Password</th>'+
+      '<th style="padding:7px"></th></tr>';
+    u.forEach(function(x){
+      var cifrata=x.origine==='crm';
+      h+='<tr style="border-bottom:1px solid #eee">'+
+        '<td style="padding:7px;font-weight:600;color:#1a3a6a">'+esc(x.nome)+'</td>'+
+        '<td style="padding:7px">'+esc(x.ruolo)+'</td>'+
+        '<td style="padding:7px;color:#666">'+esc(x.zona||'-')+'</td>'+
+        '<td style="padding:7px">'+(cifrata
+            ? '<span style="color:#2a7a4a;font-weight:600">&#128274; cifrata</span>'
+            : '<span style="color:#b35900;font-weight:600" title="Questo accesso sta ancora nella variabile CRM_UTENTI di Railway, in chiaro. Rifallo qui con una password nuova e passa a quella cifrata.">&#9888; in chiaro su Railway</span>')+'</td>'+
+        '<td style="padding:7px;text-align:right;white-space:nowrap">'+
+          '<button onclick="_utModifica(\''+esc(x.nome)+'\',\''+esc(x.ruolo)+'\',\''+esc(x.zona||'')+'\')" style="background:#eef;border:1px solid #ccd;border-radius:6px;padding:4px 9px;font-size:12px;cursor:pointer;margin-right:5px">Cambia password</button>'+
+          (cifrata?'<button onclick="eliminaUtente(\''+esc(x.nome)+'\')" style="background:#fdecec;border:1px solid #f0c0c0;color:#a33;border-radius:6px;padding:4px 9px;font-size:12px;cursor:pointer">Elimina</button>':'')+
+        '</td></tr>';
+    });
+    h+='</table>';
+    box.innerHTML=h;
+  }catch(e){box.innerHTML='<div style="color:#c00;font-size:13px">Errore di collegamento.</div>';}
+}
+function _utModifica(nome,ruolo,zona){
+  document.getElementById('utFormTitolo').textContent='Cambia password di '+nome;
+  var n=document.getElementById('utNome'); n.value=nome; n.readOnly=true;
+  document.getElementById('utRuolo').value=ruolo||'operatore';
+  document.getElementById('utZona').value=zona||'';
+  var p=document.getElementById('utPwd'); p.value=''; p.focus();
+}
+async function salvaUtente(){
+  var nome=(document.getElementById('utNome').value||'').trim();
+  var pwd=document.getElementById('utPwd').value||'';
+  var ruolo=document.getElementById('utRuolo').value;
+  var zona=document.getElementById('utZona').value;
+  var out=document.getElementById('utEsito');
+  if(!nome){out.innerHTML='<span style="color:#c00">Scrivi il nome utente.</span>';return;}
+  if(pwd&&pwd.length<8){out.innerHTML='<span style="color:#c00">La password deve avere almeno 8 caratteri.</span>';return;}
+  out.innerHTML='<span style="color:#888">Salvo...</span>';
+  try{
+    const r=await fetch('/api/utenti',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({nome:nome,password:pwd,ruolo:ruolo,zona:zona})});
+    const j=await r.json();
+    if(!r.ok){out.innerHTML='<span style="color:#c00">'+esc(j.error||'errore')+'</span>';return;}
+    out.innerHTML='<span style="color:#2a7a2a;font-weight:600">&#10003; Salvato. La password e cifrata: da ora l accesso di '+esc(nome)+' funziona con quella nuova.</span>';
+    document.getElementById('utPwd').value='';
+    _utNuovo();
+    await _caricaUtenti();
+  }catch(e){out.innerHTML='<span style="color:#c00">Errore di collegamento.</span>';}
+}
+async function eliminaUtente(nome){
+  if(!confirm('Eliminare l accesso di '+nome+'?\n\nNon potra piu entrare nel CRM. I contatti e il lavoro fatto restano.'))return;
+  var out=document.getElementById('utEsito');
+  try{
+    const r=await fetch('/api/utenti_elimina',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({nome:nome})});
+    const j=await r.json();
+    if(!r.ok){out.innerHTML='<span style="color:#c00">'+esc(j.error||'errore')+'</span>';return;}
+    out.innerHTML='<span style="color:#2a7a2a">Accesso di '+esc(nome)+' eliminato.</span>';
+    await _caricaUtenti();
+  }catch(e){out.innerHTML='<span style="color:#c00">Errore di collegamento.</span>';}
+}
 function mostraImportModal(){document.getElementById('importModal').style.display='flex';document.getElementById('importInfo').innerHTML='';document.getElementById('importAzioni').style.display='none';document.getElementById('importFile').value='';_importData=null;}
 function chiudiImport(){document.getElementById('importModal').style.display='none';}
 function anteprimaImport(){

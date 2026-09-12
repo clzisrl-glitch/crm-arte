@@ -19,6 +19,22 @@ app = Flask(__name__)
 # RAILWAY_READY
 import crm_db, crm_auth
 
+def _ricarica_utenti():
+    """Rilegge dal database gli utenti gestiti dentro il CRM (password
+    cifrate) e li passa a crm_auth. Chiamata all'avvio e dopo ogni modifica."""
+    try:
+        n = crm_auth.imposta_utenti_db(crm_db.utenti_lista())
+        return n
+    except Exception as e:
+        print(f"  (utenti dal database non letti: {e})")
+        return 0
+try:
+    _n_utenti = _ricarica_utenti()
+    if _n_utenti:
+        print(f"  Utenti gestiti dal CRM (password cifrate): {_n_utenti}")
+except Exception:
+    pass
+
 # ---------------------------------------------------------------------------
 # SERIALIZZAZIONE DELLE SCRITTURE
 # Ogni rotta che scrive fa: load_data() -> modifica -> save_data().
@@ -471,6 +487,71 @@ def api_ui_stato():
     except Exception as e:
         # una preferenza non deve MAI far fallire il lavoro dell'operatore
         return jsonify({'ok': False, 'error': str(e)}), 200
+
+@app.route('/api/utenti', methods=['GET'])
+@solo_titolare('gestione_utenti')
+def api_utenti_elenco():
+    """Elenco utenti: nome, ruolo, zona e da dove arrivano. MAI le password
+    (di quelle gestite dal CRM esiste solo l'impronta, e non esce da qui)."""
+    _ricarica_utenti()
+    return jsonify({'ok': True,
+                    'utenti': crm_auth.elenco_utenti_visibile(),
+                    'zone': sorted(crm_auth.ZONE.keys())})
+
+@app.route('/api/utenti', methods=['POST'])
+@solo_titolare('gestione_utenti')
+def api_utenti_salva():
+    """Crea o modifica un utente con password cifrata.
+    La password arriva qui, viene subito trasformata in impronta e NON viene
+    mai scritta da nessuna parte."""
+    body = request.get_json(force=True) or {}
+    nome = str(body.get('nome', '')).strip()
+    password = body.get('password')
+    ruolo = (str(body.get('ruolo', 'operatore')) or 'operatore').lower()
+    zona = (str(body.get('zona', '')) or '').lower().strip()
+    if not nome or len(nome) > 40:
+        return jsonify({'error': 'Nome utente mancante o troppo lungo.'}), 400
+    if any(c in nome for c in ':, '):
+        return jsonify({'error': 'Il nome utente non puo contenere due punti, virgole o spazi.'}), 400
+    if ruolo not in ('titolare', 'operatore'):
+        return jsonify({'error': 'Ruolo non valido.'}), 400
+    if zona and zona not in crm_auth.ZONE:
+        return jsonify({'error': 'Zona sconosciuta: ' + zona}), 400
+    impronta = None
+    if password is not None and str(password) != '':
+        password = str(password)
+        if len(password) < 8:
+            return jsonify({'error': 'La password deve essere di almeno 8 caratteri.'}), 400
+        impronta = crm_auth.crea_impronta(password)
+    try:
+        crm_db.utenti_salva(nome, impronta, ruolo, zona)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 400
+    _ricarica_utenti()
+    return jsonify({'ok': True, 'utenti': crm_auth.elenco_utenti_visibile()})
+
+@app.route('/api/utenti_elimina', methods=['POST'])
+@solo_titolare('gestione_utenti')
+def api_utenti_elimina():
+    body = request.get_json(force=True) or {}
+    nome = str(body.get('nome', '')).strip()
+    if not nome:
+        return jsonify({'error': 'nome mancante'}), 400
+    u = _utente_corrente() or {}
+    if nome.lower() == str(u.get('nome', '')).lower():
+        return jsonify({'error': 'Non puoi eliminare l utente con cui sei collegato.'}), 400
+    # deve restare almeno un titolare gestito dal CRM o dalla variabile
+    restanti = [x for x in crm_auth.elenco_utenti_visibile()
+                if x['nome'].lower() != nome.lower() and x['ruolo'] == 'titolare']
+    if not restanti:
+        return jsonify({'error': 'Resteresti senza nessun titolare: eliminazione bloccata.'}), 400
+    gestiti = set(x['nome'].lower() for x in crm_db.utenti_lista())
+    if nome.lower() not in gestiti:
+        return jsonify({'error': 'Questo accesso non e gestito dal CRM: sta nella '
+                                 'variabile CRM_UTENTI su Railway e si toglie da li.'}), 400
+    crm_db.utenti_elimina(nome)
+    _ricarica_utenti()
+    return jsonify({'ok': True, 'utenti': crm_auth.elenco_utenti_visibile()})
 
 @app.route('/api/status')
 @richiede_login

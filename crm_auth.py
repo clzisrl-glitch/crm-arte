@@ -124,14 +124,94 @@ def verifica_token(token):
     except Exception:
         return None
 
+# ══════════════════════════════════════════════════════════════════
+#  PASSWORD CIFRATE (impronta, non password)
+# ══════════════════════════════════════════════════════════════════
+# Del password non si salva MAI il testo: si salva un'impronta calcolata
+# con PBKDF2-SHA256 e 200.000 giri, piu' un "sale" casuale diverso per
+# ogni utente. Dall'impronta non si torna indietro alla password, e due
+# persone con la stessa password hanno impronte diverse.
+# Formato salvato:  pbkdf2$<giri>$<sale_hex>$<impronta_hex>
+# Solo libreria standard: niente pacchetti nuovi da installare.
+PBKDF2_GIRI = 200000
+
+def crea_impronta(password, giri=PBKDF2_GIRI):
+    sale = secrets.token_bytes(16)
+    imp = hashlib.pbkdf2_hmac('sha256', (password or '').encode('utf-8'), sale, giri)
+    return f"pbkdf2${giri}${sale.hex()}${imp.hex()}"
+
+def verifica_impronta(password, impronta):
+    """True se la password corrisponde all'impronta salvata."""
+    try:
+        algo, giri, sale_hex, atteso_hex = str(impronta).split('$')
+        if algo != 'pbkdf2':
+            return False
+        imp = hashlib.pbkdf2_hmac('sha256', (password or '').encode('utf-8'),
+                                  bytes.fromhex(sale_hex), int(giri))
+        return hmac.compare_digest(imp.hex(), atteso_hex)
+    except Exception:
+        return False
+
+# Gli utenti gestiti dentro il CRM (tabella cifrata) vengono caricati qui
+# dal server all'avvio e a ogni modifica. Formato:
+#   {'nord1': {'nome':'Nord1','impronta':'pbkdf2$...','ruolo':'operatore','zona':'nord'}}
+UTENTI_DB = {}
+
+def imposta_utenti_db(elenco):
+    """Sostituisce l'elenco degli utenti cifrati (lo chiama crm_server)."""
+    global UTENTI_DB
+    nuovo = {}
+    for u in (elenco or []):
+        nome = str(u.get('nome', '')).strip()
+        if not nome:
+            continue
+        nuovo[nome.lower()] = {
+            'nome': nome,
+            'impronta': u.get('impronta', ''),
+            'ruolo': (u.get('ruolo') or 'operatore').lower(),
+            'zona': (u.get('zona') or '').lower(),
+        }
+    UTENTI_DB = nuovo
+    return len(UTENTI_DB)
+
 def controlla_login(nome, password):
-    u = UTENTI.get((nome or '').lower().strip())
-    if not u:
+    """Prima gli utenti gestiti dal CRM (password cifrata), poi la variabile
+    CRM_UTENTI (password in chiaro) come chiave di riserva dell'admin.
+    Chi e' nella tabella cifrata NON viene piu' cercato nella variabile:
+    la password valida e' quella impostata dentro il CRM."""
+    chiave = (nome or '').lower().strip()
+    u = UTENTI_DB.get(chiave)
+    if u:
+        if verifica_impronta(password, u.get('impronta', '')):
+            return {'nome': u['nome'], 'ruolo': u['ruolo'], 'zona': u.get('zona', '')}
+        return None
+    v = UTENTI.get(chiave)
+    if not v:
+        return None
+    # L'accesso di prova admin/cambiami esiste solo per il primissimo avvio.
+    # Se il CRM ha gia' utenti veri con password cifrata, quell'accesso NON
+    # deve piu' funzionare: altrimenti svuotare CRM_UTENTI aprirebbe la porta
+    # a chiunque conosca il valore predefinito.
+    if UTENTI_DB and chiave == 'admin' and v.get('password') == 'cambiami':
         return None
     # confronto a tempo costante (anti-indovinare)
-    if hmac.compare_digest(u['password'], password or ''):
-        return {'nome': u['nome'], 'ruolo': u['ruolo'], 'zona': u.get('zona', '')}
+    if hmac.compare_digest(v['password'], password or ''):
+        return {'nome': v['nome'], 'ruolo': v['ruolo'], 'zona': v.get('zona', '')}
     return None
+
+def elenco_utenti_visibile():
+    """Nomi, ruoli e zone di TUTTI gli utenti (cifrati + variabile), senza
+    nessuna password. Serve alla scheda Utenti."""
+    fuori = []
+    for k, u in sorted(UTENTI_DB.items()):
+        fuori.append({'nome': u['nome'], 'ruolo': u['ruolo'], 'zona': u.get('zona', ''),
+                      'origine': 'crm'})
+    for k, v in sorted(UTENTI.items()):
+        if k in UTENTI_DB:
+            continue
+        fuori.append({'nome': v['nome'], 'ruolo': v['ruolo'], 'zona': v.get('zona', ''),
+                      'origine': 'variabile'})
+    return fuori
 
 # ── blocco dopo troppi tentativi sbagliati ──
 MAX_TENTATIVI = 3          # tentativi consentiti prima del blocco
