@@ -566,6 +566,7 @@ body:not([data-ruolo="operatore"]) ._soloOperatore{display:none!important}
     <div style="display:flex;align-items:center;gap:8px;margin-right:10px">
       <button onclick="_aggiornaOra()" title="Ricarica i dati dal server" id="btnAggiorna" style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;background:#2a5ab8;color:#fff;border:none;border-radius:16px;cursor:pointer;padding:6px 14px;box-shadow:0 1px 3px rgba(0,0,0,.2)"><span id="iconaAgg" style="font-size:16px;line-height:1">&#10227;</span><span>Aggiorna</span><span id="numContatti" style="background:rgba(255,255,255,.25);border-radius:10px;padding:1px 8px;font-size:12px">&mdash;</span></button>
       <span id="dbStatus" style="font-size:10px;color:#666;min-width:80px;text-align:right"></span>
+      <span id="boxUtente" style="display:none;align-items:center;gap:6px;font-size:12px;color:#33465e;background:#eef2f8;border:1px solid #d7e0ec;border-radius:16px;padding:4px 6px 4px 11px"><span id="nomeUtente" style="font-weight:600"></span><button onclick="faiLogout()" id="btnEsci" title="Esci dal CRM. Al prossimo accesso verranno richiesti utente e password." style="background:#c14545;color:#fff;border:none;border-radius:13px;cursor:pointer;padding:3px 11px;font-size:11.5px;font-weight:600">Esci</button></span>
     </div>
     <div class="tabs">
       <button class="tab active" data-tab="agenda" onclick="showTab('agenda')" title="AGENDA: gli appuntamenti e le telefonate da fare oggi e nei prossimi giorni, in ordine di data.">AGENDA</button>
@@ -938,6 +939,16 @@ async function _verificaAccesso(){
     if(j.online&&!j.login){document.getElementById("loginOverlay").style.display="flex";return false;}
     if(j.ruolo){window._ruolo=j.ruolo;document.body.setAttribute("data-ruolo",j.ruolo);}
     if(j.nome){window._nomeUtente=j.nome;}
+    // Chi sei e il pulsante per uscire: prima non c'era nessun pulsante
+    // che chiamasse faiLogout(), quindi dal CRM non si poteva uscire.
+    try{
+      if(j.online&&j.login){
+        var _bu=document.getElementById("boxUtente");
+        var _nu=document.getElementById("nomeUtente");
+        if(_nu)_nu.textContent="\uD83D\uDC64 "+(j.nome||"")+(j.zona?" \u00b7 "+j.zona:"");
+        if(_bu)_bu.style.display="inline-flex";
+      }
+    }catch(e){}
     window._titolariSet=new Set((j.titolari||[]).map(function(n){return (n||'').trim().toLowerCase();}));
     return true;
   }catch(e){return true;}
@@ -951,7 +962,10 @@ async function faiLogin(){
     else err.textContent=j.error||"Accesso negato.";
   }catch(e){err.textContent="Errore di collegamento.";}
 }
-async function faiLogout(){try{await fetch("/api/logout",{method:"POST"});location.reload();}catch(e){}}
+async function faiLogout(){
+  if(!confirm("Uscire dal CRM?\n\nAl prossimo accesso verranno richiesti utente e password.\nIl lavoro salvato resta: non si perde niente."))return;
+  try{await fetch("/api/logout",{method:"POST"});location.reload();}catch(e){location.reload();}
+}
 let allContacts=[],currentResults=[],currentIdx=0,searchActive=false;
 
 var _coordContatti=null;
