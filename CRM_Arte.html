@@ -657,7 +657,7 @@ body:not([data-ruolo="operatore"]) ._soloOperatore{display:none!important}
       <button class="btn-u pt-controllare" title="Manda questa scheda in Da controllare (per ricontrollarla: numero errato, indirizzo vecchio, ecc.)." onclick="segnalaContatto(currentResults[currentIdx]?.ID_contatto)">&#9888; Da controllare</button>
       <button class="btn-u pt-deceduto" title="Segna questo contatto come DECEDUTO: lo esclude da elenco, ricerca e agenda e lo sposta nella scheda Deceduti." onclick="segnaDeceduto()">&#9904; Segna deceduto</button>
       <button class="btn-u btn-blue-soft" id="btnAzzera" onclick="azzeraRicerca()" style="display:none" title="Torna a navigare tutto il database">&#10005; Azzera ricerca</button>
-<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 12/09/2026 14:00</span>
+<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 12/09/2026 15:00</span>
       <div style="flex:1"></div>
       <button class="btn-u btn-del-discreet" onclick="deleteContact()" title="Elimina questo contatto">&#128465;</button>
     </div>
@@ -1076,8 +1076,8 @@ function mapsHref(c){return'https://www.google.com/maps/search/?api=1&query='+en
 function statusBadge(c){
   const e=(c.Esito_ultima_chiamata||'').toLowerCase();
   let t='#6e6e73',b='#eeeef0',l=c.Esito_ultima_chiamata||'Da chiamare';
-  if(e.includes('appuntamento')){t='#248a3d';b='#e3f4e8';}
-  else if(e.includes('richiam')){t='#1a5fb4';b='#e6f0fb';}
+  if(_esitoPositivo(e)){t='#248a3d';b='#e3f4e8';}
+  else if(_esitoRichiamo(e)){t='#1a5fb4';b='#e6f0fb';}
   else if(e.includes('prioritar')){t='#b35900';b='#fdeedd';}
   else if(e.includes('negativo')||e.includes('ines')){t='#c0392b';b='#fbe7e5';}
   return `<div class="sched-top"><span class="sched-badge" style="color:${t};background:${b}">${esc(l)}</span><div class="sched-navid"><div class="sched-frecce"><button class="frecciaNav" onclick="prevContact()" title="Contatto precedente">&#9668;</button><span class="frecce-lbl">naviga</span><button class="frecciaNav" onclick="nextContact()" title="Contatto successivo">&#9658;</button></div><span class="sched-id">${esc(c.ID_contatto)}</span></div></div>`;
@@ -1511,7 +1511,10 @@ function _isDeceduto(c){const n=(c.Note||'').toUpperCase();const re=/DECEDUT[OA]
 function _attivi(){return allContacts.filter(c=>!_isDeceduto(c));}
 function renderDeceduti(){
   const q=(document.getElementById('decSearch')?.value||'').toLowerCase().trim();
-  let list=allContacts.filter(_isDeceduto);
+  // allContacts i deceduti li ha GIA' tolti (vedi il filtro al caricamento):
+  // cercandoli li' la scheda risultava sempre vuota. Vanno presi dall'elenco
+  // completo.
+  let list=contacts.filter(_isDeceduto);
   if(q)list=list.filter(c=>((c.Cognome||'')+' '+(c.Nome||'')+' '+(c.Citta||'')+' '+(c.Provincia||'')).toLowerCase().includes(q));
   list.sort((a,b)=>((a.Cognome||'')+' '+(a.Nome||'')).localeCompare((b.Cognome||'')+' '+(b.Nome||'')));
   const cnt=document.getElementById('decCount');if(cnt)cnt.textContent=list.length+' contatti';
@@ -1526,7 +1529,7 @@ function renderDeceduti(){
 }
 function apriDeceduto(id){const c=contactMap[id];if(!c)return;currentResults=[c];currentIdx=0;searchActive=true;renderContactAndMap(c);showTab('principale');}
 function stampaDeceduti(){
-  let list=allContacts.filter(_isDeceduto);
+  let list=contacts.filter(_isDeceduto);
   const q=(document.getElementById('decSearch')?.value||'').toLowerCase().trim();
   if(q)list=list.filter(c=>((c.Cognome||'')+' '+(c.Nome||'')+' '+(c.Citta||'')).toLowerCase().includes(q));
   list.sort((a,b)=>((a.Cognome||'')+'').localeCompare(b.Cognome||''));
@@ -1740,7 +1743,12 @@ function buildAgendaIndex(){
       if(c.Ora_appuntamento){const o=pOra(c.Ora_appuntamento);if(o){h=o.h;m=o.m;}else{h=null;m=0;}}else{h=null;m=0;}}
     if(!telByDate[date])telByDate[date]=[];
     const already=telByDate[date].some(x=>x.t&&x.t.ID_contatto===c.ID_contatto&&!x.fromContatti);
-    if(!already)telByDate[date].push({t:{ID_contatto:c.ID_contatto,Esito:c.Esito_ultima_chiamata},
+    // L'operatore va portato dentro anche qui: senza, il filtro che nasconde
+    // alle telefoniste gli appuntamenti del titolare non aveva niente da
+    // guardare, e quegli appuntamenti ricomparivano nella loro agenda ogni
+    // volta che il titolare ne spostava uno di giorno.
+    const _opVoce=((telByContact[c.ID_contatto]||[])[0]||{}).Operatore||'';
+    if(!already)telByDate[date].push({t:{ID_contatto:c.ID_contatto,Esito:c.Esito_ultima_chiamata,Operatore:_opVoce},
       type:isApp?'app':'call',h,m:m||0,fromContatti:true});
   }
 }
@@ -1860,8 +1868,12 @@ function _assegnaOrarioContatto(cid,iso,h,m){
   // giorno" anche dopo il salvataggio. Aggiorniamo quindi anche il registro.
   if(ddmmyyyy&&Array.isArray(telefonate)){
     const oraStr=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':00';
-    for(const t of telefonate){
-      if(String(t.ID_contatto)!==String(cid))continue;
+    // ATTENZIONE ALLA VELOCITA': qui si scorreva TUTTO l'elenco delle telefonate
+    // (85.000) per OGNI contatto sistemato, e "Sistema richiami senza ora" ne
+    // sistema centinaia in un colpo: erano centinaia di milioni di confronti.
+    // telByContact contiene GLI STESSI oggetti, quindi modificarli qui aggiorna
+    // anche l'elenco grande.
+    for(const t of (telByContact[cid]||[])){
       if(t.Data_appuntamento!==ddmmyyyy)continue;
       if(t.Ora_appuntamento)continue;
       const es=(t.Esito||'').toLowerCase();
@@ -2200,11 +2212,17 @@ function deleteContact(){
     (c.Cognome||'')+' '+(c.Nome||'')+'\n\nVerranno cancellati anche le sue telefonate e opere.\nQuesta azione non può essere annullata.'))return;
   const id=c.ID_contatto;
   // Remove from all arrays
-  contacts=contacts.filter(x=>x.ID_contatto!==id);
-  allContacts=allContacts.filter(x=>x.ID_contatto!==id);
-  currentResults=currentResults.filter(x=>x.ID_contatto!==id);
-  telefonate=telefonate.filter(x=>x.ID_contatto!==id);
-  opere=opere.filter(x=>x.ID_contatto!==id);
+  // ATTENZIONE: l'ID del contatto e' una stringa, quello dentro telefonate e
+  // opere puo' essere un numero. Con !== fra tipi diversi il confronto e'
+  // sempre vero e NON veniva rimosso niente: telefonate e opere restavano
+  // orfane in memoria e un salvataggio successivo le rimandava al server,
+  // facendo ricomparire i dati appena cancellati.
+  const _sid=String(id);
+  contacts=contacts.filter(x=>String(x.ID_contatto)!==_sid);
+  allContacts=allContacts.filter(x=>String(x.ID_contatto)!==_sid);
+  currentResults=currentResults.filter(x=>String(x.ID_contatto)!==_sid);
+  telefonate=telefonate.filter(x=>String(x.ID_contatto)!==_sid);
+  opere=opere.filter(x=>String(x.ID_contatto)!==_sid);
   delete contactMap[id];
   delete telByContact[id];
   delete opereByContact[id];
@@ -2335,8 +2353,7 @@ function _notaContratto(o){
 }
 function _trovaVoceContratto(cid,nota){
   var q=String(cid);
-  for(const t of (telefonate||[])){
-    if(String(t.ID_contatto)!==q)continue;
+  for(const t of (telByContact[cid]||[])){   // solo le telefonate di questo cliente
     if(String(t.Note_appuntamento||'').trim()===nota)return t;
   }
   return null;
@@ -2806,11 +2823,11 @@ function renderTop(){
   var lista=_listaTop().filter(function(x){if(regSel&&(x.c.Regione||'').trim()!==regSel)return false;if(provSel&&(x.c.Provincia||'').trim()!==provSel)return false;return true;});
   var cnt=document.getElementById('topConteggio'); if(cnt)cnt.textContent=lista.length+(lista.length===1?' cliente':' clienti');
   if(!lista.length){box.innerHTML='<div style="color:#b09040;font-size:13px;padding:8px">Nessun cliente top'+(regSel?' in '+regSel:'')+'.</div>';return;}
+  window._listaTopNav=lista.map(function(z){return z.c;});   // una volta sola, non per riga
   box.innerHTML=lista.slice(0,200).map(function(x,i){
     var c=x.c;
     var nome=esc((c.Cognome||'')+' '+(c.Nome||''));
     var citta=esc(c.Citta||'')+(c.Provincia?' ('+esc(c.Provincia)+')':'');
-    window._listaTopNav=lista.map(function(z){return z.c;});
     return '<div onclick="apriContattoDaId(\''+esc(String(c.ID_contatto))+'\',window._listaTopNav)" style="cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:7px 10px;background:#fff;border:1px solid #f0e4c8;border-radius:8px">'+
       '<div style="display:flex;align-items:center;gap:8px"><span style="color:#c0a040;font-weight:700;font-size:12px;width:22px">'+(i+1)+'</span><div><b style="color:#8a6810">'+nome+'</b><div style="font-size:11px;color:#b09a6a">'+citta+'</div></div></div>'+
       '<div style="text-align:right;white-space:nowrap;font-weight:700;color:#a07810">'+_fmtEuro(x.spesa)+'</div>'+
@@ -2860,12 +2877,12 @@ function renderAnziani(){
   lista.sort(function(a,b){return b.eta-a.eta;});
   var cnt=document.getElementById('anzConteggio'); if(cnt)cnt.textContent=lista.length+(lista.length===1?' cliente':' clienti');
   if(!lista.length){box.innerHTML='<div style="color:#8a72b0;font-size:13px;padding:8px">Nessun cliente di 90+ anni'+(regSel||provSel?' con questi filtri':'')+'.</div>';return;}
+  window._listaAnzNav=lista.map(function(z){return z.c;});   // una volta sola, non per riga
   box.innerHTML=lista.map(function(x){
     var c=x.c;
     var nome=esc((c.Cognome||'')+' '+(c.Nome||''));
     var citta=esc(c.Citta||'')+(c.Provincia?' ('+esc(c.Provincia)+')':'');
     var tel=esc(c.Cellulare||c.Telefono||'');
-    window._listaAnzNav=lista.map(function(z){return z.c;});
     return '<div onclick="apriContattoDaId(\''+esc(String(c.ID_contatto))+'\',window._listaAnzNav)" style="cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:7px 10px;background:#fff;border:1px solid #e6dcf2;border-radius:8px">'+
       '<div><b style="color:#5b3a8a">'+nome+'</b><div style="font-size:11px;color:#9b86bd">'+citta+(tel?' &middot; '+tel:'')+'</div></div>'+
       '<div style="text-align:right;white-space:nowrap"><div style="font-size:16px;font-weight:700;color:#7a5aa8">'+x.eta+'</div><div style="font-size:10px;color:#9b86bd">anni</div></div>'+
@@ -2900,13 +2917,13 @@ function renderCompleanni(){
   });
   lista.sort(function(a,b){return a.pc.giorni-b.pc.giorni;});
   if(!lista.length){box.innerHTML='<div style="color:#a08040;font-size:13px;padding:8px">Nessun compleanno nei prossimi 30 giorni'+(regSel?' in '+regSel:'')+'.</div>';return;}
+  window._listaComplNav=lista.map(function(z){return z.c;});   // una volta sola, non per riga
   box.innerHTML=lista.map(function(x){
     var c=x.c, pc=x.pc, eta=_calcolaEta(c);
     var quando = pc.giorni===0?'<b style="color:#c0392b">oggi!</b>':(pc.giorni===1?'domani':'tra '+pc.giorni+' giorni');
     var dataLbl=('0'+pc.giorno).slice(-2)+'/'+('0'+pc.mese).slice(-2);
     var nome=esc((c.Cognome||'')+' '+(c.Nome||''));
     var citta=esc(c.Citta||'')+(c.Provincia?' ('+esc(c.Provincia)+')':'');
-    window._listaComplNav=lista.map(function(z){return z.c;});
     return '<div onclick="apriContattoDaId(\''+esc(String(c.ID_contatto))+'\',window._listaComplNav)" style="cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:7px 10px;background:#fff;border:1px solid #f0e4cc;border-radius:8px">'+
       '<div><b style="color:#7a5500">'+nome+'</b>'+(eta!=null?' <span style="color:#a08040;font-size:12px">('+(eta+ (pc.giorni===0?0:0))+' &rarr; '+(eta+1)+' anni)</span>':'')+'<div style="font-size:11px;color:#b0966a">'+citta+'</div></div>'+
       '<div style="text-align:right;white-space:nowrap"><div style="font-size:13px;color:#9a6500">'+quando+'</div><div style="font-size:11px;color:#b0966a">'+dataLbl+'</div></div>'+
@@ -2950,8 +2967,8 @@ function _cruscottoZone(){
     Z[z].chiamate++;
     if(d&&d>=inizioSett)Z[z].chiamSett++;
     if(d&&d>=inizioMese)Z[z].chiamMese++;
-    if(es.indexOf('appunt')>=0)Z[z].appunt++;
-    if(es.indexOf('positiv')>=0||es.indexOf('appunt')>=0)Z[z].positivi++;
+    if(_esitoPositivo(es))Z[z].appunt++;
+    if(_esitoPositivo(es))Z[z].positivi++;
     if(es.indexOf('negativ')>=0)Z[z].negativi++;
   });
   // contatti per zona: lavorati (hanno un esito) vs da lavorare
@@ -3007,7 +3024,7 @@ function _cruscottoZone(){
       if(!ops[op])ops[op]={tot:0,sett:0,app:0,zone:{}};
       ops[op].tot++;
       if(d&&d>=inizioSett)ops[op].sett++;
-      if((tel.Esito||'').toLowerCase().indexOf('appunt')>=0)ops[op].app++;
+      if(_esitoPositivo(tel.Esito))ops[op].app++;
       ops[op].zone[z]=(ops[op].zone[z]||0)+1;
     });
     var opArr2=Object.keys(ops);

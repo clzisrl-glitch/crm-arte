@@ -50,6 +50,11 @@ ROTTE_CHE_SCRIVONO = {
     '/api/verifica', '/api/save', '/api/save_full', '/api/importa',
     '/api/correggi_dati', '/api/fondi_duplicati', '/api/reset', '/api/ordine_schede',
     '/api/bulk_assegna_orari',
+    # 12/09/2026: /api/login scrive il registro accessi dentro l'archivio, quindi
+    # deve prendere il blocco come tutte le altre. Senza, un accesso fatto mentre
+    # una telefonista salva una scheda riscriveva la versione letta PRIMA di quel
+    # salvataggio e lo cancellava in silenzio.
+    '/api/login',
 }
 
 # ---------------------------------------------------------------------------
@@ -606,9 +611,16 @@ def _merge_zona(existing, incoming, regioni):
     tel_in=[t for t in incoming.get('telefonate',[]) if str(t.get('ID_contatto')) in ids_zona]
     return merged_contacts, tel_fuori+tel_in
 def _regioni_utente():
+    """Regioni che l'utente puo' vedere. None = nessun limite (titolare).
+
+    ATTENZIONE: se la zona e' scritta ma sconosciuta (refuso nella variabile
+    CRM_UTENTI, zona cancellata) NON si deve tornare None, altrimenti quella
+    telefonista vedrebbe TUTTI i contatti d'Italia. Si torna un elenco che non
+    corrisponde a nessuna regione: nel dubbio non vede niente, e il problema
+    salta all'occhio subito invece di restare nascosto."""
     u=_utente_corrente()
     if u and u.get('zona'):
-        return crm_auth.regioni_della_zona(u.get('zona'))
+        return crm_auth.regioni_della_zona(u.get('zona')) or ['(zona sconosciuta)']
     return None
 @app.route('/api/load')
 @richiede_login
@@ -1136,6 +1148,7 @@ def api_zona_libera():
         body = request.get_json(force=True)
         place = str(body.get('place', '')).strip()
         radius = float(body.get('radius', 15))
+        radius = min(max(radius, 1.0), 200.0)   # tetto: niente "raggio 9999" per prendere tutto
         prov_hint = str(body.get('prov', '')).strip().upper()  # opzionale: limita la provincia
         if not place:
             return jsonify({'error': 'scrivi un luogo'}), 400
@@ -1147,6 +1160,13 @@ def api_zona_libera():
         cpt = (gp[0], gp[1])
 
         data = load_data()
+        # FILTRO DI ZONA: c'era in /api/zona ma NON qui (trovato il 12/09/2026).
+        # Senza, una telefonista poteva scrivere una citta' di un'altra zona e
+        # ricevere nome, indirizzo e telefoni di quei contatti: bastava ripetere
+        # provincia per provincia per scaricarsi l'intera rubrica.
+        _reg = _regioni_utente()
+        if _reg:
+            data = _filtra_per_zona(data, _reg)
         contacts = data.get('contacts', [])
         # candidati: se è indicata una provincia usala; altrimenti tutti i comuni già in cache
         if prov_hint:

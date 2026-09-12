@@ -30,6 +30,7 @@ MAX_UTENTI = 5
 # Se non impostata, vale la mappa predefinita qui sotto.
 ZONE_DEFAULT = {
     'centro': ['Lazio', 'Umbria', 'Marche', 'Sardegna', 'Sicilia', 'Campania', 'Calabria'],
+    'toscana': ['Toscana'],
     # 11/09/2026: nasce la zona TRIVENETO (Veneto + Trentino-Alto Adige +
     # Friuli-Venezia Giulia), staccata dal Nord. Le zone NON si sovrappongono:
     # se una regione stesse in due zone, due operatori si troverebbero gli
@@ -261,18 +262,33 @@ def registra_tentativo(nome, ok):
 AZIONI_SOLO_TITOLARE = {
     'reset',            # azzerare il database
     'import_csv',       # caricare CSV (sovrascrive)
+    'importa',          # rotta /api/importa (12/09/2026: il nome usato dal decoratore
+                        # era 'importa' e non 'import_csv', quindi il controllo non
+                        # scattava e una telefonista poteva importare contatti)
+    'accessi',          # registro accessi (stesso difetto: nome non in elenco)
     'elimina',          # eliminare un contatto
     'export_massa',     # esportare/stampare elenchi di massa
     'unisci',           # unire schede (potenziale perdita)
     'gestione_utenti',  # creare/cambiare utenti
 }
 
+# Tutte le azioni che il programma conosce. Un nome fuori da questo elenco e'
+# un refuso: puo_fare() lo rifiuta invece di lasciarlo passare.
+AZIONI_CONOSCIUTE = AZIONI_SOLO_TITOLARE | {'leggi', 'salva', 'chiama', 'stampa_singola'}
+
 # soglia: stampare/inviare email per più di questi contatti = azione di massa
 LIMITE_STAMPA_MASSA = 15
 
 def puo_fare(ruolo, azione):
+    """ATTENZIONE: chiude in caso di dubbio. Prima bastava un refuso nel nome
+    dell'azione (@solo_titolare('importa') invece di 'import_csv') perche' il
+    controllo lasciasse passare chiunque. Ora un'azione sconosciuta viene
+    trattata come riservata al titolare: un errore di scrittura chiude la
+    porta invece di aprirla."""
     if ruolo == 'titolare':
         return True
+    if azione not in AZIONI_CONOSCIUTE:
+        return False
     return azione not in AZIONI_SOLO_TITOLARE
 
 
