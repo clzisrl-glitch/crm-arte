@@ -498,11 +498,17 @@ def api_ui_stato():
     scheda = str(body.get('ultima_scheda') or '').strip().lower()
     if scheda not in SCHEDE_VALIDE:
         return jsonify({'error': 'Scheda non valida.'}), 400
+    # Ultimo cliente aperto in Principale: solo cifre/lettere, al massimo 20
+    # caratteri, cosi' un valore manomesso non puo' finire nel database.
+    contatto = str(body.get('ultimo_contatto') or '').strip()[:20]
+    if contatto and not contatto.replace('-', '').replace('_', '').isalnum():
+        contatto = ''
     try:
         stato = crm_db.ui_get(nome)
         stato['ultima_scheda'] = scheda
+        stato['ultimo_contatto'] = contatto
         crm_db.ui_set(nome, stato)
-        return jsonify({'ok': True, 'ultima_scheda': scheda})
+        return jsonify({'ok': True, 'ultima_scheda': scheda, 'ultimo_contatto': contatto})
     except Exception as e:
         # una preferenza non deve MAI far fallire il lavoro dell'operatore
         return jsonify({'ok': False, 'error': str(e)}), 200
