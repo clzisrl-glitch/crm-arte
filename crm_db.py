@@ -19,6 +19,39 @@ DATA_FILE = BASE_DIR / 'crm_data.json'
 BACKUP_DIR = BASE_DIR / 'backup'
 MAX_BACKUPS = 30
 
+# ── PROTEZIONE DEI DATI ──────────────────────────────────────
+# Tre cose, spiegate una volta qui perche' lavorano insieme:
+#
+# 1. COPIE NEL TEMPO. Non due copie in parallelo: due copie scritte insieme
+#    dallo stesso programma contengono lo STESSO errore. Quello che serve e'
+#    lo stato di PRIMA. Quindi, prima di ogni sovrascrittura, il contenuto
+#    attuale viene messo da parte: una volta al giorno (mai risovrascritta,
+#    e' lo stato di inizio giornata) e una volta all'ora nelle ore di lavoro.
+#    La copia NON passa mai da Python: viaggia dentro PostgreSQL da una
+#    tabella all'altra, cosi' non costa ne' rete ne' tempo.
+#
+# 2. CONTEGGI. Quanti contatti/telefonate/opere c'erano all'ultima scrittura,
+#    in una riga a parte (crm_conteggi). Servono per accorgersi che un
+#    salvataggio sta per cancellare mezzo archivio, SENZA dover decomprimere
+#    i 7 MB del blob a ogni salvataggio.
+#
+# 3. IMPRONTA. sha256 del blocco compresso, scritta insieme ai dati. Alla
+#    lettura si ricontrolla: se non torna, i dati si sono rovinati per conto
+#    loro (cosa rara ma silenziosa). Segnala e basta: NON blocca la lettura,
+#    perche' un CRM che non si apre e' peggio di un CRM che avvisa.
+MAX_COPIE_ORA = 12                  # ultime 12 copie orarie (una giornata)
+MAX_COPIE_EVENTO = 10               # copie fatte prima di una riduzione voluta
+ORA_COPIE_DA = 8                    # copie orarie solo nelle ore di lavoro
+ORA_COPIE_A = 21
+# Soglia: un salvataggio che porta una delle tre quantita' sotto questa
+# percentuale dell'ultima salvata viene rifiutato (se il calo supera anche
+# SOGLIA_RECORD record). Modificabile da Railway senza toccare il codice.
+try:
+    SOGLIA_PERC = float(os.environ.get('CRM_SOGLIA_RIDUZIONE', '90')) / 100.0
+except Exception:
+    SOGLIA_PERC = 0.90
+SOGLIA_RECORD = 50                  # sotto i 50 record persi non disturba
+
 DATABASE_URL = os.environ.get('DATABASE_URL', '').strip()
 USE_DB = bool(DATABASE_URL)
 
@@ -48,6 +81,27 @@ def _db_init():
         # BYTEA = dati binari (qui ci mettiamo il JSON compresso gzip)
         cur.execute("CREATE TABLE IF NOT EXISTS crm_blob (id INT PRIMARY KEY, data BYTEA)")
         cur.execute("CREATE TABLE IF NOT EXISTS crm_backup (giorno TEXT PRIMARY KEY, data BYTEA, creato TIMESTAMP DEFAULT now())")
+        # numeri e impronta delle copie giornaliere (aggiunti dopo: le vecchie
+        # copie restano valide, hanno solo le colonne vuote)
+        for col, tipo in (('contatti', 'INT'), ('telefonate', 'INT'),
+                          ('opere', 'INT'), ('impronta', 'TEXT'), ('controllo', 'TEXT'),
+                          ('verifica', 'TEXT'), ('verificata', 'TIMESTAMP')):
+            cur.execute(f"ALTER TABLE crm_backup ADD COLUMN IF NOT EXISTS {col} {tipo}")
+        # copie infragiornaliere: 'ora' = una all'ora, 'evento' = quella fatta
+        # d'ufficio prima di una riduzione confermata dal titolare
+        cur.execute("CREATE TABLE IF NOT EXISTS crm_copie ("
+                    "chiave TEXT PRIMARY KEY, tipo TEXT DEFAULT 'ora', data BYTEA, "
+                    "contatti INT, telefonate INT, opere INT, impronta TEXT, "
+                    "controllo TEXT, nota TEXT, creato TIMESTAMP DEFAULT now())")
+        cur.execute("ALTER TABLE crm_copie ADD COLUMN IF NOT EXISTS controllo TEXT")
+        cur.execute("ALTER TABLE crm_copie ADD COLUMN IF NOT EXISTS verifica TEXT")
+        cur.execute("ALTER TABLE crm_copie ADD COLUMN IF NOT EXISTS verificata TIMESTAMP")
+        # una sola riga (id=1): com'era l'archivio all'ultima scrittura
+        cur.execute("CREATE TABLE IF NOT EXISTS crm_conteggi ("
+                    "id INT PRIMARY KEY, contatti INT, telefonate INT, opere INT, "
+                    "impronta TEXT, controllo TEXT, autore TEXT, "
+                    "aggiornato TIMESTAMP DEFAULT now())")
+        cur.execute("ALTER TABLE crm_conteggi ADD COLUMN IF NOT EXISTS controllo TEXT")
 
 def _comprimi(data):
     import gzip as _g
@@ -82,14 +136,36 @@ def _decomprimi(blob):
             raise DatiIllegibili(
                 f"blob di {len(b)} byte non decodificabile ({_e1} / {_e2})")
 
+ALLARME_LETTURA = ''      # diagnostica: ultimo disallineamento visto in lettura
+
 def _db_load():
+    global ALLARME_LETTURA
     _db_init()
     conn = _get_pg()
     with conn.cursor() as cur:
         cur.execute("SELECT data FROM crm_blob WHERE id=1")
         row = cur.fetchone()
         if row and row[0] is not None:
-            return _decomprimi(row[0])
+            dati = _decomprimi(row[0])
+            # Controllo gratuito: i dati letti devono avere gli stessi numeri
+            # che l'ultima scrittura ha dichiarato. Se non tornano, la
+            # scrittura e' rimasta a meta'. SEGNALA e basta: un CRM che non si
+            # apre sarebbe peggio del guaio che stiamo cercando.
+            try:
+                attesi = _conteggi_salvati(cur)
+                if attesi:
+                    ora = _conta(dati)
+                    diff = [k for k in ('contatti', 'telefonate', 'opere')
+                            if attesi.get(k) is not None and attesi[k] != ora[k]]
+                    if diff:
+                        ALLARME_LETTURA = ('numeri diversi da quelli dichiarati: ' +
+                                           ', '.join(f"{k} {attesi[k]}->{ora[k]}" for k in diff))
+                        print('  ATTENZIONE: ' + ALLARME_LETTURA)
+                    else:
+                        ALLARME_LETTURA = ''
+            except Exception:
+                pass
+            return dati
     return {}
 
 class SalvataggioSospetto(Exception):
@@ -107,6 +183,241 @@ def _controlla_payload(data, forza):
             "salvataggio rifiutato: zero contatti. "
             "Quasi sempre significa che il caricamento iniziale non e' riuscito. "
             "I dati sul database NON sono stati toccati.")
+
+def _conta(data):
+    """I tre numeri che contano. Costa niente: sono liste gia' in memoria."""
+    d = data if isinstance(data, dict) else {}
+    return {'contatti':   len(d.get('contacts') or []),
+            'telefonate': len(d.get('telefonate') or []),
+            'opere':      len(d.get('opere') or [])}
+
+
+def _checkup(data):
+    """LA VERIFICA DEL CONTENUTO, non solo dell'integrita'.
+
+    L'impronta dice che i byte sono quelli di prima. Questa dice se quello
+    che c'e' dentro ha senso: ogni contatto ha un ID, gli ID non si ripetono,
+    le telefonate e le opere sono attaccate a un contatto che esiste davvero.
+    Un archivio dimezzato da uno sbaglio ha l'impronta perfetta ma qui si
+    vede: telefonate orfane a migliaia, o i numeri che crollano.
+
+    Un solo giro sulle liste (~50 millesimi sui numeri veri), e il risultato
+    viaggia insieme a ogni copia: nella pagina Backup ogni riga dice di che
+    cosa e' fatta, senza doverla aprire."""
+    d = data if isinstance(data, dict) else {}
+    contatti = d.get('contacts') or []
+    ids, doppi, senza_id, con_nome = set(), 0, 0, 0
+    for c in contatti:
+        cid = str((c or {}).get('ID_contatto', '') or '').strip()
+        if not cid:
+            senza_id += 1
+            continue
+        if cid in ids:
+            doppi += 1
+        else:
+            ids.add(cid)
+        if str((c or {}).get('Nome', '') or '').strip() or \
+           str((c or {}).get('Cognome', '') or '').strip():
+            con_nome += 1
+    orfane = {}
+    for campo, nome in (('telefonate', 'telefonate_orfane'), ('opere', 'opere_orfane')):
+        n = 0
+        for x in (d.get(campo) or []):
+            if str((x or {}).get('ID_contatto', '') or '').strip() not in ids:
+                n += 1
+        orfane[nome] = n
+    out = _conta(d)
+    out.update({'senza_id': senza_id, 'id_doppi': doppi, 'con_nome': con_nome})
+    out.update(orfane)
+    return out
+
+
+def _giudizio(ck):
+    """Traduce la scheda di controllo in un verdetto leggibile.
+    Prudente di proposito: segnala, non condanna."""
+    if not ck:
+        return ('?', 'copia vecchia, senza scheda di controllo')
+    guai = []
+    if ck.get('senza_id'):
+        guai.append(f"{ck['senza_id']} contatti senza ID")
+    if ck.get('id_doppi'):
+        guai.append(f"{ck['id_doppi']} ID ripetuti")
+    tel, orf = ck.get('telefonate') or 0, ck.get('telefonate_orfane') or 0
+    if orf and tel and orf > max(50, tel * 0.02):
+        guai.append(f"{orf} telefonate senza contatto")
+    op, oro = ck.get('opere') or 0, ck.get('opere_orfane') or 0
+    if oro and op and oro > max(50, op * 0.02):
+        guai.append(f"{oro} opere senza contatto")
+    if not (ck.get('contatti') or 0):
+        return ('✘', 'nessun contatto')
+    return (('✔', 'contenuto coerente') if not guai else ('!', '; '.join(guai)))
+
+
+def _ora_it():
+    """Ora italiana. Import dentro la funzione: crm_auth non deve diventare
+    una dipendenza dello strato dati, e se manca si va avanti lo stesso."""
+    try:
+        import crm_auth
+        return crm_auth._ora_italiana()
+    except Exception:
+        return datetime.datetime.now()
+
+
+def _conteggi_salvati(cur):
+    """Com'era l'archivio all'ultima scrittura riuscita, o None la prima volta."""
+    try:
+        cur.execute("SELECT contatti, telefonate, opere, impronta FROM crm_conteggi WHERE id=1")
+        r = cur.fetchone()
+    except Exception:
+        return None
+    if not r or r[0] is None:
+        return None
+    return {'contatti': r[0], 'telefonate': r[1], 'opere': r[2], 'impronta': r[3] or ''}
+
+
+_NOMI = {'contatti': 'contatti', 'telefonate': 'telefonate', 'opere': 'opere'}
+
+def _controlla_riduzione(cur, nuovi, conferma):
+    """LA SOGLIA. Rifiuta un salvataggio che porterebbe una delle tre quantita'
+    sotto SOGLIA_PERC di quella salvata, SE il calo supera anche SOGLIA_RECORD.
+
+    Le due condizioni insieme sono volute: la percentuale da sola darebbe
+    fastidio sui numeri piccoli, i record da soli non direbbero niente sui
+    numeri grandi. Ritorna la descrizione del calo piu' grave (o None) cosi'
+    chi chiama puo' scriverla nella copia fatta prima della riduzione."""
+    return _decidi_riduzione(_conteggi_salvati(cur), nuovi, conferma)
+
+
+def _peggior_calo(vecchi, nuovi):
+    """Il calo piu' grave fra i tre, o None se nessuno supera la soglia."""
+    if not vecchi:
+        return None                      # prima volta: niente con cui confrontare
+    peggio = None
+    for chiave in ('contatti', 'telefonate', 'opere'):
+        prima, dopo = vecchi.get(chiave) or 0, nuovi.get(chiave) or 0
+        if prima <= 0 or dopo >= prima:
+            continue
+        if dopo >= prima * SOGLIA_PERC or (prima - dopo) <= SOGLIA_RECORD:
+            continue
+        testo = f"{_NOMI[chiave]}: da {prima:,} a {dopo:,}".replace(',', '.')
+        if peggio is None or dopo / prima < peggio[1]:
+            peggio = (testo, dopo / prima)
+    return peggio
+
+
+def _decidi_riduzione(vecchi, nuovi, conferma):
+    peggio = _peggior_calo(vecchi, nuovi)
+    if peggio is None:
+        return None
+    if conferma:
+        return peggio[0]                 # voluto: chi chiama fa la copia e procede
+    raise SalvataggioSospetto(
+        "Salvataggio BLOCCATO: cancellerebbe una parte grossa dell'archivio "
+        f"({peggio[0]}). I dati sul database NON sono stati toccati. "
+        "Se la riduzione e' voluta, confermala: verra' fatta una copia "
+        "di sicurezza prima di procedere.")
+
+
+_SQL_VERIFICA = (
+    " SET verifica = CASE WHEN impronta IS NULL THEN '?' "
+    "                     WHEN impronta = encode(sha256(data),'hex') THEN '{ok}' "
+    "                     ELSE '{ko}' END, verificata = now() ")
+
+def _verifica_subito(cur, tabella, colonna, chiave=None):
+    """Controllo AUTOMATICO, fatto da PostgreSQL: ricalcola l'impronta dai byte
+    veri e la confronta con quella scritta quando la copia e' nata.
+    Una copia costa ~10 millesimi; si fa appena la copia nasce (chiave='...')
+    e una volta al giorno su tutte (chiave=None). L'esito resta scritto nella
+    riga, cosi' la pagina lo mostra senza dover ricalcolare niente."""
+    sql = _SQL_VERIFICA.format(ok='✔', ko='✘')
+    try:
+        if chiave is None:
+            cur.execute(f"UPDATE {tabella}{sql}")
+        else:
+            cur.execute(f"UPDATE {tabella}{sql} WHERE {colonna} = %s", (chiave,))
+        return True
+    except Exception as e:
+        # PostgreSQL senza sha256(): si resta senza verifica automatica, non e'
+        # un errore da fermare il salvataggio.
+        print(f"  (verifica automatica non disponibile: {e})")
+        return False
+
+
+def _copie_prima_di_scrivere(cur, motivo_riduzione=None):
+    """Copie nel tempo, fatte PRIMA di sovrascrivere.
+
+    I 7 MB non passano mai da Python: vanno da una tabella all'altra dentro
+    PostgreSQL. E il 'NOT EXISTS' non e' un dettaglio — senza, PostgreSQL
+    costruirebbe la riga (quindi leggerebbe i 7 MB) a ogni salvataggio per
+    poi scartarla; con il NOT EXISTS, quando la copia di quell'ora c'e' gia',
+    il costo e' una sola occhiata all'indice.
+      • una al giorno  -> stato di INIZIO giornata, mai risovrascritta
+      • una all'ora    -> solo nelle ore di lavoro, ultime MAX_COPIE_ORA
+      • una d'ufficio  -> subito prima di una riduzione confermata
+    Se qualcosa qui va storto, il salvataggio deve comunque andare avanti:
+    una copia mancata non puo' bloccare il lavoro."""
+    adesso = _ora_it()
+    giorno = adesso.strftime('%Y-%m-%d')
+    ora = adesso.strftime('%Y-%m-%d %H')
+    try:
+        # ── giornaliera: lo stato com'era all'inizio della giornata ──
+        # (prima veniva scritta DOPO la modifica e risovrascritta a ogni
+        # riavvio: la copia di oggi poteva contenere proprio lo sbaglio di oggi)
+        cur.execute(
+            "INSERT INTO crm_backup (giorno, data, contatti, telefonate, opere, impronta, controllo) "
+            "SELECT %s, b.data, c.contatti, c.telefonate, c.opere, c.impronta, c.controllo "
+            "  FROM crm_blob b LEFT JOIN crm_conteggi c ON c.id = 1 "
+            " WHERE b.id = 1 AND b.data IS NOT NULL "
+            "   AND NOT EXISTS (SELECT 1 FROM crm_backup WHERE giorno = %s) "
+            "ON CONFLICT (giorno) DO NOTHING", (giorno, giorno))
+        if cur.rowcount:
+            cur.execute("DELETE FROM crm_backup WHERE giorno NOT IN "
+                        "(SELECT giorno FROM crm_backup ORDER BY giorno DESC LIMIT %s)",
+                        (MAX_BACKUPS,))
+            # una volta al giorno il controllo passa su TUTTE le copie: se una
+            # si e' rovinata stando ferma, si scopre da solo e non il giorno
+            # in cui serviva.
+            _verifica_subito(cur, 'crm_backup', 'giorno')
+            _verifica_subito(cur, 'crm_copie', 'chiave')
+    except Exception as e:
+        print(f"  (copia giornaliera non riuscita: {e})")
+    try:
+        # ── oraria: solo nelle ore in cui si lavora davvero ──
+        if ORA_COPIE_DA <= adesso.hour <= ORA_COPIE_A:
+            cur.execute(
+                "INSERT INTO crm_copie (chiave, tipo, data, contatti, telefonate, opere, impronta, controllo, nota) "
+                "SELECT %s, 'ora', b.data, c.contatti, c.telefonate, c.opere, c.impronta, c.controllo, '' "
+                "  FROM crm_blob b LEFT JOIN crm_conteggi c ON c.id = 1 "
+                " WHERE b.id = 1 AND b.data IS NOT NULL "
+                "   AND NOT EXISTS (SELECT 1 FROM crm_copie WHERE chiave = %s) "
+                "ON CONFLICT (chiave) DO NOTHING", (ora, ora))
+            if cur.rowcount:
+                cur.execute("DELETE FROM crm_copie WHERE tipo = 'ora' AND chiave NOT IN "
+                            "(SELECT chiave FROM crm_copie WHERE tipo = 'ora' "
+                            " ORDER BY chiave DESC LIMIT %s)", (MAX_COPIE_ORA,))
+                _verifica_subito(cur, 'crm_copie', 'chiave', ora)
+    except Exception as e:
+        print(f"  (copia oraria non riuscita: {e})")
+    if motivo_riduzione:
+        try:
+            # ── d'ufficio: il titolare ha confermato una riduzione grossa.
+            # Questa copia e' il paracadute della mezz'ora dopo, quando ci si
+            # accorge che non era quello che si voleva fare.
+            chiave = adesso.strftime('%Y-%m-%d %H:%M:%S') + ' riduzione'
+            cur.execute(
+                "INSERT INTO crm_copie (chiave, tipo, data, contatti, telefonate, opere, impronta, controllo, nota) "
+                "SELECT %s, 'evento', b.data, c.contatti, c.telefonate, c.opere, c.impronta, c.controllo, %s "
+                "  FROM crm_blob b LEFT JOIN crm_conteggi c ON c.id = 1 "
+                " WHERE b.id = 1 AND b.data IS NOT NULL "
+                "ON CONFLICT (chiave) DO NOTHING",
+                (chiave, 'prima della riduzione — ' + motivo_riduzione))
+            _verifica_subito(cur, 'crm_copie', 'chiave', chiave)
+            cur.execute("DELETE FROM crm_copie WHERE tipo = 'evento' AND chiave NOT IN "
+                        "(SELECT chiave FROM crm_copie WHERE tipo = 'evento' "
+                        " ORDER BY chiave DESC LIMIT %s)", (MAX_COPIE_EVENTO,))
+        except Exception as e:
+            print(f"  (copia prima della riduzione non riuscita: {e})")
+
 
 import contextlib as _ctx
 
@@ -133,25 +444,39 @@ def blocco_scrittura():
         except Exception:
             pass
 
-_last_db_backup_day = None
-def _db_save(data, forza=False):
-    global _last_db_backup_day
+def _db_save(data, forza=False, autore='', conferma_riduzione=False):
+    """L'ordine delle operazioni qui e' la protezione:
+       1. i controlli (mai zero contatti, mai una riduzione grossa non voluta);
+       2. le copie dello stato PRECEDENTE;
+       3. solo adesso si sovrascrive;
+       4. e nella stessa transazione si aggiornano numeri e impronta, cosi'
+          non possono mai raccontare qualcosa di diverso dai dati."""
     _controlla_payload(data, forza)
     _db_init()
     conn = _get_pg()
+    controllo = _checkup(data)
+    numeri = {k: controllo[k] for k in ('contatti', 'telefonate', 'opere')}
     payload = _comprimi(data)
+    impronta = hashlib.sha256(payload).hexdigest()
     with conn.cursor() as cur:
+        motivo = None
+        if not forza:
+            motivo = _controlla_riduzione(cur, numeri, conferma_riduzione)
+        _copie_prima_di_scrivere(cur, motivo)
         cur.execute("INSERT INTO crm_blob (id, data) VALUES (1, %s) "
                     "ON CONFLICT (id) DO UPDATE SET data = EXCLUDED.data", (payload,))
-        # backup: una copia al giorno
-        giorno = datetime.datetime.now().strftime('%Y-%m-%d')
-        if giorno != _last_db_backup_day:
-            cur.execute("INSERT INTO crm_backup (giorno, data) VALUES (%s, %s) "
-                        "ON CONFLICT (giorno) DO UPDATE SET data = EXCLUDED.data, creato = now()", (giorno, payload))
-            # conservo solo gli ultimi MAX_BACKUPS giorni
-            cur.execute("DELETE FROM crm_backup WHERE giorno NOT IN "
-                        "(SELECT giorno FROM crm_backup ORDER BY giorno DESC LIMIT %s)", (MAX_BACKUPS,))
-            _last_db_backup_day = giorno
+        try:
+            cur.execute(
+                "INSERT INTO crm_conteggi (id, contatti, telefonate, opere, impronta, controllo, autore, aggiornato) "
+                "VALUES (1, %s, %s, %s, %s, %s, %s, now()) "
+                "ON CONFLICT (id) DO UPDATE SET contatti=EXCLUDED.contatti, "
+                "telefonate=EXCLUDED.telefonate, opere=EXCLUDED.opere, "
+                "impronta=EXCLUDED.impronta, controllo=EXCLUDED.controllo, "
+                "autore=EXCLUDED.autore, aggiornato=now()",
+                (numeri['contatti'], numeri['telefonate'], numeri['opere'], impronta,
+                 json.dumps(controllo, separators=(',', ':')), (autore or '')[:80]))
+        except Exception as e:
+            print(f"  (conteggi non aggiornati: {e})")
 
 def _db_has_data():
     """Attenzione: se la lettura FALLISCE l'eccezione esce di proposito.
@@ -163,24 +488,35 @@ def _db_has_data():
 # ─────────────────────────────────────────────────────────────
 #  MODO LOCALE — file crm_data.json (come sempre)
 # ─────────────────────────────────────────────────────────────
-_last_backup_hash = None
-def _file_auto_backup(text):
-    global _last_backup_hash
+def _file_copie_prima():
+    """Le stesse copie del modo online, ma su file — e con la stessa
+    correzione: si copia lo stato ATTUALE, PRIMA di sovrascriverlo, e la copia
+    del giorno non si tocca piu' fino a domani.
+
+    Prima qui si scriveva il testo NUOVO sopra la copia del giorno, a ogni
+    salvataggio: la copia di oggi conteneva sempre l'ultima modifica, anche
+    quando l'ultima modifica era proprio lo sbaglio da cui difendersi."""
     try:
-        h = hashlib.md5(text.encode('utf-8')).hexdigest()
-        if h == _last_backup_hash:
+        if not DATA_FILE.exists():
             return
+        import shutil
         BACKUP_DIR.mkdir(exist_ok=True)
-        giorno = datetime.datetime.now().strftime('%Y-%m-%d')
-        with open(BACKUP_DIR / f'crm_data_{giorno}.json', 'w', encoding='utf-8') as f:
-            f.write(text)
-        _last_backup_hash = h
-        files = sorted(BACKUP_DIR.glob('crm_data_*.json'))
-        for old in files[:-MAX_BACKUPS]:
-            try: old.unlink()
-            except Exception: pass
+        adesso = _ora_it()
+        giorno = BACKUP_DIR / f"crm_data_{adesso.strftime('%Y-%m-%d')}.json"
+        if not giorno.exists():
+            shutil.copy2(DATA_FILE, giorno)
+            for old in sorted(BACKUP_DIR.glob('crm_data_*.json'))[:-MAX_BACKUPS]:
+                try: old.unlink()
+                except Exception: pass
+        if ORA_COPIE_DA <= adesso.hour <= ORA_COPIE_A:
+            ora = BACKUP_DIR / f"crm_ora_{adesso.strftime('%Y-%m-%d_%H')}.json"
+            if not ora.exists():
+                shutil.copy2(DATA_FILE, ora)
+                for old in sorted(BACKUP_DIR.glob('crm_ora_*.json'))[:-MAX_COPIE_ORA]:
+                    try: old.unlink()
+                    except Exception: pass
     except Exception as e:
-        print(f"  (backup automatico non riuscito: {e})")
+        print(f"  (copia automatica non riuscita: {e})")
 
 def _file_load():
     if DATA_FILE.exists():
@@ -199,13 +535,41 @@ def _file_load():
                 print(f"  backup non recuperabile: {e2}")
     return {}
 
+CONTEGGI_FILE = BASE_DIR / 'backup' / 'conteggi.json'
+
+def _conteggi_file():
+    try:
+        with open(CONTEGGI_FILE, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except Exception:
+        return None
+
+def _controlla_riduzione_file(data, conferma):
+    """Stessa soglia anche in locale: e' proprio in locale che si provano gli
+    script di correzione, cioe' dove gli sbagli nascono."""
+    try:
+        return _decidi_riduzione(_conteggi_file(), _conta(data), conferma)
+    except SalvataggioSospetto:
+        raise
+    except Exception:
+        return None
+
+def _scrivi_conteggi_file(data):
+    try:
+        BACKUP_DIR.mkdir(exist_ok=True)
+        with open(CONTEGGI_FILE, 'w', encoding='utf-8') as f:
+            json.dump(_checkup(data), f)
+    except Exception:
+        pass
+
 def _file_save(data):
     text = json.dumps(data, ensure_ascii=False, separators=(',',':'))
+    _file_copie_prima()            # PRIMA di sovrascrivere, non dopo
     tmp = DATA_FILE.with_suffix('.json.tmp')
     with open(tmp, 'w', encoding='utf-8') as f:
         f.write(text); f.flush(); os.fsync(f.fileno())
     os.replace(tmp, DATA_FILE)
-    _file_auto_backup(text)
+    _scrivi_conteggi_file(data)
 
 # ─────────────────────────────────────────────────────────────
 #  INTERFACCIA UNICA (quello che usa il server)
@@ -213,11 +577,16 @@ def _file_save(data):
 def load_data():
     return _db_load() if USE_DB else _file_load()
 
-def save_data(data, forza=False):
-    """forza=True SOLO per il reset esplicito del titolare."""
+def save_data(data, forza=False, autore='', conferma_riduzione=False):
+    """forza=True SOLO per il reset esplicito del titolare.
+    conferma_riduzione=True SOLO quando il titolare ha confermato a schermo
+    che la riduzione e' voluta (vedi _controlla_riduzione)."""
     if USE_DB:
-        return _db_save(data, forza=forza)
+        return _db_save(data, forza=forza, autore=autore,
+                        conferma_riduzione=conferma_riduzione)
     _controlla_payload(data, forza)   # stessa protezione anche in locale
+    if not forza:
+        _controlla_riduzione_file(data, conferma_riduzione)
     return _file_save(data)
 
 def has_data():
@@ -309,33 +678,174 @@ def seed_from_file_if_empty():
 # ─────────────────────────────────────────────────────────────
 #  BACKUP: lista e lettura delle copie giornaliere (per la pagina Backup admin)
 # ─────────────────────────────────────────────────────────────
-def lista_backup():
-    """Ritorna la lista dei backup giornalieri disponibili: [{giorno, creato}], più recenti prima."""
-    if not USE_DB:
-        # in locale: elenco i file nella cartella backup
+_DETTO_VERIFICA = {'✔': 'byte integri', '✘': 'IMPRONTA DIVERSA: copia rovinata',
+                   '?': "copia precedente all'impronta"}
+
+def _riga_copia(chiave, tipo, creato, contatti, telefonate, opere,
+                impronta, controllo, byte, nota='', verifica='', verificata=None):
+    try:
+        ck = json.loads(controllo) if controllo else None
+    except Exception:
+        ck = None
+    segno, detto = _giudizio(ck)
+    return {'chiave': chiave, 'tipo': tipo,
+            'creato': str(creato) if creato else '',
+            'contatti': contatti, 'telefonate': telefonate, 'opere': opere,
+            'byte': int(byte or 0), 'impronta': (impronta or '')[:12],
+            'contenuto': segno, 'contenuto_detto': detto,
+            'dettaglio': ck or {}, 'nota': nota or '',
+            'integrita': verifica or '',
+            'integrita_detto': (_DETTO_VERIFICA.get(verifica, '') if verifica
+                                else 'non ancora verificata'),
+            'verificata': str(verificata) if verificata else '',
+            'variazione': {}}
+
+
+def _aggiungi_variazioni(righe):
+    """Ogni copia confrontata con quella SUBITO PRECEDENTE nel tempo.
+    Le crescite (telefonate, richiami, appuntamenti, opere che aumentano
+    durante la giornata) sono la normalita' e vengono mostrate e basta:
+    si segnala solo quando un numero SCENDE."""
+    ordinate = sorted([r for r in righe if r.get('creato') or r.get('chiave')],
+                      key=lambda r: r['chiave'])
+    prec = None
+    for r in ordinate:
+        if prec:
+            v = {}
+            for k in ('contatti', 'telefonate', 'opere'):
+                a, b = prec.get(k), r.get(k)
+                if isinstance(a, int) and isinstance(b, int):
+                    v[k] = b - a
+            r['variazione'] = v
+            calo = [k for k, d in v.items()
+                    if d < 0 and abs(d) > SOGLIA_RECORD
+                    and (prec.get(k) or 0) and (r.get(k) or 0) < (prec[k] * SOGLIA_PERC)]
+            if calo and r['contenuto'] == '✔':
+                r['contenuto'] = '!'
+                r['contenuto_detto'] = 'calo rispetto alla copia precedente: ' + ', '.join(calo)
+        prec = r
+    return righe
+
+
+def lista_backup(complete=False):
+    """Le copie disponibili, piu' recenti prima.
+    complete=False -> solo le giornaliere, nella forma di sempre (la pagina
+    Backup storica continua a funzionare senza modifiche)."""
+    righe = elenco_copie() if complete else None
+    if righe is None:
+        if not USE_DB:
+            try:
+                files = sorted(BACKUP_DIR.glob('crm_data_*.json'), reverse=True)
+                return [{'giorno': f.stem.replace('crm_data_', ''), 'creato': ''} for f in files]
+            except Exception:
+                return []
         try:
-            files = sorted(BACKUP_DIR.glob('crm_data_*.json'), reverse=True)
-            return [{'giorno': f.stem.replace('crm_data_', ''), 'creato': ''} for f in files]
+            conn = _get_pg()
+            with conn.cursor() as cur:
+                cur.execute("SELECT giorno, creato FROM crm_backup ORDER BY giorno DESC")
+                r2 = cur.fetchall()
+            return [{'giorno': r[0], 'creato': str(r[1]) if r[1] else ''} for r in r2]
+        except Exception as e:
+            print(f"  (lista_backup: {e})")
+            return []
+    return righe
+
+
+def elenco_copie():
+    """TUTTE le copie: giornaliere, orarie e quelle fatte prima di una
+    riduzione confermata. Non calcola le impronte: e' un elenco, deve essere
+    istantaneo. La verifica dell'integrita' si chiede a parte."""
+    if not USE_DB:
+        try:
+            out = []
+            for modello, tipo in (('crm_data_*.json', 'giorno'), ('crm_ora_*.json', 'ora')):
+                for f in sorted(BACKUP_DIR.glob(modello), reverse=True):
+                    chiave = f.stem.replace('crm_data_', '').replace('crm_ora_', '')
+                    ck = {}
+                    try:
+                        ck = _checkup(json.load(open(f, encoding='utf-8')))
+                    except Exception:
+                        pass
+                    out.append(_riga_copia(chiave, tipo, '', ck.get('contatti'),
+                                           ck.get('telefonate'), ck.get('opere'), '',
+                                           json.dumps(ck), f.stat().st_size))
+            _aggiungi_variazioni(out)
+            return sorted(out, key=lambda x: x['chiave'], reverse=True)
         except Exception:
             return []
     try:
         conn = _get_pg()
+        _db_init()
+        out = []
         with conn.cursor() as cur:
-            cur.execute("SELECT giorno, creato FROM crm_backup ORDER BY giorno DESC")
-            righe = cur.fetchall()
-        return [{'giorno': r[0], 'creato': str(r[1]) if r[1] else ''} for r in righe]
+            cur.execute("SELECT giorno, creato, contatti, telefonate, opere, impronta, "
+                        "controllo, length(data), verifica, verificata "
+                        "FROM crm_backup ORDER BY giorno DESC")
+            for r in cur.fetchall():
+                out.append(_riga_copia(r[0], 'giorno', r[1], r[2], r[3], r[4], r[5], r[6],
+                                       r[7], '', r[8], r[9]))
+            cur.execute("SELECT chiave, tipo, creato, contatti, telefonate, opere, impronta, "
+                        "controllo, length(data), nota, verifica, verificata "
+                        "FROM crm_copie ORDER BY chiave DESC")
+            for r in cur.fetchall():
+                out.append(_riga_copia(r[0], r[1] or 'ora', r[2], r[3], r[4], r[5],
+                                       r[6], r[7], r[8], r[9], r[10], r[11]))
+        _aggiungi_variazioni(out)
+        return sorted(out, key=lambda x: x['chiave'], reverse=True)
     except Exception as e:
-        print(f"  (lista_backup: {e})")
+        print(f"  (elenco_copie: {e})")
         return []
+
+
+def verifica_integrita(chiavi=None):
+    """L'IMPRONTA, ricalcolata da PostgreSQL sui byte veri della copia.
+    Il calcolo avviene DENTRO il database: i 7 MB non attraversano la rete,
+    e una copia si controlla in una ventina di millesimi.
+    Ritorna {chiave: {'segno','detto'}}."""
+    esito = {}
+    if not USE_DB:
+        return esito
+    try:
+        conn = _get_pg()
+        with conn.cursor() as cur:
+            for tabella, col in (('crm_backup', 'giorno'), ('crm_copie', 'chiave')):
+                if chiavi:
+                    for k in chiavi:
+                        _verifica_subito(cur, tabella, col, k)
+                else:
+                    _verifica_subito(cur, tabella, col)
+                cur.execute(f"SELECT {col}, verifica FROM {tabella}")
+                for chiave, segno in cur.fetchall():
+                    if segno:
+                        esito[chiave] = {'segno': segno,
+                                         'detto': _DETTO_VERIFICA.get(segno, '')}
+    except Exception as e:
+        print(f"  (verifica_integrita: {e})")
+    return esito
+
+
+def verifica_a_fondo(chiave):
+    """LA VERIFICA COMPLETA di UNA copia: la si apre davvero, si rilegge tutto
+    e si rifa' la scheda di controllo sui dati veri. Costa un paio di secondi
+    perche' decomprime 7 MB e rilegge l'archivio intero: si fa su richiesta, e
+    d'ufficio prima di ogni ripristino — che e' il momento in cui contare su
+    una copia sbagliata costerebbe caro."""
+    d = carica_backup(chiave)
+    if d is None:
+        return {'ok': False, 'detto': 'copia non trovata o non leggibile', 'dettaglio': {}}
+    ck = _checkup(d)
+    segno, detto = _giudizio(ck)
+    return {'ok': segno != '✘', 'segno': segno, 'detto': detto, 'dettaglio': ck}
 
 def carica_backup(giorno):
     """Ritorna i dati di un backup giornaliero specifico (dict), o None."""
     if not USE_DB:
         try:
-            f = BACKUP_DIR / f'crm_data_{giorno}.json'
-            if f.exists():
-                with open(f, 'r', encoding='utf-8') as fh:
-                    return json.load(fh)
+            for f in (BACKUP_DIR / f'crm_data_{giorno}.json',
+                      BACKUP_DIR / f'crm_ora_{giorno}.json'):
+                if f.exists():
+                    with open(f, 'r', encoding='utf-8') as fh:
+                        return json.load(fh)
         except Exception:
             return None
         return None
@@ -344,6 +854,10 @@ def carica_backup(giorno):
         with conn.cursor() as cur:
             cur.execute("SELECT data FROM crm_backup WHERE giorno = %s", (giorno,))
             row = cur.fetchone()
+            if not (row and row[0]):
+                # puo' essere una copia oraria o una copia da evento
+                cur.execute("SELECT data FROM crm_copie WHERE chiave = %s", (giorno,))
+                row = cur.fetchone()
         if row and row[0]:
             return _decomprimi(bytes(row[0]))
     except Exception as e:

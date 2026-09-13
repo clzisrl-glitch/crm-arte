@@ -49,7 +49,7 @@ ROTTE_CHE_SCRIVONO = {
     '/api/aggiungi_telefonata', '/api/contatto_stato', '/api/segnala',
     '/api/verifica', '/api/save', '/api/save_full', '/api/importa',
     '/api/correggi_dati', '/api/fondi_duplicati', '/api/reset', '/api/ordine_schede',
-    '/api/bulk_assegna_orari',
+    '/api/bulk_assegna_orari', '/api/copia_ripristina',
     # 12/09/2026: /api/login scrive il registro accessi dentro l'archivio, quindi
     # deve prendere il blocco come tutte le altre. Senza, un accesso fatto mentre
     # una telefonista salva una scheda riscriveva la versione letta PRIMA di quel
@@ -183,8 +183,17 @@ def _auto_backup(text):
     except Exception as e:
         print(f"  (backup automatico non riuscito: {e})")
 
-def save_data(data, forza=False):
-    return crm_db.save_data(data, forza=forza)
+def save_data(data, forza=False, conferma_riduzione=False):
+    """L'autore lo ricava da solo dalla sessione: cosi' ogni scrittura, anche
+    quelle scritte mesi fa, finisce firmata senza doverle toccare una per una."""
+    autore = ''
+    try:
+        u = _utente_corrente()
+        autore = (u or {}).get('nome', '') or ''
+    except Exception:
+        pass
+    return crm_db.save_data(data, forza=forza, autore=autore,
+                            conferma_riduzione=conferma_riduzione)
 def blocco_scrittura():
     return crm_db.blocco_scrittura()
 
@@ -339,6 +348,98 @@ def api_backup_scarica():
             headers={'Content-Disposition':f'attachment;filename=crm_backup_{giorno}.json'})
     except Exception as e:
         return jsonify({'error':str(e)}),500
+
+
+@app.route('/api/copie')
+@richiede_login
+def api_copie():
+    """Elenco di TUTTE le copie: giornaliere, orarie, e quelle fatte prima di
+    una riduzione confermata. Con i numeri di ciascuna e la variazione
+    rispetto alla precedente, cosi' si sceglie guardando le cifre."""
+    if not _solo_titolare_api():
+        return jsonify({'error': 'riservato al titolare'}), 403
+    try:
+        out = {'copie': crm_db.elenco_copie(),
+               'soglia': int(round(crm_db.SOGLIA_PERC * 100)),
+               'allarme_lettura': getattr(crm_db, 'ALLARME_LETTURA', '')}
+        if request.args.get('verifica'):
+            # ~10 millesimi per copia: il calcolo lo fa PostgreSQL, i 7 MB
+            # di ogni copia non attraversano mai la rete.
+            esiti = crm_db.verifica_integrita()
+            for r in out['copie']:
+                e = esiti.get(r['chiave'])
+                if e:
+                    r['integrita'] = e['segno']
+                    r['integrita_detto'] = e['detto']
+        return jsonify(out)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/copia_verifica')
+@richiede_login
+def api_copia_verifica():
+    """LA VERIFICA A FONDO di una copia: la apre davvero e ricontrolla il
+    contenuto, non solo i byte. Un paio di secondi, su richiesta."""
+    if not _solo_titolare_api():
+        return jsonify({'error': 'riservato al titolare'}), 403
+    chiave = request.args.get('chiave', '')
+    if not chiave:
+        return jsonify({'error': 'chiave mancante'}), 400
+    try:
+        return jsonify(crm_db.verifica_a_fondo(chiave))
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/copia_ripristina', methods=['POST'])
+@solo_titolare('salva_tutto')
+def api_copia_ripristina():
+    """Rimette in linea una copia. Prima di farlo:
+       1. la copia viene aperta e verificata a fondo (mai ripristinare alla
+          cieca: e' il momento in cui una copia sbagliata costa di piu');
+       2. lo stato ATTUALE viene messo da parte come copia da evento, cosi'
+          anche un ripristino sbagliato si puo' disfare.
+    Il ripristino riduce quasi sempre i numeri: passa con conferma_riduzione."""
+    try:
+        body = request.get_json(force=True) or {}
+        chiave = str(body.get('chiave', '')).strip()
+        if not chiave:
+            return jsonify({'error': 'chiave mancante'}), 400
+        esito = crm_db.verifica_a_fondo(chiave)
+        if not esito.get('ok'):
+            return jsonify({'error': 'copia non utilizzabile: ' + esito.get('detto', ''),
+                            'dettaglio': esito.get('dettaglio', {})}), 409
+        if esito.get('segno') == '!' and not body.get('conferma_anomalia'):
+            return jsonify({'error': 'la copia presenta anomalie: ' + esito.get('detto', ''),
+                            'anomalia': True, 'dettaglio': esito.get('dettaglio', {})}), 409
+        # Un ripristino torna indietro nel tempo: quasi sempre riporta NUMERI
+        # PIU' BASSI di adesso, ed e' normale. Ma se la copia e' molto piu'
+        # piccola dell'archivio di oggi, chi ripristina deve saperlo prima,
+        # con i numeri sotto gli occhi: cosi' non si scambia una copia rotta
+        # per quella buona proprio nel momento peggiore.
+        dett = esito.get('dettaglio') or {}
+        if not body.get('conferma_riduzione'):
+            try:
+                adesso = crm_db._checkup(load_data() or {})
+                calo = crm_db._peggior_calo(adesso, dett)
+                if calo:
+                    return jsonify({'error': 'la copia e\' molto piu\' piccola dell\'archivio '
+                                             'attuale (' + calo[0] + '). Controlla i numeri '
+                                             'e conferma se e\' quella giusta.',
+                                    'riduzione': True, 'adesso': adesso,
+                                    'dettaglio': dett}), 409
+            except Exception:
+                pass
+        dati = crm_db.carica_backup(chiave)
+        if dati is None:
+            return jsonify({'error': 'copia non trovata'}), 404
+        # il blocco di scrittura lo prende gia' before_request: la rotta e'
+        # nell'elenco ROTTE_CHE_SCRIVONO
+        save_data(dati, conferma_riduzione=True)
+        return jsonify({'ok': True, 'chiave': chiave, 'dettaglio': esito.get('dettaglio', {})})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 
 @app.route('/api/diag_utenti')
@@ -558,6 +659,7 @@ AZIONI_LEGGIBILI = {
     '/api/fondi_duplicati':     'fusione duplicati',
     '/api/reset':               'AZZERAMENTO archivio',
     '/api/ordine_schede':       'ordine schede',
+    '/api/copia_ripristina':    'RIPRISTINO da copia',
     '/api/utenti':              'gestione utenti',
     '/api/utenti_elimina':      'utente eliminato',
     '/api/login':               'accesso',
@@ -1003,8 +1105,10 @@ def api_save():
             existing['contacts']  = incoming.get('contacts', existing.get('contacts', []))
             existing['telefonate'] = incoming.get('telefonate', existing.get('telefonate', []))
         existing['lastIdx']   = incoming.get('lastIdx', 0)
-        save_data(existing)
+        save_data(existing, conferma_riduzione=bool(incoming.get('conferma_riduzione')))
         return jsonify({'ok': True, 'contacts': len(existing['contacts'])})
+    except crm_db.SalvataggioSospetto as e:
+        return jsonify({'error': str(e), 'riduzione': True}), 409
     except Exception as e:
         print(f"Save error: {e}")
         return jsonify({'error': str(e)}), 500
@@ -1035,8 +1139,12 @@ def api_save_full():
         if 'verifiche' in incoming:
             existing['verifiche'] = incoming['verifiche']
         # ogni altra chiave già su disco resta invariata
-        save_data(existing)
+        save_data(existing, conferma_riduzione=bool(incoming.get('conferma_riduzione')))
         return jsonify({'ok': True})
+    except crm_db.SalvataggioSospetto as e:
+        # 409 e non 500: non e' un guasto, e' un rifiuto motivato. Il client
+        # mostra il motivo e offre la conferma, che solo il titolare puo' dare.
+        return jsonify({'error': str(e), 'riduzione': True}), 409
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
