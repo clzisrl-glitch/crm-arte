@@ -75,7 +75,18 @@ def _get_pg():
                               keepalives_interval=10, keepalives_count=5)
     return _pg
 
-def _db_init():
+_INIT_FATTO = False
+
+def _db_init(forza=False):
+    """Prepara le tabelle. Sono istruzioni innocue (IF NOT EXISTS) ma sono
+    QUINDICI: eseguirle a ogni lettura significherebbe quindici andate e
+    ritorni al database per ogni pagina aperta e ogni telefonata registrata.
+    Si fanno UNA VOLTA per processo. Se piu' avanti qualcosa dovesse fallire
+    perche' una tabella manca, chi se ne accorge richiama _db_init(forza=True)
+    e si rimette a posto da solo."""
+    global _INIT_FATTO
+    if _INIT_FATTO and not forza:
+        return
     conn = _get_pg()
     with conn.cursor() as cur:
         # BYTEA = dati binari (qui ci mettiamo il JSON compresso gzip)
@@ -102,6 +113,7 @@ def _db_init():
                     "impronta TEXT, controllo TEXT, autore TEXT, "
                     "aggiornato TIMESTAMP DEFAULT now())")
         cur.execute("ALTER TABLE crm_conteggi ADD COLUMN IF NOT EXISTS controllo TEXT")
+    _INIT_FATTO = True
 
 def _comprimi(data):
     import gzip as _g
@@ -343,6 +355,20 @@ def _verifica_subito(cur, tabella, colonna, chiave=None):
         return False
 
 
+def _riprova_prepara(errore):
+    """Se un'operazione e' fallita perche' manca una tabella o una colonna
+    (database rifatto, aggiornamento a meta'), si rifanno le istruzioni di
+    preparazione: al tentativo successivo tutto e' a posto. Per qualunque
+    altro errore non si fa niente."""
+    t = str(errore).lower()
+    if 'does not exist' in t or 'non esiste' in t or 'undefinedtable' in t or 'undefinedcolumn' in t:
+        try:
+            _db_init(forza=True)
+            print('  (tabelle ricreate: al prossimo salvataggio la copia riparte)')
+        except Exception as e2:
+            print(f'  (ricreazione tabelle non riuscita: {e2})')
+
+
 def _copie_prima_di_scrivere(cur, motivo_riduzione=None):
     """Copie nel tempo, fatte PRIMA di sovrascrivere.
 
@@ -381,6 +407,7 @@ def _copie_prima_di_scrivere(cur, motivo_riduzione=None):
             _verifica_subito(cur, 'crm_copie', 'chiave')
     except Exception as e:
         print(f"  (copia giornaliera non riuscita: {e})")
+        _riprova_prepara(e)
     try:
         # ── oraria: solo nelle ore in cui si lavora davvero ──
         if ORA_COPIE_DA <= adesso.hour <= ORA_COPIE_A:
@@ -398,6 +425,7 @@ def _copie_prima_di_scrivere(cur, motivo_riduzione=None):
                 _verifica_subito(cur, 'crm_copie', 'chiave', ora)
     except Exception as e:
         print(f"  (copia oraria non riuscita: {e})")
+        _riprova_prepara(e)
     if motivo_riduzione:
         try:
             # ── d'ufficio: il titolare ha confermato una riduzione grossa.
@@ -477,6 +505,7 @@ def _db_save(data, forza=False, autore='', conferma_riduzione=False):
                  json.dumps(controllo, separators=(',', ':')), (autore or '')[:80]))
         except Exception as e:
             print(f"  (conteggi non aggiornati: {e})")
+            _riprova_prepara(e)
 
 def _db_has_data():
     """Attenzione: se la lettura FALLISCE l'eccezione esce di proposito.
