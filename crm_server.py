@@ -714,15 +714,21 @@ def _registra_attivita(risposta):
                 nome = ''
             if nome:
                 crm_db.attivita_registra(nome, '', '', 'accesso')
-                crm_db.presenza_tocca(nome, '', '')
+                # le sessioni del TITOLARE non si registrano: il tempo di
+                # connessione serve per le telefoniste. L'accesso qui sopra
+                # resta (e' la scheda Accessi, che non cambia).
+                if nome not in crm_auth.nomi_titolari():
+                    crm_db.presenza_tocca(nome, '', '')
             return risposta
         if not u:
             return risposta
         nome = u.get('nome') or ''
-        # presenza: al massimo una scrittura ogni 2 minuti per utente
+        # presenza: al massimo una scrittura ogni 2 minuti per utente.
+        # Il titolare e' escluso: niente sessioni sue nel registro.
         import time as _t
         ora = _t.time()
-        if ora - _ultimo_tocco.get(nome, 0) > TOCCO_OGNI_SEC:
+        if (u.get('ruolo', '') != 'titolare'
+                and ora - _ultimo_tocco.get(nome, 0) > TOCCO_OGNI_SEC):
             _ultimo_tocco[nome] = ora
             crm_db.presenza_tocca(nome, u.get('ruolo', ''), u.get('zona', ''))
         # registro: solo le operazioni che cambiano qualcosa
@@ -962,7 +968,7 @@ def api_attivita():
         giorni = 7
     giorni = min(max(giorni, 1), 60)
     return jsonify({'ok': True, 'giorni': giorni,
-                    'sessioni': crm_db.sessioni_elenco(giorni),
+                    'sessioni': crm_db.sessioni_elenco(giorni, crm_auth.nomi_titolari()),
                     'attivita': crm_db.attivita_elenco(giorni, 400),
                     'adesso': crm_auth._ora_italiana().isoformat(timespec='seconds')})
 
