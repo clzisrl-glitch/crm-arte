@@ -659,7 +659,7 @@ body:not([data-ruolo="operatore"]) ._soloOperatore{display:none!important}
       <button class="btn-u pt-controllare" title="Manda questa scheda in Da controllare (per ricontrollarla: numero errato, indirizzo vecchio, ecc.)." onclick="segnalaContatto(currentResults[currentIdx]?.ID_contatto)">&#9888; Da controllare</button>
       <button class="btn-u pt-deceduto" title="Segna questo contatto come DECEDUTO: lo esclude da elenco, ricerca e agenda e lo sposta nella scheda Deceduti." onclick="segnaDeceduto()">&#9904; Segna deceduto</button>
       <button class="btn-u btn-blue-soft" id="btnAzzera" onclick="azzeraRicerca()" style="display:none" title="Torna a navigare tutto il database">&#10005; Azzera ricerca</button>
-<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 13/09/2026 09:40</span>
+<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 14/09/2026 19:20</span>
       <div style="flex:1"></div>
       <button class="btn-u btn-del-discreet" onclick="deleteContact()" title="Elimina questo contatto">&#128465;</button>
     </div>
@@ -3405,14 +3405,54 @@ function _msgRigaHtml(m, sonoTitolare){
   try{var d=new Date(m.quando);
     quando=('0'+d.getDate()).slice(-2)+'/'+('0'+(d.getMonth()+1)).slice(-2)+' '
           +('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2);}catch(e){}
+  // La x compare solo su quello che si puo' davvero togliere: al titolare
+  // sempre, alla telefonista solo sui PROPRI messaggi non ancora letti. Un
+  // pulsante che poi dice di no e' peggio di un pulsante che non c'e'.
+  var puoi = sonoTitolare || (!m.da_titolare && !m.letto);
+  var x = puoi ? '<span onclick="eliminaMessaggio('+(m.id||0)+')" title="Cancella questo messaggio" '
+        +'style="cursor:pointer;color:#b9a0a0;font-size:14px;line-height:1;margin-left:8px;float:right">&times;</span>' : '';
   return '<div style="display:flex;justify-content:'+(mio?'flex-end':'flex-start')+';margin-bottom:8px">'
     +'<div style="max-width:78%;background:'+col+';border:1px solid '+bor+';border-radius:10px;padding:7px 11px">'
+    +x
     +'<div style="font-size:11px;color:#8a8a90;margin-bottom:2px">'+esc(m.autore||'')+' &#183; '+quando
       +(m.letto?'':' &#183; <span style="color:#c0392b">nuovo</span>')+'</div>'
     +'<div style="font-size:13.5px;color:#23262b;white-space:pre-wrap">'+esc(m.testo||'')+'</div>'
     +(m.id_contatto?'<div style="margin-top:4px"><span onclick="chiudiMessaggi();apriContattoDaId(\''+esc(m.id_contatto)+'\')" style="cursor:pointer;color:#1a5ab8;text-decoration:underline;font-size:12px">&#128203; apri la scheda '+esc(m.id_contatto)+'</span></div>':'')
     +'</div></div>';
 }
+// Cancellare un messaggio. Il permesso lo decide il SERVER: qui la x si mostra
+// solo dove ha senso, ma se qualcuno provasse lo stesso la risposta e' la stessa.
+async function eliminaMessaggio(id){
+  if(!id)return;
+  if(!confirm('Cancellare questo messaggio?\n\nSparisce per tutti e due e non si recupera.'))return;
+  try{
+    var r=await fetch('/api/messaggi_elimina',{method:'POST',headers:{'Content-Type':'application/json'},
+                      body:JSON.stringify({id:id})});
+    var j=await r.json().catch(function(){return {};});
+    if(!r.ok){alert(j.error||'Non si e\' potuto cancellare.');return;}
+    apriMessaggi(_msgUtenteAperto);
+    _msgControlla(false);
+  }catch(e){alert('Errore di collegamento.');}
+}
+
+// Svuotare tutta la conversazione con una persona. Solo il titolare.
+async function svuotaConversazione(){
+  var chi=_msgUtenteAperto;
+  if(!chi){alert('Scegli prima la persona.');return;}
+  if((window._ruolo||'')!=='titolare'){alert('Riservato al titolare.');return;}
+  if(!confirm('Cancellare TUTTI i messaggi con '+chi+'?\n\nNon si recuperano.'))return;
+  if(!confirm('Confermi? Verranno tolti tutti i messaggi scambiati con '+chi+'.'))return;
+  try{
+    var r=await fetch('/api/messaggi_elimina',{method:'POST',headers:{'Content-Type':'application/json'},
+                      body:JSON.stringify({utente:chi,tutto:true})});
+    var j=await r.json().catch(function(){return {};});
+    if(!r.ok){alert(j.error||'Non si e\' potuto svuotare.');return;}
+    alert('Tolti '+(j.eliminati||0)+' messaggi.');
+    apriMessaggi(chi);
+    _msgControlla(false);
+  }catch(e){alert('Errore di collegamento.');}
+}
+
 async function apriMessaggi(utente, idContatto, testoIniziale){
   var m=document.getElementById('messaggiModal'); if(!m)return;
   _msgRif=idContatto||'';
@@ -3452,6 +3492,10 @@ async function apriMessaggi(utente, idContatto, testoIniziale){
           +esc(n)+(q?' <span style="background:#c0392b;color:#fff;border-radius:8px;padding:0 5px;font-size:11px">'+q+'</span>':'')+'</button>';
       }).join('');
       _msgUtenteAperto=utente||'';
+      // "Svuota" solo quando c'e' davvero UNA conversazione aperta: nell'elenco
+      // generale non si sa che cosa si starebbe svuotando.
+      var _sv=document.getElementById('msgSvuota');
+      if(_sv)_sv.style.display=utente?'inline-block':'none';
       window._msgAperte=j.aperte||{};
       if(utente){
         // su quale scheda sta lavorando lei in questo momento
@@ -3490,6 +3534,7 @@ async function apriMessaggi(utente, idContatto, testoIniziale){
       box.style.display='none';
       _msgUtenteAperto=j.utente||'';
       var _ds=document.getElementById('msgDoveSta'); if(_ds)_ds.style.display='none';
+      var _sv2=document.getElementById('msgSvuota'); if(_sv2)_sv2.style.display='none';
     }
     corpo.innerHTML=msg.length ? msg.map(function(x){return _msgRigaHtml(x,sonoTitolare);}).join('')
       : '<div style="color:#999;font-size:13px">Nessun messaggio ancora. Scrivi il primo qui sotto.</div>';
@@ -5858,7 +5903,10 @@ const EMBEDDED_APPUNTAMENTI=``
   <div style="background:#fff;border-radius:14px;padding:18px 20px;max-width:720px;width:94%;max-height:88vh;display:flex;flex-direction:column;box-shadow:0 10px 40px rgba(0,0,0,.3)">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
       <div style="font-size:18px;font-weight:700;color:#1a3a6a">&#128172; <span id="msgTitolo">Messaggi</span></div>
-      <button onclick="chiudiMessaggi()" style="background:#eee;border:1px solid #ccc;border-radius:8px;padding:4px 12px;cursor:pointer">Chiudi</button>
+      <div style="display:flex;gap:6px;align-items:center">
+        <button id="msgSvuota" onclick="svuotaConversazione()" style="display:none;background:#fff;border:1px solid #e0b4b4;color:#c0392b;border-radius:8px;padding:4px 10px;cursor:pointer;font-size:12.5px" title="Cancella tutti i messaggi scambiati con questa persona">&#128465; Svuota</button>
+        <button onclick="chiudiMessaggi()" style="background:#eee;border:1px solid #ccc;border-radius:8px;padding:4px 12px;cursor:pointer">Chiudi</button>
+      </div>
     </div>
     <div id="msgSpiega" style="font-size:12.5px;color:#888;margin-bottom:8px"></div>
     <div id="msgNotifiche" style="font-size:12.5px;margin-bottom:10px;padding:8px 10px;background:#f7f8fa;border:1px solid #e6e8ee;border-radius:8px"></div>

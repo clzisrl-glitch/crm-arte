@@ -1224,6 +1224,57 @@ def messaggi_elenco(utente=None, limite=200):
         print(f"  (messaggi_elenco: {e})")
         return []
 
+def messaggio_elimina(id_messaggio, chi=None, solo_propri_non_letti=False):
+    """Cancella UN messaggio. Ritorna (riuscito, motivo).
+
+    Il titolare (chi=None) cancella qualunque messaggio.
+    La telefonista puo' cancellare SOLO i propri e SOLO finche' non sono stati
+    letti: dopo che il titolare li ha letti e magari ha gia' fatto la correzione,
+    togliere la richiesta lascerebbe lui senza il perche' di quello che ha fatto.
+    """
+    if not USE_DB:
+        return False, 'solo nella versione online'
+    try:
+        _msg_db_init()
+        conn = _get_pg()
+        with conn.cursor() as cur:
+            cur.execute("SELECT utente, da_titolare, letto FROM crm_messaggi WHERE id=%s",
+                        (int(id_messaggio),))
+            r = cur.fetchone()
+            if not r:
+                return False, 'messaggio non trovato'
+            utente, da_titolare, letto = r[0], bool(r[1]), bool(r[2])
+            if solo_propri_non_letti:
+                if da_titolare or str(utente) != str(chi):
+                    return False, 'puoi cancellare solo i tuoi messaggi'
+                if letto:
+                    return False, 'il titolare lo ha gia\' letto: non si puo\' piu\' togliere'
+            cur.execute("DELETE FROM crm_messaggi WHERE id=%s", (int(id_messaggio),))
+            return True, ''
+    except Exception as e:
+        print(f"  (messaggio_elimina: {e})")
+        return False, str(e)
+
+
+def messaggi_svuota(utente=None):
+    """Svuota una conversazione (o tutte, se utente e' vuoto). Solo titolare.
+    Ritorna quanti messaggi sono stati tolti."""
+    if not USE_DB:
+        return 0
+    try:
+        _msg_db_init()
+        conn = _get_pg()
+        with conn.cursor() as cur:
+            if utente:
+                cur.execute("DELETE FROM crm_messaggi WHERE utente=%s", (str(utente)[:80],))
+            else:
+                cur.execute("DELETE FROM crm_messaggi")
+            return cur.rowcount or 0
+    except Exception as e:
+        print(f"  (messaggi_svuota: {e})")
+        return 0
+
+
 def messaggi_da_leggere(per_titolare, utente=None):
     """Quanti messaggi non letti. per_titolare=True conta quelli scritti dalle
     telefoniste (li deve leggere il titolare); False quelli scritti dal

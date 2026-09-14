@@ -660,6 +660,7 @@ AZIONI_LEGGIBILI = {
     '/api/reset':               'AZZERAMENTO archivio',
     '/api/ordine_schede':       'ordine schede',
     '/api/copia_ripristina':    'RIPRISTINO da copia',
+    '/api/messaggi_elimina':    'messaggio cancellato',
     '/api/utenti':              'gestione utenti',
     '/api/utenti_elimina':      'utente eliminato',
     '/api/login':               'accesso',
@@ -885,6 +886,41 @@ def api_messaggi():
     crm_db.messaggi_segna_letti(mio, True)            # ho letto quelli del titolare
     return jsonify({'ok': True, 'titolare': False, 'utente': mio,
                     'messaggi': crm_db.messaggi_elenco(mio)})
+
+@app.route('/api/messaggi_elimina', methods=['POST'])
+@richiede_login
+def api_messaggi_elimina():
+    """Cancella un messaggio, o svuota una conversazione.
+
+    Il titolare cancella quello che vuole. La telefonista solo i propri, e solo
+    finche' non sono stati letti: un messaggio gia' letto puo' aver prodotto una
+    correzione, e toglierlo lascerebbe il titolare senza il perche'.
+    Le cancellazioni restano nel registro attivita'."""
+    u = _utente_corrente() or {}
+    titolare = u.get('ruolo') == 'titolare'
+    body = request.get_json(force=True) or {}
+
+    if body.get('tutto'):
+        if not titolare:
+            return jsonify({'error': 'riservato al titolare'}), 403
+        chi = str(body.get('utente') or '').strip()[:80]
+        if not chi:
+            return jsonify({'error': 'indica la conversazione da svuotare'}), 400
+        quanti = crm_db.messaggi_svuota(chi)
+        return jsonify({'ok': True, 'eliminati': quanti})
+
+    try:
+        ident = int(body.get('id') or 0)
+    except Exception:
+        ident = 0
+    if not ident:
+        return jsonify({'error': 'id mancante'}), 400
+    fatto, motivo = crm_db.messaggio_elimina(
+        ident, chi=u.get('nome'), solo_propri_non_letti=(not titolare))
+    if not fatto:
+        return jsonify({'error': motivo or 'non eliminato'}), 403
+    return jsonify({'ok': True, 'eliminati': 1})
+
 
 @app.route('/api/messaggi', methods=['POST'])
 @richiede_login
