@@ -1094,15 +1094,8 @@ def attivita_registra(nome, ruolo, zona, azione, id_contatto='', dettaglio=''):
 def presenza_tocca(nome, ruolo, zona):
     """Segna che l'utente e' vivo adesso. Se la sua ultima attivita' e' di
     piu' di SESSIONE_PAUSA_MIN minuti, apre una sessione NUOVA: cosi' il
-    tempo di connessione non conta le ore in cui il CRM era solo aperto.
-
-    Le sessioni del TITOLARE non si registrano: le ha chieste lui solo per le
-    telefoniste. Chi chiama la funzione filtra gia' per nome (il ruolo qui
-    puo' essere vuoto, al login non e' ancora noto): questo e' il secondo
-    controllo, per quando il ruolo c'e'."""
+    tempo di connessione non conta le ore in cui il CRM era solo aperto."""
     if not USE_DB:
-        return False
-    if str(ruolo or '') == 'titolare':
         return False
     try:
         _att_db_init()
@@ -1141,27 +1134,19 @@ def attivita_elenco(giorni=7, limite=400):
         print(f"  (attivita_elenco: {e})")
         return []
 
-def sessioni_elenco(giorni=7, escludi=None):
-    """Sessioni di collegamento, dalla piu' recente, con la durata in minuti.
-
-    'escludi' e' l'elenco dei nomi da NON mostrare: serve a tenere fuori il
-    titolare, che ha chiesto di non vedere registrate le proprie sessioni.
-    Il filtro e' per NOME e non per ruolo perche' le righe scritte al momento
-    del login hanno il ruolo vuoto (nel cookie non c'e' ancora)."""
+def sessioni_elenco(giorni=7):
+    """Sessioni di collegamento, dalla piu' recente, con la durata in minuti."""
     if not USE_DB:
         return []
     try:
         _att_db_init()
         conn = _get_pg()
-        fuori = [str(n or '')[:80] for n in (escludi or []) if str(n or '').strip()]
         with conn.cursor() as cur:
             cur.execute("SELECT nome, ruolo, zona, inizio, ultimo, "
                         "  GREATEST(1, ROUND(EXTRACT(EPOCH FROM (ultimo-inizio))/60)::int), "
                         "  (ultimo > now() - interval '5 minutes') "
                         "FROM crm_sessioni WHERE inizio > now() - (%s || ' days')::interval "
-                        "  AND COALESCE(ruolo,'') <> 'titolare' "
-                        "  AND NOT (COALESCE(nome,'') = ANY(%s)) "
-                        "ORDER BY inizio DESC LIMIT 500", (str(int(giorni)), fuori))
+                        "ORDER BY inizio DESC LIMIT 500", (str(int(giorni)),))
             return [{'nome': a, 'ruolo': b, 'zona': c,
                      'inizio': d.isoformat(timespec='seconds') if d else '',
                      'ultimo': e.isoformat(timespec='seconds') if e else '',

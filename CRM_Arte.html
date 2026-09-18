@@ -659,7 +659,7 @@ body:not([data-ruolo="operatore"]) ._soloOperatore{display:none!important}
       <button class="btn-u pt-controllare" title="Manda questa scheda in Da controllare (per ricontrollarla: numero errato, indirizzo vecchio, ecc.)." onclick="segnalaContatto(currentResults[currentIdx]?.ID_contatto)">&#9888; Da controllare</button>
       <button class="btn-u pt-deceduto" title="Segna questo contatto come DECEDUTO: lo esclude da elenco, ricerca e agenda e lo sposta nella scheda Deceduti." onclick="segnaDeceduto()">&#9904; Segna deceduto</button>
       <button class="btn-u btn-blue-soft" id="btnAzzera" onclick="azzeraRicerca()" style="display:none" title="Torna a navigare tutto il database">&#10005; Azzera ricerca</button>
-<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 14/09/2026 22:45</span>
+<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 18/09/2026 10:05</span>
       <div style="flex:1"></div>
       <button class="btn-u btn-del-discreet" onclick="deleteContact()" title="Elimina questo contatto">&#128465;</button>
     </div>
@@ -738,7 +738,7 @@ body:not([data-ruolo="operatore"]) ._soloOperatore{display:none!important}
       </select>
       <select id="recuperoTipo" onchange="renderRecupero()" style="padding:3px 6px;border:1px solid #aaa;border-radius:3px;font-size:11px">
         <option value="all">Tutti</option>
-        <option value="appuntamento">Solo positivi</option>
+        <option value="appuntamento">Solo appuntamenti</option>
         <option value="richiamo">Solo richiami</option>
       </select>
       <select id="recuperoPeriodo" onchange="renderRecupero()" style="padding:3px 6px;border:1px solid #c06010;border-radius:3px;font-size:11px;font-weight:600;color:#c06010" title="Da quanto e scaduto il richiamo">
@@ -860,7 +860,7 @@ body:not([data-ruolo="operatore"]) ._soloOperatore{display:none!important}
         <a href="#w-pot" class="tb-btn" style="text-decoration:none">Potenziali / Deceduti</a>
         <a href="#w-salva" class="tb-btn" style="text-decoration:none">Salvataggi e backup</a>
       </div>
-      <h3 id="w-barra" style="color:#1a3a6a;border-bottom:2px solid #1a3a6a;padding-bottom:4px;margin:22px 0 8px">&#128205; I pulsanti in alto</h3><ul style="margin-left:18px"><li><b>AGENDA</b> &#8212; chi devi chiamare oggi e gli appuntamenti.</li><li><b>Principale</b> &#8212; la scheda della persona: numeri, indirizzo, opere comprate, note, mappa.</li><li><b>Elenco</b> &#8212; <span class="_soloTitolare">tutte le persone in una lista, come un foglio Excel.</span><span class="_soloOperatore">le persone della tua zona in una lista, come un foglio Excel.</span></li><li><b>Provincia</b> e <b>Zona</b> &#8212; cerca per citt&#224;, oppure chi sta vicino a un punto.</li><li><b>&#9203; Da Recuperare</b> &#8212; chi va richiamato.</li><li><b>&#128270; Da controllare</b> &#8212; i casi dubbi da sistemare.</li><li><b>&#9742; Potenziali</b> &#8212; vecchi nominativi che non sono ancora clienti.</li><li><b>&#128241; Da controllare cellulare</b> &#8212; clienti di cui manca il numero di cellulare.</li><li class="_soloTitolare"><b>&#9904; Deceduti</b> &#8212; chi &#232; mancato: messo da parte. Si apre dal riquadro <b>Strumenti</b> qui sopra.</li><li class="_soloTitolare"><b>&#128202; Statistiche</b> &#8212; solo per te: numeri delle chiamate, zone, vendite, accessi.</li></ul><h3 id="w-giorno" style="color:#1a3a6a;border-bottom:2px solid #1a3a6a;padding-bottom:4px;margin:22px 0 8px">&#9728;&#65039; Come si lavora, in cinque passi</h3><ol style="margin-left:18px"><li>Apri <b>AGENDA</b>: vedi chi chiamare oggi e gli appuntamenti.</li><li>Clicca il nome: si apre la <b>scheda</b>.</li><li>Premi il <b>tasto verde</b> sul numero per chiamare.</li><li>Dopo la chiamata scrivi <b>com'&#232; andata</b>. Se serve fissa un nuovo richiamo o un appuntamento.</li><li>Passa al prossimo. <b>Non devi salvare niente</b>: si salva da solo.</li></ol><p style="margin:6px 0">Quando riapri il CRM, riparte <b>dalla pagina dove eri rimasto</b>. Vale per il tuo accesso, anche da un altro computer o dal telefono.</p><h3 id="w-agenda2" style="color:#1a3a6a;border-bottom:2px solid #1a3a6a;padding-bottom:4px;margin:22px 0 8px">&#128197; L'agenda</h3><ul style="margin-left:18px"><li>Per spostare un appuntamento, <b>trascinalo</b> nel giorno e nell'ora che vuoi. Si salva da solo.</li><li><b>&#128337; Sistema richiami senza ora</b>: d&#224; un orario, uno dopo l'altro dalle 9:00, ai richiami che non ce l'hanno. Puoi sempre spostarli a mano dopo.</li><li><b>&#128424; Stampa PDF</b>: scegli una data in alto e stampi le schede di tutti gli appuntamenti di quel giorno. <b>&#9993; Invia email</b> apre lo stesso PDF da allegare.</li><li class="_soloTitolare">La tendina <b>&#127758;</b> mostra l'agenda di <b>una zona sola</b>.</li><li class="_soloTitolare">Il pulsante <b>&#127758; Zone a colori</b> mostra <b>tutte le zone insieme</b>, ognuna con un colore: Nord giallo, Triveneto verde acqua, Centro viola, Toscana arancio, Altre grigio. Gli appuntamenti restano celesti. I colori sono spiegati in basso.</li><li class="_soloOperatore">Nella tua agenda ci sono <b>solo le chiamate e gli appuntamenti della tua zona</b>.</li></ul><h3 id="w-cerca" style="color:#1a3a6a;border-bottom:2px solid #1a3a6a;padding-bottom:4px;margin:22px 0 8px">&#128269; Trovare una persona</h3><ul style="margin-left:18px"><li>In <b>Elenco</b> scrivi cognome, nome, citt&#224; o numero: la lista si stringe subito.</li><li>In <b>Provincia</b> e <b>Zona</b> cerchi per citt&#224; o per vicinanza.</li><li>In <b>Principale &#8594; Trova</b> cerchi dentro un campo preciso (note, opere, ID...). Le parole puoi scriverle <b>in qualsiasi ordine</b>: &quot;CLZI 2026&quot; trova anche &quot;2026 CLZI riunione&quot;.</li><li><b>Potenziali</b>, <b>Deceduti</b> e <b>UTET da verificare</b> non escono nelle ricerche normali: hanno la loro pagina.</li></ul><h3 id="w-scheda" style="color:#1a3a6a;border-bottom:2px solid #1a3a6a;padding-bottom:4px;margin:22px 0 8px">&#128203; La scheda</h3><ul style="margin-left:18px"><li><b>Tasto verde</b> sul numero = chiama. Ci sono anche WhatsApp, email e mappa.</li><li class="_soloTitolare"><b>Modifica</b> per correggere i dati. Si salva da solo: compare una conferma verde in basso.</li><li class="_soloOperatore">I dati del cliente (nome, indirizzo, recapiti, note storiche, opere) sono in <b>sola lettura</b>: li corregge il titolare. Se al telefono scopri un dato sbagliato, <b>scrivilo nelle tue note</b> oppure usa <b>&#128270; Segnala</b>: ci pensa lui.</li><li class="_soloOperatore">Quello che <b>tu</b> scrivi: com'&#232; andata la chiamata, i richiami e gli appuntamenti, e le <b>Note telefonista</b>. Questo &#232; il tuo lavoro e si salva da solo.</li><li><b>creaTel</b> per fissare un richiamo. <b>Ora</b> per un appuntamento con l'orario.</li><li>Quando registri com'&#232; andata la chiamata scegli fra tre esiti: <b>&#128994; Positivo</b>, <b>&#128309; Richiamo</b>, <b>&#128308; Negativo</b>.</li><li>Se aggiungi un'<b>opera</b> con la <b>data di acquisto</b>, il CRM mette da solo in agenda il <b>&#128196; contratto</b> su quella data. Non devi scrivere niente: se correggi la data la voce si sposta, se togli l'opera sparisce. Non diventa una chiamata da richiamare (il cliente ha gi&#224; comprato) e non tocca un richiamo che avevi gi&#224; fissato.</li><li class="_soloTitolare"><b>&#9904; Segna deceduto</b> mette la persona tra i Deceduti e la toglie dalle ricerche.</li><li class="_soloOperatore"><b>&#9904; Segna deceduto</b> manda una <b>segnalazione al titolare</b>, che sposta la scheda. Da quel momento non richiamare quel nominativo.</li><li>In fondo trovi le <b>opere comprate</b> e tutte le <b>chiamate fatte</b>.</li></ul><h3 id="w-ctrl" style="color:#1a3a6a;border-bottom:2px solid #1a3a6a;padding-bottom:4px;margin:22px 0 8px">&#128270; Da controllare</h3><p style="margin:6px 0">Sono i casi dubbi: lo stesso numero su due schede, dati strani, possibili doppioni. Guardi il caso e scegli un pulsante: <b>ok</b>, <b>non risponde</b>, <b>numero errato</b>, <b>trasferito</b>, <b>non interessato</b>, <b>Archivia</b>, <b>Apri</b>.</p><ul style="margin-left:18px"><li>In alto a destra scegli cosa guardare: <b>CRM generale</b>, <b>UTET da verificare</b> o <b>Tutti</b>.</li><li>I filtri e il menu <b>regione</b> restringono la lista.</li><li class="_soloTitolare"><b>Unisci qui</b> unisce due schede doppie in una sola: porta tutto nella scheda che tieni (opere, chiamate, note, appuntamenti) e scrive nelle note il nome dell'altra. <b>Elimina</b> cancella la scheda.</li><li class="_soloOperatore">Unire due schede doppie o cancellarne una lo fa il titolare: tu <b>segnala</b> il caso e ci pensa lui.</li></ul><h3 id="w-nocell" style="color:#1a3a6a;border-bottom:2px solid #1a3a6a;padding-bottom:4px;margin:22px 0 8px">&#128241; Da controllare cellulare</h3><ul style="margin-left:18px"><li>Sono i clienti <b>senza numero di cellulare</b>, da cercare.</li><li>Scegli prima la <b>regione</b>, poi la <b>provincia</b>.</li><li>Vedi indirizzo, data di nascita e codice fiscale. Con <b>Stampa</b> ti porti l'elenco su carta.</li></ul><h3 id="w-pot" style="color:#1a3a6a;border-bottom:2px solid #1a3a6a;padding-bottom:4px;margin:22px 0 8px">&#9742; Potenziali<span class="_soloTitolare"> &#183; &#9904; Deceduti</span></h3><ul style="margin-left:18px"><li><b>Potenziali</b>: vecchi nominativi, non ancora clienti. Se uno compra, diventa cliente normale.</li><li class="_soloTitolare"><b>Deceduti</b>: messi da parte e fuori dalle ricerche. Per riportarne uno tra gli attivi, apri la scheda e togli la parola DECEDUTO dalle note.</li><li class="_soloOperatore">Quando segni una persona come <b>deceduta</b>, sparisce dalle ricerche e finisce in un archivio che tiene il titolare.</li></ul><h3 id="w-zone" style="color:#1a3a6a;border-bottom:2px solid #1a3a6a;padding-bottom:4px;margin:22px 0 8px">&#127758; Le zone</h3><p style="margin:6px 0">Una zona &#232; un gruppo di regioni. Serve a dividere il lavoro: chi ha una zona vede <b>solo i contatti di quelle regioni</b>.</p><p class="_soloOperatore" style="margin:6px 0">Tu lavori <b>sulla tua zona</b>. I nominativi delle altre regioni sono di altre colleghe: non ti compaiono e non devi cercarli. Se non trovi qualcuno, non &#232; un errore del programma.</p><ul class="_soloTitolare" style="margin-left:18px"><li><b>Nord</b> &#8212; Piemonte, Valle d'Aosta, Lombardia, Liguria.</li><li><b>Triveneto</b> &#8212; Veneto, Trentino-Alto Adige, Friuli-Venezia Giulia.</li><li><b>Centro</b> &#8212; Lazio, Umbria, Marche, Sardegna, Sicilia, Campania, Calabria.</li><li><b>Toscana</b> &#8212; Toscana.</li><li><b>Altre</b> &#8212; le regioni che non stanno in nessuna zona (Emilia-Romagna, Puglia, Abruzzo, Basilicata, Molise, estero).</li></ul><p class="_soloTitolare" style="margin:6px 0">Tu le vedi tutte. Una regione sta in <b>una zona sola</b>: se stesse in due, due telefoniste si troverebbero gli stessi nominativi.</p><p class="_soloTitolare" style="margin:6px 0">In alto, accanto a <b>Welcome</b>, hai la tendina <b>&#127758; Vedi come...</b>: scegli una zona e il CRM ti mostra <b>solo</b> quella, come la vede la telefonista che ci lavora &#8212; elenchi, ricerche e agenda. Serve a controllare il suo lavoro <b>senza entrare col suo accesso</b>. Non cambia niente nei dati e non toglie niente a te: quando hai finito rimetti <b>Tutte le zone</b>. Riaprendo il CRM riparte comunque da tutte le zone. Finch&#233; la vista &#232; attiva, in alto resta scritto quale zona stai guardando.</p><div class="_soloTitolare"><h3 id="w-stat" style="color:#1a3a6a;border-bottom:2px solid #1a3a6a;padding-bottom:4px;margin:22px 0 8px">&#128202; Statistiche (solo tu)</h3><ul style="margin-left:18px"><li><b>Chiamate</b>: oggi, ultimi 7 giorni, ultimi 30, totale. E come sono andate.</li><li><b>Monitoraggio zone</b>: per ogni zona quanti contatti, quante chiamate, quanti appuntamenti e quanto &#232; gi&#224; stato lavorato.</li><li><b>Per telefonista</b>: quante chiamate ha fatto ciascuna.</li><li><b>&#128506; Vendite per regione</b>: conta le opere con data di acquisto <b>dal 01/08/2026</b> in poi (la data si cambia nel campo &quot;Dal&quot;) e le mette sotto la regione del cliente. <b>Clicca una regione</b> e vedi l'elenco delle vendite; il pulsante <b>Apri scheda</b> ti porta sul cliente.</li><li>Se un'opera ha una data di acquisto <b>nel futuro</b> &#232; un errore di scrittura: non viene contata e la trovi segnalata in un riquadro giallo, da correggere nella scheda.</li><li><b>Accessi</b>: chi si &#232; collegato e quando.</li></ul></div><h3 id="w-salva" style="color:#1a3a6a;border-bottom:2px solid #1a3a6a;padding-bottom:4px;margin:22px 0 8px">&#128190; Si salva da solo</h3><ul style="margin-left:18px"><li>Ogni modifica <b>si salva da sola</b>: compare una conferma verde in basso a destra.</li><li class="_soloTitolare"><b>Backup</b>, <b>Excel</b> e <b>Completo</b> sono nel riquadro <b>Strumenti</b> qui in alto: sono riservati a te.</li><li class="_soloTitolare"><b>&#128338; Copie di sicurezza</b>: il CRM mette da parte da solo una copia <b>all'inizio di ogni giornata</b> e una <b>ogni ora</b> mentre si lavora, sempre <b>prima</b> di sovrascrivere. Ogni copia mostra i suoi numeri (contatti, telefonate, opere) e quanto sono cresciuti rispetto alla precedente: scegli guardando le cifre, non a memoria. <b>Controlla</b> apre la copia e verifica che il contenuto sia sano; <b>Ripristina</b> la rimette in linea, dopo aver messo da parte lo stato di adesso.</li><li class="_soloTitolare">Un salvataggio che cancellerebbe una parte grossa dell'archivio viene <b>rifiutato</b> e te ne spiega il motivo: se la riduzione &egrave; voluta la confermi tu, e prima viene fatta una copia in pi&ugrave;. Le cose che <b>crescono</b> &#8212; telefonate, richiami, appuntamenti, opere &#8212; non vengono mai fermate.</li><li class="_soloOperatore">Non devi fare nessun backup: ci pensa il titolare, e il server ne fa uno da solo ogni giorno.</li><li class="_soloOperatore">Ogni mattina devi <b>rifare l'accesso</b>: la sera alle 21 il CRM chiude e l'accesso del giorno prima non vale pi&#249;.</li><li>In basso nella barra c'&#232; la <b>versione</b> del programma (data e ora). Serve se qualcosa non torna: vuol dire che il browser sta mostrando una copia vecchia.</li></ul><div style="margin-top:24px;padding:12px 14px;background:#eef4fc;border-left:4px solid #1a3a6a;border-radius:6px;color:#33506f"><b>In due parole:</b> <b>AGENDA</b> per sapere chi chiamare oggi, la <b>scheda</b> per chiamare e scrivere com'&#232; andata, <b>Da controllare</b> per i casi dubbi. Il resto sono elenchi di servizio.<span class="_soloOperatore"> Tutto quello che vedi riguarda la tua zona.</span></div>
+      <h3 id="w-barra" style="color:#1a3a6a;border-bottom:2px solid #1a3a6a;padding-bottom:4px;margin:22px 0 8px">&#128205; I pulsanti in alto</h3><ul style="margin-left:18px"><li><b>AGENDA</b> &#8212; chi devi chiamare oggi e gli appuntamenti.</li><li><b>Principale</b> &#8212; la scheda della persona: numeri, indirizzo, opere comprate, note, mappa.</li><li><b>Elenco</b> &#8212; <span class="_soloTitolare">tutte le persone in una lista, come un foglio Excel.</span><span class="_soloOperatore">le persone della tua zona in una lista, come un foglio Excel.</span></li><li><b>Provincia</b> e <b>Zona</b> &#8212; cerca per citt&#224;, oppure chi sta vicino a un punto.</li><li><b>&#9203; Da Recuperare</b> &#8212; chi va richiamato.</li><li><b>&#128270; Da controllare</b> &#8212; i casi dubbi da sistemare.</li><li><b>&#9742; Potenziali</b> &#8212; vecchi nominativi che non sono ancora clienti.</li><li><b>&#128241; Da controllare cellulare</b> &#8212; clienti di cui manca il numero di cellulare.</li><li class="_soloTitolare"><b>&#9904; Deceduti</b> &#8212; chi &#232; mancato: messo da parte. Si apre dal riquadro <b>Strumenti</b> qui sopra.</li><li class="_soloTitolare"><b>&#128202; Statistiche</b> &#8212; solo per te: numeri delle chiamate, zone, vendite, accessi.</li></ul><h3 id="w-giorno" style="color:#1a3a6a;border-bottom:2px solid #1a3a6a;padding-bottom:4px;margin:22px 0 8px">&#9728;&#65039; Come si lavora, in cinque passi</h3><ol style="margin-left:18px"><li>Apri <b>AGENDA</b>: vedi chi chiamare oggi e gli appuntamenti.</li><li>Clicca il nome: si apre la <b>scheda</b>.</li><li>Premi il <b>tasto verde</b> sul numero per chiamare.</li><li>Dopo la chiamata scrivi <b>com'&#232; andata</b>. Se serve fissa un nuovo richiamo o un appuntamento.</li><li>Passa al prossimo. <b>Non devi salvare niente</b>: si salva da solo.</li></ol><p style="margin:6px 0">Quando riapri il CRM, riparte <b>dalla pagina dove eri rimasto</b>. Vale per il tuo accesso, anche da un altro computer o dal telefono.</p><h3 id="w-agenda2" style="color:#1a3a6a;border-bottom:2px solid #1a3a6a;padding-bottom:4px;margin:22px 0 8px">&#128197; L'agenda</h3><ul style="margin-left:18px"><li>Per spostare un appuntamento, <b>trascinalo</b> nel giorno e nell'ora che vuoi. Si salva da solo.</li><li><b>&#128337; Sistema richiami senza ora</b>: d&#224; un orario, uno dopo l'altro dalle 9:00, ai richiami che non ce l'hanno. Puoi sempre spostarli a mano dopo.</li><li><b>&#128424; Stampa PDF</b>: scegli una data in alto e stampi le schede di tutti gli appuntamenti di quel giorno. <b>&#9993; Invia email</b> apre lo stesso PDF da allegare.</li><li class="_soloTitolare">La tendina <b>&#127758;</b> mostra l'agenda di <b>una zona sola</b>.</li><li class="_soloTitolare">Il pulsante <b>&#127758; Zone a colori</b> mostra <b>tutte le zone insieme</b>, ognuna con un colore: Nord giallo, Triveneto verde acqua, Centro viola, Toscana arancio, Altre grigio. Gli appuntamenti restano celesti. I colori sono spiegati in basso.</li><li class="_soloOperatore">Nella tua agenda ci sono <b>solo le chiamate e gli appuntamenti della tua zona</b>.</li></ul><h3 id="w-cerca" style="color:#1a3a6a;border-bottom:2px solid #1a3a6a;padding-bottom:4px;margin:22px 0 8px">&#128269; Trovare una persona</h3><ul style="margin-left:18px"><li>In <b>Elenco</b> scrivi cognome, nome, citt&#224; o numero: la lista si stringe subito.</li><li>In <b>Provincia</b> e <b>Zona</b> cerchi per citt&#224; o per vicinanza.</li><li>In <b>Principale &#8594; Trova</b> cerchi dentro un campo preciso (note, opere, ID...). Le parole puoi scriverle <b>in qualsiasi ordine</b>: &quot;CLZI 2026&quot; trova anche &quot;2026 CLZI riunione&quot;.</li><li><b>Potenziali</b>, <b>Deceduti</b> e <b>UTET da verificare</b> non escono nelle ricerche normali: hanno la loro pagina.</li></ul><h3 id="w-scheda" style="color:#1a3a6a;border-bottom:2px solid #1a3a6a;padding-bottom:4px;margin:22px 0 8px">&#128203; La scheda</h3><ul style="margin-left:18px"><li><b>Tasto verde</b> sul numero = chiama. Ci sono anche WhatsApp, email e mappa.</li><li class="_soloTitolare"><b>Modifica</b> per correggere i dati. Si salva da solo: compare una conferma verde in basso.</li><li class="_soloOperatore">I dati del cliente (nome, indirizzo, recapiti, note storiche, opere) sono in <b>sola lettura</b>: li corregge il titolare. Se al telefono scopri un dato sbagliato, <b>scrivilo nelle tue note</b> oppure usa <b>&#128270; Segnala</b>: ci pensa lui.</li><li class="_soloOperatore">Quello che <b>tu</b> scrivi: com'&#232; andata la chiamata, i richiami e gli appuntamenti, e le <b>Note telefonista</b>. Questo &#232; il tuo lavoro e si salva da solo.</li><li><b>creaTel</b> per fissare un richiamo. <b>Ora</b> per un appuntamento con l'orario.</li><li>Quando registri com'&#232; andata la chiamata scegli fra quattro esiti: <b>&#128994; Appuntamento</b>, <b>&#128992; Richiamo prioritario</b>, <b>&#128309; Richiamo</b>, <b>&#128308; Negativo</b>. L'esito comanda l'agenda: l'<b>appuntamento</b> va in agenda il giorno e l'ora fissati con il cliente, un <b>richiamo</b> sposta la persona alla nuova data, un <b>negativo</b> resta scritto nello storico e la toglie dall'agenda. Scegliendo <b>Appuntamento</b> compare anche la tendina <b>com'&#232; andato l'appuntamento</b>: lasciala su <i>Da fare</i> finch&#233; non &#232; stato fatto; poi <b>Positivo</b> o <b>Negativo</b> lo chiudono e lo tolgono dall'agenda, <b>Richiamo</b> lo riporta in agenda alla data che fissi.</li><li>Se aggiungi un'<b>opera</b> con la <b>data di acquisto</b>, il CRM mette da solo in agenda il <b>&#128196; contratto</b> su quella data. Non devi scrivere niente: se correggi la data la voce si sposta, se togli l'opera sparisce. Non diventa una chiamata da richiamare (il cliente ha gi&#224; comprato) e non tocca un richiamo che avevi gi&#224; fissato.</li><li class="_soloTitolare"><b>&#9904; Segna deceduto</b> mette la persona tra i Deceduti e la toglie dalle ricerche.</li><li class="_soloOperatore"><b>&#9904; Segna deceduto</b> manda una <b>segnalazione al titolare</b>, che sposta la scheda. Da quel momento non richiamare quel nominativo.</li><li>In fondo trovi le <b>opere comprate</b> e tutte le <b>chiamate fatte</b>.</li></ul><h3 id="w-ctrl" style="color:#1a3a6a;border-bottom:2px solid #1a3a6a;padding-bottom:4px;margin:22px 0 8px">&#128270; Da controllare</h3><p style="margin:6px 0">Sono i casi dubbi: lo stesso numero su due schede, dati strani, possibili doppioni. Guardi il caso e scegli un pulsante: <b>ok</b>, <b>non risponde</b>, <b>numero errato</b>, <b>trasferito</b>, <b>non interessato</b>, <b>Archivia</b>, <b>Apri</b>.</p><ul style="margin-left:18px"><li>In alto a destra scegli cosa guardare: <b>CRM generale</b>, <b>UTET da verificare</b> o <b>Tutti</b>.</li><li>I filtri e il menu <b>regione</b> restringono la lista.</li><li class="_soloTitolare"><b>Unisci qui</b> unisce due schede doppie in una sola: porta tutto nella scheda che tieni (opere, chiamate, note, appuntamenti) e scrive nelle note il nome dell'altra. <b>Elimina</b> cancella la scheda.</li><li class="_soloOperatore">Unire due schede doppie o cancellarne una lo fa il titolare: tu <b>segnala</b> il caso e ci pensa lui.</li></ul><h3 id="w-nocell" style="color:#1a3a6a;border-bottom:2px solid #1a3a6a;padding-bottom:4px;margin:22px 0 8px">&#128241; Da controllare cellulare</h3><ul style="margin-left:18px"><li>Sono i clienti <b>senza numero di cellulare</b>, da cercare.</li><li>Scegli prima la <b>regione</b>, poi la <b>provincia</b>.</li><li>Vedi indirizzo, data di nascita e codice fiscale. Con <b>Stampa</b> ti porti l'elenco su carta.</li></ul><h3 id="w-pot" style="color:#1a3a6a;border-bottom:2px solid #1a3a6a;padding-bottom:4px;margin:22px 0 8px">&#9742; Potenziali<span class="_soloTitolare"> &#183; &#9904; Deceduti</span></h3><ul style="margin-left:18px"><li><b>Potenziali</b>: vecchi nominativi, non ancora clienti. Se uno compra, diventa cliente normale.</li><li class="_soloTitolare"><b>Deceduti</b>: messi da parte e fuori dalle ricerche. Per riportarne uno tra gli attivi, apri la scheda e togli la parola DECEDUTO dalle note.</li><li class="_soloOperatore">Quando segni una persona come <b>deceduta</b>, sparisce dalle ricerche e finisce in un archivio che tiene il titolare.</li></ul><h3 id="w-zone" style="color:#1a3a6a;border-bottom:2px solid #1a3a6a;padding-bottom:4px;margin:22px 0 8px">&#127758; Le zone</h3><p style="margin:6px 0">Una zona &#232; un gruppo di regioni. Serve a dividere il lavoro: chi ha una zona vede <b>solo i contatti di quelle regioni</b>.</p><p class="_soloOperatore" style="margin:6px 0">Tu lavori <b>sulla tua zona</b>. I nominativi delle altre regioni sono di altre colleghe: non ti compaiono e non devi cercarli. Se non trovi qualcuno, non &#232; un errore del programma.</p><ul class="_soloTitolare" style="margin-left:18px"><li><b>Nord</b> &#8212; Piemonte, Valle d'Aosta, Lombardia, Liguria.</li><li><b>Triveneto</b> &#8212; Veneto, Trentino-Alto Adige, Friuli-Venezia Giulia.</li><li><b>Centro</b> &#8212; Lazio, Umbria, Marche, Sardegna, Sicilia, Campania, Calabria.</li><li><b>Toscana</b> &#8212; Toscana.</li><li><b>Altre</b> &#8212; le regioni che non stanno in nessuna zona (Emilia-Romagna, Puglia, Abruzzo, Basilicata, Molise, estero).</li></ul><p class="_soloTitolare" style="margin:6px 0">Tu le vedi tutte. Una regione sta in <b>una zona sola</b>: se stesse in due, due telefoniste si troverebbero gli stessi nominativi.</p><p class="_soloTitolare" style="margin:6px 0">In alto, accanto a <b>Welcome</b>, hai la tendina <b>&#127758; Vedi come...</b>: scegli una zona e il CRM ti mostra <b>solo</b> quella, come la vede la telefonista che ci lavora &#8212; elenchi, ricerche e agenda. Serve a controllare il suo lavoro <b>senza entrare col suo accesso</b>. Non cambia niente nei dati e non toglie niente a te: quando hai finito rimetti <b>Tutte le zone</b>. Riaprendo il CRM riparte comunque da tutte le zone. Finch&#233; la vista &#232; attiva, in alto resta scritto quale zona stai guardando.</p><div class="_soloTitolare"><h3 id="w-stat" style="color:#1a3a6a;border-bottom:2px solid #1a3a6a;padding-bottom:4px;margin:22px 0 8px">&#128202; Statistiche (solo tu)</h3><ul style="margin-left:18px"><li><b>Chiamate</b>: oggi, ultimi 7 giorni, ultimi 30, totale. E come sono andate.</li><li><b>Monitoraggio zone</b>: per ogni zona quanti contatti, quante chiamate, quanti appuntamenti e quanto &#232; gi&#224; stato lavorato.</li><li><b>Per telefonista</b>: quante chiamate ha fatto ciascuna.</li><li><b>&#128506; Vendite per regione</b>: conta le opere con data di acquisto <b>dal 01/08/2026</b> in poi (la data si cambia nel campo &quot;Dal&quot;) e le mette sotto la regione del cliente. <b>Clicca una regione</b> e vedi l'elenco delle vendite; il pulsante <b>Apri scheda</b> ti porta sul cliente.</li><li>Se un'opera ha una data di acquisto <b>nel futuro</b> &#232; un errore di scrittura: non viene contata e la trovi segnalata in un riquadro giallo, da correggere nella scheda.</li><li><b>Accessi</b>: chi si &#232; collegato e quando.</li></ul></div><h3 id="w-salva" style="color:#1a3a6a;border-bottom:2px solid #1a3a6a;padding-bottom:4px;margin:22px 0 8px">&#128190; Si salva da solo</h3><ul style="margin-left:18px"><li>Ogni modifica <b>si salva da sola</b>: compare una conferma verde in basso a destra.</li><li class="_soloTitolare"><b>Backup</b>, <b>Excel</b> e <b>Completo</b> sono nel riquadro <b>Strumenti</b> qui in alto: sono riservati a te.</li><li class="_soloTitolare"><b>&#128338; Copie di sicurezza</b>: il CRM mette da parte da solo una copia <b>all'inizio di ogni giornata</b> e una <b>ogni ora</b> mentre si lavora, sempre <b>prima</b> di sovrascrivere. Ogni copia mostra i suoi numeri (contatti, telefonate, opere) e quanto sono cresciuti rispetto alla precedente: scegli guardando le cifre, non a memoria. <b>Controlla</b> apre la copia e verifica che il contenuto sia sano; <b>Ripristina</b> la rimette in linea, dopo aver messo da parte lo stato di adesso.</li><li class="_soloTitolare">Un salvataggio che cancellerebbe una parte grossa dell'archivio viene <b>rifiutato</b> e te ne spiega il motivo: se la riduzione &egrave; voluta la confermi tu, e prima viene fatta una copia in pi&ugrave;. Le cose che <b>crescono</b> &#8212; telefonate, richiami, appuntamenti, opere &#8212; non vengono mai fermate.</li><li class="_soloOperatore">Non devi fare nessun backup: ci pensa il titolare, e il server ne fa uno da solo ogni giorno.</li><li class="_soloOperatore">Ogni mattina devi <b>rifare l'accesso</b>: la sera alle 21 il CRM chiude e l'accesso del giorno prima non vale pi&#249;.</li><li>In basso nella barra c'&#232; la <b>versione</b> del programma (data e ora). Serve se qualcosa non torna: vuol dire che il browser sta mostrando una copia vecchia.</li></ul><div style="margin-top:24px;padding:12px 14px;background:#eef4fc;border-left:4px solid #1a3a6a;border-radius:6px;color:#33506f"><b>In due parole:</b> <b>AGENDA</b> per sapere chi chiamare oggi, la <b>scheda</b> per chiamare e scrivere com'&#232; andata, <b>Da controllare</b> per i casi dubbi. Il resto sono elenchi di servizio.<span class="_soloOperatore"> Tutto quello che vedi riguarda la tua zona.</span></div>
     </div>
   </div>
 </div>
@@ -888,19 +888,33 @@ body:not([data-ruolo="operatore"]) ._soloOperatore{display:none!important}
         <label style="font-size:10px;font-weight:700;color:#666;text-transform:uppercase;display:block;margin-bottom:6px">Esito chiamata</label>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
           <label style="display:flex;align-items:center;gap:5px;cursor:pointer;padding:6px 12px;border:2px solid #ddd;border-radius:4px">
-            <input type="radio" name="regEsito" value="Positivo"> <span style="color:#1a7a30;font-weight:700">&#128994; Positivo</span>
+            <input type="radio" name="regEsito" value="Appuntamento" onchange="_regEsitoCambiato()"> <span style="color:#1a7a30;font-weight:700">&#128994; Appuntamento</span>
           </label>
           <label style="display:flex;align-items:center;gap:5px;cursor:pointer;padding:6px 12px;border:2px solid #ddd;border-radius:4px">
-            <input type="radio" name="regEsito" value="Richiamo"> <span style="color:#4488cc;font-weight:700">&#128309; Richiamo</span>
+            <input type="radio" name="regEsito" value="Richiamo prioritario" onchange="_regEsitoCambiato()"> <span style="color:#b35900;font-weight:700">&#128992; Richiamo prioritario</span>
           </label>
           <label style="display:flex;align-items:center;gap:5px;cursor:pointer;padding:6px 12px;border:2px solid #ddd;border-radius:4px">
-            <input type="radio" name="regEsito" value="Negativo"> <span style="color:#c0392b;font-weight:700">&#128308; Negativo</span>
+            <input type="radio" name="regEsito" value="Richiamo" onchange="_regEsitoCambiato()"> <span style="color:#4488cc;font-weight:700">&#128309; Richiamo</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:5px;cursor:pointer;padding:6px 12px;border:2px solid #ddd;border-radius:4px">
+            <input type="radio" name="regEsito" value="Negativo" onchange="_regEsitoCambiato()"> <span style="color:#c0392b;font-weight:700">&#128308; Negativo</span>
           </label>
         </div>
       </div>
-      <div style="display:flex;gap:12px;margin-bottom:12px">
+      <!-- Solo per l'APPUNTAMENTO: com'e' andato, quando e' gia' stato fatto.
+           Lasciando "da fare" l'appuntamento resta in agenda sulla data fissata. -->
+      <div id="regEsitoAppBox" style="display:none;margin-bottom:12px;padding:8px 10px;background:#f3f7f2;border-left:3px solid #1a7a30;border-radius:4px">
+        <label style="font-size:10px;font-weight:700;color:#666;text-transform:uppercase;display:block;margin-bottom:6px">Com'&#232; andato l'appuntamento</label>
+        <select id="regEsitoApp" onchange="_regEsitoCambiato()" style="width:100%;padding:5px 8px;border:1px solid #aaa;border-radius:3px;font-size:12px">
+          <option value="">&#128197; Da fare &#8212; resta in agenda</option>
+          <option value="Positivo">&#128994; Positivo &#8212; andato a buon fine</option>
+          <option value="Richiamo">&#128309; Richiamo &#8212; da risentire alla data qui sotto</option>
+          <option value="Negativo">&#128308; Negativo &#8212; chiuso, esce dall'agenda</option>
+        </select>
+      </div>
+      <div id="regTelDataRiga" style="display:flex;gap:12px;margin-bottom:4px">
         <div style="flex:1">
-          <label style="font-size:10px;font-weight:700;color:#666;text-transform:uppercase;display:block;margin-bottom:4px">Prossima data</label>
+          <label id="regTelDataLbl" style="font-size:10px;font-weight:700;color:#666;text-transform:uppercase;display:block;margin-bottom:4px">Prossima data</label>
           <input type="date" id="regTelDate" style="width:100%;padding:5px 8px;border:1px solid #aaa;border-radius:3px;font-size:12px">
         </div>
         <div style="width:100px">
@@ -908,6 +922,7 @@ body:not([data-ruolo="operatore"]) ._soloOperatore{display:none!important}
           <input type="time" id="regTelOra" style="width:100%;padding:5px 8px;border:1px solid #aaa;border-radius:3px;font-size:12px" value="10:00">
         </div>
       </div>
+      <div id="regTelDataNota" style="font-size:11px;color:#6b7a8c;margin-bottom:12px"></div>
       <div style="margin-bottom:16px">
         <label style="font-size:10px;font-weight:700;color:#666;text-transform:uppercase;display:block;margin-bottom:4px">Note</label>
         <textarea id="regTelNote" rows="4" style="width:100%;padding:5px 8px;border:1px solid #aaa;border-radius:3px;font-size:12px;resize:vertical;font-family:inherit" placeholder="Note appuntamento..."></textarea>
@@ -1088,9 +1103,9 @@ function mapsHref(c){return'https://www.google.com/maps/search/?api=1&query='+en
 function statusBadge(c){
   const e=(c.Esito_ultima_chiamata||'').toLowerCase();
   let t='#6e6e73',b='#eeeef0',l=c.Esito_ultima_chiamata||'Da chiamare';
-  if(_esitoPositivo(e)){t='#248a3d';b='#e3f4e8';}
+  if(_esitoPrioritario(e)){t='#b35900';b='#fdeedd';}
+  else if(_esitoPositivo(e)){t='#248a3d';b='#e3f4e8';}
   else if(_esitoRichiamo(e)){t='#1a5fb4';b='#e6f0fb';}
-  else if(e.includes('prioritar')){t='#b35900';b='#fdeedd';}
   else if(e.includes('negativo')||e.includes('ines')){t='#c0392b';b='#fbe7e5';}
   return `<div class="sched-top"><span class="sched-badge" style="color:${t};background:${b}">${esc(l)}</span><div class="sched-navid"><div class="sched-frecce"><button class="frecciaNav" onclick="prevContact()" title="Contatto precedente">&#9668;</button><span class="frecce-lbl">naviga</span><button class="frecciaNav" onclick="nextContact()" title="Contatto successivo">&#9658;</button></div><span class="sched-id">${esc(c.ID_contatto)}</span></div></div>`;
 }
@@ -1727,20 +1742,37 @@ function _clsEvento(item,zona){
 // ═══════════════════════════════════════════════════
 // COSA SIGNIFICA UN ESITO
 // ═══════════════════════════════════════════════════
-// Le scelte nuove sono tre: Positivo, Richiamo, Negativo. Nell'archivio pero'
-// ci sono gia' decine di migliaia di righe con le diciture vecchie
-// (Appuntamento, Richiamo prioritario, Richiamare e qualche refuso tipo
-// "Richiam"). Tutto il programma passa da qui, cosi' vecchio e nuovo
-// convivono e domani si cambia in un punto solo.
+// Le scelte sono quattro: Appuntamento, Richiamo prioritario, Richiamo,
+// Negativo. Nell'archivio pero' ci sono decine di migliaia di righe con altre
+// diciture (Positivo dal periodo a tre scelte, Richiamare e qualche refuso tipo
+// "Richiam"). Tutto il programma passa da qui, cosi' vecchio e nuovo convivono
+// e domani si cambia in un punto solo.
 function _esitoPositivo(e){
   var s=String(e||'').trim().toLowerCase();
-  return s==='positivo'||s.indexOf('appunt')===0;     // Appuntamento, Appuntamento positivo
+  return s==='positivo'||s.indexOf('appunt')===0;     // Appuntamento, Appuntamento positivo, Positivo
 }
 function _esitoRichiamo(e){
   var s=String(e||'').trim().toLowerCase();
   return s.indexOf('richiam')===0;                    // Richiamo, Richiamo prioritario, Richiamare
 }
+function _esitoPrioritario(e){
+  var s=String(e||'').trim().toLowerCase();
+  return s.indexOf('richiam')===0&&s.indexOf('priorit')>0;
+}
+function _esitoNegativo(e){
+  var s=String(e||'').trim().toLowerCase();
+  return s.indexOf('negativo')===0||s.indexOf('ines')===0;
+}
 function _esitoInAgenda(e){return _esitoPositivo(e)||_esitoRichiamo(e);}
+// Esito che conta per una riga di telefonata: se l'appuntamento e' gia' stato
+// fatto vale com'e' andato (Esito_appuntamento), altrimenti l'esito della
+// chiamata. Serve perche' un appuntamento chiuso con "Richiamo" deve comparire
+// in agenda come richiamo, non come appuntamento.
+function _esitoRiga(t){
+  if(!t)return '';
+  var a=String(t.Esito_appuntamento||'').trim();
+  return a||String(t.Esito||'');
+}
 
 function buildAgendaIndex(){
   try{_azzeraMappaContratti();}catch(e){}   // i contratti possono essere cambiati
@@ -1748,7 +1780,7 @@ function buildAgendaIndex(){
   for(const t of telefonate){
     const df=t.Data_appuntamento;if(!df||!df.trim())continue;
     const dt=pd(df);if(!dt)continue;
-    const es=(t.Esito||'').toLowerCase();
+    const es=(_esitoRiga(t)||'').toLowerCase();
     const isApp=_esitoPositivo(es);const isRich=_esitoRichiamo(es);
     if(!isApp&&!isRich)continue;
     const _c=contactMap[t.ID_contatto];
@@ -1910,7 +1942,7 @@ function _assegnaOrarioContatto(cid,iso,h,m){
     for(const t of (telByContact[cid]||[])){
       if(t.Data_appuntamento!==ddmmyyyy)continue;
       if(t.Ora_appuntamento)continue;
-      const es=(t.Esito||'').toLowerCase();
+      const es=(_esitoRiga(t)||'').toLowerCase();
       if(_esitoInAgenda(es))t.Ora_appuntamento=oraStr;
     }
   }
@@ -2241,7 +2273,7 @@ function renderAgenda(){
         <td style="padding:5px 8px;border-bottom:1px solid #e8e4dc;background:${bg}">${esc(c.Nome||'')}</td>
         <td style="padding:5px 8px;border-bottom:1px solid #e8e4dc;font-family:monospace;font-size:11px;background:${bg}">${esc(phones)}</td>
         <td style="padding:5px 8px;border-bottom:1px solid #e8e4dc;background:${bg}">${esc(c.Citta||'')}${c.Provincia?' - '+esc(c.Provincia):''}</td>
-        <td style="padding:5px 8px;border-bottom:1px solid #e8e4dc;background:${bg}"><span class="sq ${sqColor(item.t.Esito)}" style="margin-right:3px"></span>${esc(item.t.Esito||'')}</td>
+        <td style="padding:5px 8px;border-bottom:1px solid #e8e4dc;background:${bg}"><span class="sq ${sqColor(_esitoRiga(item.t))}" style="margin-right:3px"></span>${esc(item.t.Esito||'')}</td>
       </tr>`;});
     document.getElementById('calListBody').innerHTML=rows||'<tr><td colspan="7" style="text-align:center;color:#aaa;padding:20px">Nessun evento nelle 3 settimane</td></tr>';
   }
@@ -2324,19 +2356,19 @@ function delTelefonata(cid,idx){
   try{
     const _c=contactMap[cid];
     if(_c){
-      const _e=(t.Esito||'').toLowerCase();
+      const _e=(_esitoRiga(t)||'').toLowerCase();
       const _eraAgenda=_esitoInAgenda(_e);
       const _dataT=pd(t.Data_appuntamento||t.Data_da_fare);
       const _dataP=pd(_c.Prossima_telefonata);
       if(_eraAgenda && _dataT && _dataP && _dataT.iso===_dataP.iso){
         const _rim=(telByContact[cid]||[]).filter(function(x){
-          const e=(x.Esito||'').toLowerCase();
+          const e=(_esitoRiga(x)||'').toLowerCase();
           return _esitoInAgenda(e)&&(x.Data_appuntamento||x.Data_da_fare);
         });
         if(_rim.length){
           _rim.sort(function(a,b){var da=pd(a.Data_appuntamento||a.Data_da_fare),db=pd(b.Data_appuntamento||b.Data_da_fare);return (db?db.iso:'').localeCompare(da?da.iso:'');});
           var _nx=_rim[0];
-          _c.Esito_ultima_chiamata=_nx.Esito||_c.Esito_ultima_chiamata;
+          _c.Esito_ultima_chiamata=_esitoRiga(_nx)||_c.Esito_ultima_chiamata;
           _c.Prossima_telefonata=_nx.Data_appuntamento||_nx.Data_da_fare||'';
           _c.Ora_appuntamento=_nx.Ora_appuntamento||'';
         }else{
@@ -2417,7 +2449,7 @@ function _sincronizzaContrattoInAgenda(cid,o,notaPrima){
     return true;
   }
   var nuova={ID_contatto:String(cid),Data_appuntamento:data,Ora_appuntamento:'10:00:00',
-             Data_da_fare:'',Esito:'Positivo',Note_appuntamento:nota,Operatore:''};
+             Data_da_fare:'',Esito:'Appuntamento',Note_appuntamento:nota,Operatore:''};
   telefonate.push(nuova);
   if(!telByContact[cid])telByContact[cid]=[];
   telByContact[cid].unshift(nuova);
@@ -2526,7 +2558,8 @@ function switchSubtab(tab){
 }
 
 function sqColor(e){const el=(e||'').toLowerCase();
-  if(_esitoPositivo(el))return'sq-g';if(el.includes('prioritario'))return'sq-o';
+  if(_esitoPrioritario(el))return'sq-o';
+  if(_esitoPositivo(el))return'sq-g';
   if(_esitoRichiamo(el))return'sq-b';
   if(el.includes('negativo')||el.includes('ines'))return'sq-r';return'sq-gray';}
 
@@ -4069,10 +4102,10 @@ function renderContact(c){
     <div class="tbl-hdr"><span>Storico Telefonate</span><span>${tels.length} record</span></div>
     <div class="tbl-scroll tel"><table class="dtbl"><thead><tr><th style="width:14px"></th><th>Data Ultima Tel</th><th>Esito</th><th>Prossima Telefonata</th><th>Ora</th><th style="width:30px"></th></tr></thead>
     <tbody>${tels.map((t,ti)=>`<tr>
-      <td><span class="sq ${sqColor(t.Esito)}"></span></td>
+      <td><span class="sq ${sqColor(_esitoRiga(t))}"></span></td>
       <td style="white-space:nowrap">${esc(fd(t.Data_da_fare))}${(t.Ora_chiamata||_oraFatta(t.Data_da_fare))?` <span style="color:#999;font-size:11px">${t.Ora_chiamata||_oraFatta(t.Data_da_fare)}</span>`:''}</td>
-      <td>${esc(t.Esito||'')}</td>
-      <td style="white-space:nowrap;${_esitoInAgenda(t.Esito)?'color:#0d7fb0;font-weight:700':''}">${esc(fd(t.Data_appuntamento))}</td>
+      <td>${esc(t.Esito||'')}${t.Esito_appuntamento?` <span style="color:#6b7a8c;font-size:11px">&rarr; ${esc(t.Esito_appuntamento)}</span>`:''}</td>
+      <td style="white-space:nowrap;${_esitoInAgenda(_esitoRiga(t))?'color:#0d7fb0;font-weight:700':''}">${esc(fd(t.Data_appuntamento))}</td>
       <td style="white-space:nowrap">${esc(ft(t.Ora_appuntamento))}</td>
       <td style="text-align:center"><span onclick="delTelefonata('${esc(c.ID_contatto)}',${ti})" style="cursor:pointer;color:#c03030" title="Elimina questa telefonata">&#128465;</span></td>
     </tr>`).join('')}
@@ -4214,9 +4247,9 @@ function renderEditForm(){
       <div class="tbl-hdr"><span>Storico Telefonate</span><span>${tels.length} record</span></div>
       <table class="dtbl"><thead><tr><th style="width:14px"></th><th>Data Ultima Tel</th><th>Esito</th><th>Prossima Telefonata</th><th>Ora</th></tr></thead>
       <tbody>${tels.slice(0,35).map(t=>`<tr>
-        <td><span class="sq ${sqColor(t.Esito)}"></span></td>
+        <td><span class="sq ${sqColor(_esitoRiga(t))}"></span></td>
         <td style="white-space:nowrap">${esc(fd(t.Data_da_fare))}</td>
-        <td>${esc(t.Esito||'')}</td>
+        <td>${esc(t.Esito||'')}${t.Esito_appuntamento?` <span style="color:#6b7a8c;font-size:11px">&rarr; ${esc(t.Esito_appuntamento)}</span>`:''}</td>
         <td style="white-space:nowrap">${esc(fd(t.Data_appuntamento))}</td>
         <td style="white-space:nowrap">${esc(ft(t.Ora_appuntamento))}</td>
       </tr>`).join('')}
@@ -4893,37 +4926,82 @@ function openRegTel(){
   document.getElementById('regTelDate').value=fISO(today);
   document.getElementById('regTelOra').value='10:00';
   document.getElementById('regTelNote').value='';
+  const _sa=document.getElementById('regEsitoApp');if(_sa)_sa.value='';
+  _regEsitoCambiato();
   document.getElementById('regTelModal').style.display='flex';
+}
+// La tendina "com'e' andato l'appuntamento" esiste solo per l'Appuntamento:
+// per un richiamo o per un Negativo non avrebbe senso e resta nascosta.
+function _regEsitoCambiato(){
+  var es=(document.querySelector('input[name="regEsito"]:checked')||{}).value||'';
+  var box=document.getElementById('regEsitoAppBox');
+  var isApp=_esitoPositivo(es);
+  if(box)box.style.display=isApp?'':'none';
+  var app=isApp?((document.getElementById('regEsitoApp')||{}).value||''):'';
+  var lbl=document.getElementById('regTelDataLbl');
+  var nota=document.getElementById('regTelDataNota');
+  var riga=document.getElementById('regTelDataRiga');
+  var testo='',titolo='Prossima data';
+  if(!es){testo='';}
+  else if(_esitoNegativo(es)){titolo='Data (non usata)';testo='La chiamata resta registrata e il nominativo esce dall’agenda.';}
+  else if(isApp&&app==='Negativo'){titolo='Data (non usata)';testo='Appuntamento chiuso: resta registrato ed esce dall’agenda.';}
+  else if(isApp&&app==='Positivo'){titolo='Data (non usata)';testo='Appuntamento andato a buon fine: resta registrato ed esce dall’agenda.';}
+  else if(isApp&&app==='Richiamo'){titolo='Data del richiamo';testo='Diventa un richiamo e si sposta alla data qui sopra.';}
+  else if(isApp){titolo='Data dell’appuntamento';testo='Va in agenda il giorno e l’ora fissati con il cliente.';}
+  else if(_esitoPrioritario(es)){titolo='Data del richiamo';testo='Richiamo prioritario: si sposta alla data qui sopra (quadratino arancione).';}
+  else {titolo='Data del richiamo';testo='Il richiamo si sposta alla data qui sopra.';}
+  if(lbl)lbl.textContent=titolo;
+  if(nota)nota.textContent=testo;
+  var _fuoriAgenda=_esitoNegativo(es)||(isApp&&(app==='Positivo'||app==='Negativo'));
+  if(riga)riga.style.opacity=_fuoriAgenda?'.45':'1';
 }
 function closeRegTel(){document.getElementById('regTelModal').style.display='none';}
 function saveRegTel(){
   const c=_regTelContact;if(!c)return;
   const esito=document.querySelector('input[name="regEsito"]:checked')?.value||'';
   if(!esito){alert('Seleziona un esito');return;}
+  // Esito dell'appuntamento: solo se l'esito della chiamata e' Appuntamento.
+  const esitoApp=_esitoPositivo(esito)?((document.getElementById('regEsitoApp')||{}).value||''):'';
+  // Con questi esiti il nominativo esce dall'agenda: la data non serve.
+  const _fuoriAgenda=_esitoNegativo(esito)||esitoApp==='Positivo'||esitoApp==='Negativo';
   const date=document.getElementById('regTelDate').value; // YYYY-MM-DD
   const ora=document.getElementById('regTelOra').value;   // HH:MM
   const note=document.getElementById('regTelNote').value.trim();
   // Convert date to DD/MM/YYYY
   const dataDDMM=date?date.slice(8)+'/'+date.slice(5,7)+'/'+date.slice(0,4):'';
+  // Un appuntamento o un richiamo senza data resterebbe fermo sulla data
+  // vecchia: l'agenda mostrerebbe una cosa e la telefonista un'altra.
+  if(!_fuoriAgenda&&!dataDDMM){
+    alert(_esitoPositivo(esito)?'Metti la data dell’appuntamento fissata con il cliente.':'Metti la data del richiamo.');
+    return;
+  }
   const oraStr=ora?ora+':00':'';
   const today=new Date();
   const todayStr=String(today.getDate()).padStart(2,'0')+'/'+String(today.getMonth()+1).padStart(2,'0')+'/'+today.getFullYear();
   const _now=new Date();const oraChiamata=String(_now.getHours()).padStart(2,'0')+':'+String(_now.getMinutes()).padStart(2,'0');
+  // Un Negativo non fissa niente: la data non va scritta, altrimenti nello
+  // storico comparirebbe una "prossima telefonata" che nessuno fara'.
+  // Per un appuntamento gia' fatto la data invece resta: e' quando si e' tenuto.
+  const _dataRiga=_esitoNegativo(esito)?'':dataDDMM;
+  const _oraRiga=_esitoNegativo(esito)?'':oraStr;
   const t={ID_contatto:c.ID_contatto,Data_da_fare:todayStr,Ora_chiamata:oraChiamata,Esito:esito,
-    Data_appuntamento:dataDDMM,Ora_appuntamento:oraStr,Note_appuntamento:note,Operatore:(window._nomeUtente||''),_local:true};
+    Data_appuntamento:_dataRiga,Ora_appuntamento:_oraRiga,Note_appuntamento:note,Operatore:(window._nomeUtente||''),_local:true};
+  if(esitoApp)t.Esito_appuntamento=esitoApp;
   // Add to telByContact AND to telefonate (so buildAgendaIndex sees it)
   if(!telByContact[c.ID_contatto])telByContact[c.ID_contatto]=[];
   telByContact[c.ID_contatto].unshift(t);
   telefonate.unshift(t);
-  // Update contact esito
-  c.Esito_ultima_chiamata=esito;
-  const esitoLow=esito.toLowerCase();
-  if(esitoLow==='negativo'){
-    // Negativo: remove from agenda — clear prossima tel
+  // ── L'ESITO COMANDA L'AGENDA ───────────────────────────────────────────
+  // Appuntamento  -> in agenda il giorno e l'ora fissati con il cliente
+  // Richiamo (anche prioritario) -> il richiamo si SPOSTA alla nuova data
+  // Negativo      -> la chiamata resta registrata, il nominativo esce dall'agenda
+  // Appuntamento gia' fatto: Positivo o Negativo lo chiudono e lo tolgono
+  // dall'agenda; Richiamo lo riporta alla data fissata.
+  c.Esito_ultima_chiamata=(esitoApp==='Richiamo')?'Richiamo':esito;
+  if(_fuoriAgenda){
     c.Prossima_telefonata='';c.Ora_appuntamento='';
     delete agendaMods[c.ID_contatto];
-  }else if(dataDDMM){
-    // Richiamo/Appuntamento: set new date (replaces old)
+  }else{
     c.Prossima_telefonata=dataDDMM;c.Ora_appuntamento=oraStr;
     delete agendaMods[c.ID_contatto];
   }
