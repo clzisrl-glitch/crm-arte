@@ -6472,10 +6472,19 @@ function _correggiDati(){
 // gia' viste, e _nomeUfficiale() le riporta tutte a uno.
 
 var LISTINO_OPERE=[
+  // Le 5 Lire 1861 escono in due versioni con listino diverso: argento rivestito
+  // oro 24K (2.650) e argento 925 (2.250). Tenerle su un'unica voce faceva
+  // sparire la differenza, quindi sono due voci distinte. Le diciture generiche
+  // ("LIRE 5 1861", "5 LIRE 1861"...) restano sulla 24K, che e' la piu' venduta:
+  // l'argento 925 va scritto dicendolo.
   {nome:"5 LIRE 1861 UNITA D'ITALIA - ARGENTO/ORO 24K",
    alias:["LIRE 5 1861 AU/AG - ARGENTO RIVESTITA ORO 24K","5 LIRE UNITA ITALIA ARG/ORO","LIRE 5 1861 AG/AU",
-          "LIRE 5 1861 ARGENTO 925","LIRE 5 1861 ARGENTO","LIRE 5 1861","5 LIRE 1861","5 LIRE UNITA ITALIA",
+          "LIRE 5 1861","5 LIRE 1861","5 LIRE UNITA ITALIA",
           "LIRE 5 1861 AU/AG","5 LIRE 1861 UNITA D'ITALIA"]},
+  {nome:"5 LIRE 1861 UNITA D'ITALIA - ARGENTO 925",
+   alias:["LIRE 5 1861 ARGENTO 925","LIRE 5 1861 ARGENTO","5 LIRE 1861 UNITA D'ITALIA - ARGENTO",
+          "5 LIRE 1861 ARGENTO 925","5 LIRE 1861 ARGENTO","5 LIRE UNITA ITALIA ARGENTO",
+          "LIRE 5 1861 AG 925","LIRE 5 1861 ARG 925"]},
   {nome:"500 LIRE 1a UNITA D'ITALIA - ARGENTO/ORO 24K",
    alias:["500 Lire Nuove 1a Unita d'Italia Oro/Argento, Ag/Oro 24K","500 LIRE NUOVE",
           "500 LIRE NUOVE UNITA D'ITALIA","500 LIRE NUOVE 1a UNITA D'ITALIA",
