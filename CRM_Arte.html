@@ -660,7 +660,7 @@ body:not([data-ruolo="operatore"]) ._soloOperatore{display:none!important}
       <button class="btn-u pt-controllare" title="Manda questa scheda in Da controllare (per ricontrollarla: numero errato, indirizzo vecchio, ecc.)." onclick="segnalaContatto(currentResults[currentIdx]?.ID_contatto)">&#9888; Da controllare</button>
       <button class="btn-u pt-deceduto" title="Segna questo contatto come DECEDUTO: lo esclude da elenco, ricerca e agenda e lo sposta nella scheda Deceduti." onclick="segnaDeceduto()">&#9904; Segna deceduto</button>
       <button class="btn-u btn-blue-soft" id="btnAzzera" onclick="azzeraRicerca()" style="display:none" title="Torna a navigare tutto il database">&#10005; Azzera ricerca</button>
-<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 21/09/2026 11:30</span>
+<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 21/09/2026 12:05</span>
       <div style="flex:1"></div>
       <button class="btn-u btn-del-discreet" onclick="deleteContact()" title="Elimina questo contatto">&#128465;</button>
     </div>
@@ -844,7 +844,7 @@ body:not([data-ruolo="operatore"]) ._soloOperatore{display:none!important}
       <div style="background:#eef7ee;border:1px solid #cce5cc;border-radius:12px;padding:16px 18px;margin-bottom:22px">
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px">
           <div style="font-size:15px;font-weight:700;color:#2a7a2a">&#128176; <span class="_soloTitolare">Fatturato per zona</span><span class="_soloOperatore">Il fatturato della tua zona</span></div>
-          <label style="font-size:11.5px;color:#5a7a5a;display:inline-flex;align-items:center;gap:5px">Dal <input type="date" id="fzDal" value="2026-08-01" onchange="renderFatturatoZona()" style="font-size:12px;padding:3px 6px;border:1px solid #a9d8bb;border-radius:6px"></label>
+          <label style="font-size:11.5px;color:#5a7a5a;display:inline-flex;align-items:center;gap:5px">Dal <input type="date" id="fzDal" value="2026-07-30" onchange="renderFatturatoZona()" style="font-size:12px;padding:3px 6px;border:1px solid #a9d8bb;border-radius:6px"></label>
         </div>
         <div id="boxFatturatoZona"></div>
         <div style="font-size:11.5px;color:#7a9a7a;margin-top:8px">Opere con data di acquisto dalla data indicata a oggi. Le date nel futuro non vengono contate: sono errori di scrittura.</div>
@@ -3233,7 +3233,7 @@ function _fzElencoHtml(zona, righe){
 function renderFatturatoZona(){
   var box=document.getElementById('boxFatturatoZona');
   if(!box)return;
-  var dal=(document.getElementById('fzDal')||{}).value||'2026-08-01';
+  var dal=(document.getElementById('fzDal')||{}).value||'2026-07-30';
   var r=_fatturatoPerZona(dal);
   var sonoTitolare=(window._ruolo||'')==='titolare';
   var zone=Object.keys(r.per).sort(function(a,b){return r.per[b].val-r.per[a].val;});
