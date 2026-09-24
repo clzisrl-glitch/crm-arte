@@ -578,7 +578,7 @@ body:not([data-ruolo="operatore"]) ._soloOperatore{display:none!important}
       <button class="tab tab-attesa" data-tab="recupero" onclick="showTab('recupero')" title="DA RECUPERARE: i contatti da richiamare (telefonata mancata, da risentire) in base alla data di prossimo richiamo.">&#9203; Da Recuperare</button>
       <button class="tab tab-attesa" data-tab="controllare" onclick="showTab('controllare')" title="DA CONTROLLARE: la coda dei casi dubbi (doppioni, numeri sospetti, import UTET da confermare). Si risolvono uno a uno e lo stato si salva.">&#128270; Da controllare</button>
       <button class="tab tab-attesa" data-tab="potenziali" onclick="showTab('potenziali')" title="Nominativi da una vecchia lista nazionale (CANI): non sono ancora tuoi clienti. Tenuti da parte, fuori dalle ricerche normali, da contattare quando vuoi.">&#9742; Potenziali</button>
-      <button class="tab tab-attesa" data-tab="nocell" onclick="showTab('nocell')" title="Clienti attivi SENZA numero di cellulare. Scegli la regione e stampa l'elenco con indirizzo, data di nascita e codice fiscale per cercare i cellulari mancanti.">&#128241; Da controllare cellulare</button>
+      <button class="tab tab-attesa" data-tab="nocell" onclick="showTab('nocell')" title="Clienti attivi senza numero di cellulare, o con un numero che una telefonista ha segnalato come errato (Stato numero, da Registra Telefonata). Scegli la regione e stampa l'elenco con indirizzo, data di nascita e codice fiscale per trovare/correggere i cellulari.">&#128241; Da controllare cellulare</button>
 <button class="tab" data-tab="welcome" onclick="showTab('welcome')" title="WELCOME: la pagina iniziale con riepilogo e scorciatoie.">Welcome</button>
 <span class="_soloTitolare" style="display:inline-flex;align-items:center;gap:4px;margin-left:6px">&#127758;<select id="zonaVista" onchange="cambiaZonaVista(this.value)" title="Guarda il CRM come lo vede la telefonista di una zona, senza entrare col suo accesso. E&#39; solo una vista: non cambia i dati e non cambia i permessi." style="font-size:12px;padding:4px 7px;border:1px solid #b0a898;border-radius:6px;background:#fff;font-weight:600;color:#33465e"><option value="">Tutte le zone</option><option value="Nord">Vedi come Nord</option><option value="Triveneto">Vedi come Triveneto</option><option value="Centro">Vedi come Centro</option><option value="Toscana">Vedi come Toscana</option><option value="Altre">Vedi come Altre</option></select><span id="avvisoZonaVista" style="display:none;align-items:center;background:#fdf1d6;border:1px solid #e8c97a;color:#7a5a10;border-radius:12px;padding:3px 10px;font-size:11px;font-weight:700"></span></span>
 <button class="tab tab-soloadmin" data-tab="statistiche" onclick="showTab('statistiche')" title="STATISTICHE (solo titolare): andamento chiamate, esiti, telefoniste.">&#128202; Statistiche</button>
@@ -746,6 +746,7 @@ body:not([data-ruolo="operatore"]) ._soloOperatore{display:none!important}
       <span style="font-weight:700;color:#a05000">&#9203; Clienti da recuperare</span>
       <input class="list-search" id="recuperoSearch" placeholder="Cerca..." oninput="filterRecupero()">
       <select id="recuperoSort" onchange="renderRecupero()" style="padding:3px 6px;border:1px solid #aaa;border-radius:3px;font-size:11px">
+        <option value="priorita">&#128992; Prioritari prima</option>
         <option value="date_desc">Piu recenti prima</option>
         <option value="date_asc">Piu vecchi prima</option>
         <option value="cognome">Per cognome</option>
@@ -758,7 +759,8 @@ body:not([data-ruolo="operatore"]) ._soloOperatore{display:none!important}
       <select id="recuperoTipo" onchange="renderRecupero()" style="padding:3px 6px;border:1px solid #aaa;border-radius:3px;font-size:11px">
         <option value="all">Tutti</option>
         <option value="appuntamento">Solo appuntamenti</option>
-        <option value="richiamo">Solo richiami</option>
+        <option value="prioritario">&#128992; Solo richiami prioritari</option>
+        <option value="richiamo">Solo richiami (tutti)</option>
       </select>
       <select id="recuperoPeriodo" onchange="renderRecupero()" style="padding:3px 6px;border:1px solid #c06010;border-radius:3px;font-size:11px;font-weight:600;color:#c06010" title="Da quanto e scaduto il richiamo">
         <option value="recenti">Da fare ora (ultimi 6 mesi)</option>
@@ -1632,7 +1634,21 @@ function renderPotenziali(){
   h+='</tbody></table>';body.innerHTML=h;
 }
 
-function _senzaCell(c){const dg=s=>String(s||'').replace(/\D/g,'');for(const k of ['Cellulare','Cellulare2']){const n=dg(c[k]);if(n.length===10&&n[0]==='3')return false;}return true;}
+// FIX 24/09/2026 (Appendice 30): prima "Da controllare cellulare" trovava solo chi
+// non ha NESSUN numero. Un numero segnalato "numero errato" dalla telefonista
+// (Stato numero, dal modulo Registra Telefonata) restava scritto in scheda ma
+// non finiva da nessuna parte: si perdeva. Ora entra nella stessa coda.
+function _senzaCell(c){
+  const dg=s=>String(s||'').replace(/\D/g,'');
+  const haNumeroValido=['Cellulare','Cellulare2'].some(k=>{const n=dg(c[k]);return n.length===10&&n[0]==='3';});
+  if(!haNumeroValido)return true;
+  return String(c.Note_telefono||'').trim().toLowerCase()==='numero errato';
+}
+function _motivoNocell(c){
+  const dg=s=>String(s||'').replace(/\D/g,'');
+  const haNumeroValido=['Cellulare','Cellulare2'].some(k=>{const n=dg(c[k]);return n.length===10&&n[0]==='3';});
+  return haNumeroValido?'Numero segnalato errato':'Senza numero';
+}
 function _nocellList(){return allContacts.filter(_senzaCell);}
 function _ncPopolaRegioni(){const sel=document.getElementById('ncRegione');if(!sel)return;const regs=[...new Set(_nocellList().map(c=>(c.Regione||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'it'));const sig=regs.join('|');if(sel.dataset.sig===sig)return;sel.dataset.sig=sig;const cur=sel.value;sel.innerHTML='<option value=\'\'>Tutte le regioni</option>'+regs.map(r=>'<option value=\''+esc(r)+'\'>'+esc(r)+'</option>').join('');sel.value=cur;}
 function _ncPopolaProvince(){const sel=document.getElementById('ncProvincia');if(!sel)return;const reg=(document.getElementById('ncRegione')?.value||'');let base=_nocellList();if(reg)base=base.filter(c=>(c.Regione||'').trim()===reg);const provs=[...new Set(base.map(c=>(c.Provincia||'').trim().toUpperCase()).filter(Boolean))].sort();const sig=reg+'::'+provs.join('|');if(sel.dataset.sig===sig)return;sel.dataset.sig=sig;let cur=sel.value;if(cur&&!provs.includes(cur))cur='';sel.innerHTML='<option value=\'\'>Tutte le province</option>'+provs.map(p=>'<option value=\''+esc(p)+'\'>'+esc(p)+'</option>').join('');sel.value=cur;}
@@ -1640,15 +1656,17 @@ function _ncFiltrati(){let list=_nocellList();const reg=(document.getElementById
 function renderNocell(){
   _ncPopolaRegioni();_ncPopolaProvince();
   const list=_ncFiltrati();
-  const cnt=document.getElementById('ncCount');if(cnt)cnt.textContent=list.length.toLocaleString('it')+' senza cellulare';
+  const cnt=document.getElementById('ncCount');if(cnt)cnt.textContent=list.length.toLocaleString('it')+' da controllare';
   const body=document.getElementById('ncBody');if(!body)return;
   if(!list.length){body.innerHTML='<div style=\'padding:30px;color:#888\'>Nessun nominativo qui.</div>';return;}
   const MAX=600,show=list.slice(0,MAX);
   let h='';if(list.length>MAX)h+='<div style=\'font-size:11px;color:#999;margin-bottom:6px\'>Mostro i primi '+MAX+' di '+list.length.toLocaleString('it')+'. Restringi con regione o ricerca.</div>';
-  h+='<table class=\'ltable\'><thead><tr><th>Cognome</th><th>Nome</th><th>Titolo</th><th>Indirizzo</th><th>Nascita</th><th>Cod.fiscale</th><th>Fisso</th><th></th></tr></thead><tbody>';
+  h+='<table class=\'ltable\'><thead><tr><th>Cognome</th><th>Nome</th><th>Titolo</th><th>Indirizzo</th><th>Nascita</th><th>Cod.fiscale</th><th>Fisso</th><th>Motivo</th><th></th></tr></thead><tbody>';
   for(const c of show){const ind=[c.Via,[c.CAP,c.Citta].filter(Boolean).join(' '),c.Provincia?'('+c.Provincia+')':''].filter(Boolean).join(', ');
     const fisso=c.Telefono||c.Tel_Ufficio||c.Telefono2||'';
+    const motivo=_motivoNocell(c);
     h+='<tr><td>'+esc(c.Cognome||'')+'</td><td>'+esc(c.Nome||'')+'</td><td style=\'font-size:10px;color:#666\'>'+esc(c.Titolo||'')+'</td><td style=\'font-size:10px\'>'+esc(ind)+'</td><td>'+esc(fd(c.Data_nascita)||'')+'</td><td style=\'font-size:10px\'>'+esc(c.Codice_fiscale||'')+'</td><td>'+esc(fisso)+'</td>'+
+      '<td style=\'font-size:10px\'><span style=\'padding:1px 7px;border-radius:8px;'+(motivo==='Senza numero'?'background:#eef2f8;color:#33465e':'background:#fde8e8;color:#a33')+'\'>'+esc(motivo)+'</span></td>'+
       '<td><button onclick=\'apriNocell("'+esc(c.ID_contatto)+'")\' style=\'padding:2px 8px;border:1px solid #1a6a8a;background:#fff;border-radius:3px;cursor:pointer;font-size:11px\'>Apri</button></td></tr>';}
   h+='</tbody></table>';body.innerHTML=h;
 }
@@ -1656,9 +1674,9 @@ function apriNocell(id){const lista=_ncFiltrati();const i=lista.findIndex(x=>Str
 function stampaNocell(){
   const list=_ncFiltrati();const reg=(document.getElementById('ncRegione')?.value||'')||'tutte le regioni';
   const prov=(document.getElementById('ncProvincia')?.value||'');const tit=reg+(prov?' \u2014 prov. '+prov:'');
-  stampaTabella('Da controllare cellulare \u2014 '+tit, new Date().toLocaleDateString('it-IT')+' \u00b7 '+list.length.toLocaleString('it')+' nominativi senza cellulare',
-    ['Cognome','Nome','Titolo','Indirizzo','Nascita','Cod.fiscale','Fisso'],
-    list.map(c=>[c.Cognome,c.Nome,c.Titolo,[c.Via,[c.CAP,c.Citta].filter(Boolean).join(' '),c.Provincia?'('+c.Provincia+')':''].filter(Boolean).join(', '),fd(c.Data_nascita)||'',c.Codice_fiscale||'',c.Telefono||c.Tel_Ufficio||'']));
+  stampaTabella('Da controllare cellulare \u2014 '+tit, new Date().toLocaleDateString('it-IT')+' \u00b7 '+list.length.toLocaleString('it')+' nominativi da controllare',
+    ['Cognome','Nome','Titolo','Indirizzo','Nascita','Cod.fiscale','Fisso','Motivo'],
+    list.map(c=>[c.Cognome,c.Nome,c.Titolo,[c.Via,[c.CAP,c.Citta].filter(Boolean).join(' '),c.Provincia?'('+c.Provincia+')':''].filter(Boolean).join(', '),fd(c.Data_nascita)||'',c.Codice_fiscale||'',c.Telefono||c.Tel_Ufficio||'',_motivoNocell(c)]));
 }
 function apriPotenziale(id){const lista=_potFiltrati();const i=lista.findIndex(x=>String(x.ID_contatto)===String(id));if(i<0){const c=contactMap[id];if(!c)return;currentResults=[c];currentIdx=0;}else{currentResults=lista;currentIdx=i;}searchActive=true;renderContactAndMap(currentResults[currentIdx]);showTab('principale');}
 function stampaPotenziali(){
@@ -2755,7 +2773,7 @@ function vistaCompleto(){
   if(typeof _soloTitolare==='function' && !_soloTitolare('Vista Completo'))return;
   // tutti i contatti dal piu recente inserito (in fondo all'elenco) al primo
   currentResults=[...allContacts].reverse();
-  searchActive=true; currentIdx=0;
+  searchActive=true; currentIdx=0; _listOrderTouched=false;
   if(currentResults.length){showTab('principale');renderContactAndMap(currentResults[0]);}
   updateAzzeraBtn();
 }
@@ -2766,7 +2784,7 @@ function openFromChiChiama(id){
   _workSnapshot={results:currentResults,idx:currentIdx,active:searchActive,id:cur?cur.ID_contatto:null};
   if(typeof closeSearch==='function')closeSearch();
   currentResults=(window._modalResults&&window._modalResults.length)?window._modalResults:[contactMap[id]].filter(Boolean);
-  searchActive=true;
+  searchActive=true; _listOrderTouched=false;
   currentIdx=Math.max(0,currentResults.findIndex(r=>String(r.ID_contatto)===String(id)));
   showTab('principale');
   if(currentResults[currentIdx])renderContactAndMap(currentResults[currentIdx]);
@@ -4536,7 +4554,7 @@ function runFind(){
     results.sort((a,b)=>pr.get(b)-pr.get(a)); // ordinamento stabile: dentro ogni gruppo resta l'ordine alfabetico
   }
   if(results.length){
-    currentResults=results;currentIdx=0;searchActive=true;
+    currentResults=results;currentIdx=0;searchActive=true;_listOrderTouched=false;
     document.getElementById('findCount').textContent=results.length+' trovati';
     exitFindMode();renderContactAndMap(results[0]);
   }else{
@@ -4699,7 +4717,7 @@ function liveSearch(q){clearTimeout(srchTimer);srchTimer=setTimeout(()=>{
   const f=allContacts.filter(c=>!_isDeceduto(c)&&_matchNomeLibero(c,q)===2);
   if(!f.length&&_nzNome(q).indexOf(' ')>0)allContacts.forEach(c=>{if(!_isDeceduto(c)&&_matchNomeLibero(c,q))f.push(c);});
   if(f.length){
-    currentResults=f;searchActive=true;currentIdx=0;renderContactAndMap(f[0]);
+    currentResults=f;searchActive=true;currentIdx=0;_listOrderTouched=false;renderContactAndMap(f[0]);
     document.getElementById('prNav').textContent=`${currentIdx+1} / ${currentResults.length} risultati · su ${allContacts.length.toLocaleString('it')}`;
   }else{
     const b=document.getElementById('prBody');
@@ -4756,6 +4774,15 @@ function modalSearchFn(q){
 let _currentListData=[];
 let listSortCol='ID_contatto',listSortDir=-1; // -1 = decrescente (ID: ultimi inseriti in cima)
 let _elencoBaseList=[]; // ultimo elenco "di base" passato a renderList, prima di ordinamento/raggruppamento
+// FIX 24/09/2026 (Appendice 30): con una ricerca attiva, l'Elenco riapplicava sempre
+// l'ultimo ordinamento per colonna (di default ID decrescente) mentre la scheda
+// Principale mostrava il risultato nell'ordine grezzo della ricerca — le due viste
+// potevano mostrare "lo stesso primo risultato" che in realta' erano due contatti
+// diversi. _listOrderTouched resta false finche' l'utente non clicca ESPLICITAMENTE
+// una colonna dell'Elenco durante QUESTA ricerca: finche' e' false, l'Elenco segue
+// l'ordine dei risultati della ricerca (identico a quello di Principale/currentResults),
+// esattamente come gia' succede cliccando una riga (apriContattoDaId/openContact).
+let _listOrderTouched=false;
 let _elencoGroupLabels=null; // etichette di gruppo parallele a _currentListData quando si usa "per provincia/regione" (appendice 29)
 
 // ═══════════════════════════════════════════════════
@@ -4949,10 +4976,17 @@ function renderList(list){
   if(modo==='manuale'){
     _currentListData=[...list];
     _elencoGroupLabels=null;
-    _applyListSort();
     listSelectedIdx=-1;
-    _renderListRows();
-    _updateListSortHeaders();
+    if(searchActive&&!_listOrderTouched){
+      // ricerca appena fatta, nessun clic su una colonna: l'Elenco resta
+      // nell'ordine dei risultati della ricerca, uguale a Principale
+      _renderListRows();
+      _clearListSortHeaders();
+    }else{
+      _applyListSort();
+      _renderListRows();
+      _updateListSortHeaders();
+    }
   }else{
     const ord=_ordinaComeAgenda(list,modo);
     _currentListData=ord.list;
@@ -4982,6 +5016,7 @@ function _applyListSort(){
 function sortList(col){
   // Un clic su una colonna torna sempre all'ordine libero manuale (appendice 29:
   // le nuove opzioni per giorno/settimana/mese/provincia/regione si spengono).
+  _listOrderTouched=true; // scelta esplicita dell'utente: da qui in poi l'Elenco si ordina per colonna anche durante una ricerca
   const sel=document.getElementById('elencoListSort');
   if(sel&&sel.value!=='manuale'){sel.value='manuale';_toggleElencoPickers('manuale');}
   _elencoGroupLabels=null;
@@ -5696,7 +5731,12 @@ function getRecuperoList(){
   return list;
 }
 function renderRecupero(){
-  const sort=document.getElementById('recuperoSort')?.value||'date_desc';
+  // FIX 24/09/2026 (Appendice 30, "Da richiamare a due livelli"): prima non
+  // c'era modo di isolare o mettere in cima i richiami PRIORITARI rispetto a
+  // quelli normali in questa coda — bisognava leggere il quadratino colorato
+  // riga per riga. Ora un livello (prioritari) e l'altro (tutto il resto) si
+  // possono filtrare o ordinare separatamente.
+  const sort=document.getElementById('recuperoSort')?.value||'priorita';
   const tipo=document.getElementById('recuperoTipo')?.value||'all';
   const provSel=document.getElementById('recuperoProv');
   const provFilter=(provSel?.value||'').toUpperCase();
@@ -5714,10 +5754,18 @@ function renderRecupero(){
     provSel.innerHTML='<option value="">Tutte le province</option>'+provs.map(p=>`<option value="${esc(p)}">${esc(p)}</option>`).join('');
   }
   if(tipo==='appuntamento')list=list.filter(x=>_esitoPositivo(x.c.Esito_ultima_chiamata));
+  else if(tipo==='prioritario')list=list.filter(x=>_esitoPrioritario(x.c.Esito_ultima_chiamata));
   else if(tipo==='richiamo')list=list.filter(x=>_esitoRichiamo(x.c.Esito_ultima_chiamata));
   if(provFilter)list=list.filter(x=>(x.c.Provincia||'').trim().toUpperCase()===provFilter);
   if(q)list=list.filter(x=>((x.c.Cognome||'')+' '+(x.c.Nome||'')+' '+(x.c.Citta||'')+' '+(x.c.Provincia||'')).toLowerCase().includes(q)||(x.c.Cellulare||'').includes(q)||(x.c.Telefono||'').includes(q));
-  if(sort==='date_desc')list.sort((a,b)=>b.date.iso.localeCompare(a.date.iso));
+  // "Prioritari prima": due livelli, Livello 1 = richiamo prioritario, Livello
+  // 2 = tutto il resto (richiamo normale, appuntamento); dentro ogni livello,
+  // il piu scaduto (piu vecchio) prima.
+  if(sort==='priorita')list.sort((a,b)=>{
+    const pa=_esitoPrioritario(a.c.Esito_ultima_chiamata)?0:1, pb=_esitoPrioritario(b.c.Esito_ultima_chiamata)?0:1;
+    return (pa-pb)||a.date.iso.localeCompare(b.date.iso);
+  });
+  else if(sort==='date_desc')list.sort((a,b)=>b.date.iso.localeCompare(a.date.iso));
   else if(sort==='date_asc')list.sort((a,b)=>a.date.iso.localeCompare(b.date.iso));
   else if(sort==='cognome')list.sort((a,b)=>(a.c.Cognome||'').localeCompare(b.c.Cognome||'','it'));
   else if(sort==='prov_asc')list.sort((a,b)=>((a.c.Provincia||'').localeCompare(b.c.Provincia||'','it'))||((a.c.Citta||'').localeCompare(b.c.Citta||'','it'))||((a.c.Cognome||'').localeCompare(b.c.Cognome||'','it')));
@@ -5731,11 +5779,19 @@ function renderRecupero(){
   // conteggio per provincia (per l'intestazione)
   var _provCnt={};
   if(_raggr){list.forEach(function(x){var pr=(x.c.Provincia||'(senza provincia)').trim().toUpperCase();_provCnt[pr]=(_provCnt[pr]||0)+1;});}
+  // "Prioritari prima": due intestazioni fisse, Livello 1 poi Livello 2
+  var _raggrLiv=(sort==='priorita');
+  var _livCorr=null;
+  var _livCnt={0:0,1:0};
+  if(_raggrLiv){list.forEach(function(x){_livCnt[_esitoPrioritario(x.c.Esito_ultima_chiamata)?0:1]++;});}
   document.getElementById('recuperoBody').innerHTML=list.slice(0,MAX).map(x=>{
     const c=x.c;
     const t=x.daysAgo>365?`${Math.floor(x.daysAgo/365)} anni`:`${Math.floor(x.daysAgo/30)} mesi`;
     var _intest='';
     if(_raggr){var _pr=(c.Provincia||'(senza provincia)').trim().toUpperCase(); if(_pr!==_provCorr){_provCorr=_pr; _intest=`<tr><td colspan="8" style="background:#fff1e0;color:#c06010;font-weight:700;padding:6px 10px;font-size:12px">\u{1F4CD} ${esc(_pr)} <span style="color:#b08050;font-weight:400">(${_provCnt[_pr]})</span></td></tr>`;}}
+    if(_raggrLiv){var _lv=_esitoPrioritario(c.Esito_ultima_chiamata)?0:1; if(_lv!==_livCorr){_livCorr=_lv;
+      _intest=_lv===0?`<tr><td colspan="8" style="background:#fdeee0;color:#b35900;font-weight:700;padding:6px 10px;font-size:12px">\u{1F7E0} LIVELLO 1 — Richiami prioritari <span style="color:#c08a50;font-weight:400">(${_livCnt[0]})</span></td></tr>`
+        :`<tr><td colspan="8" style="background:#eef2f8;color:#33465e;font-weight:700;padding:6px 10px;font-size:12px">LIVELLO 2 — Richiami e appuntamenti <span style="color:#7a8ba0;font-weight:400">(${_livCnt[1]})</span></td></tr>`;}}
     return _intest+`<tr onclick="openContact('${esc(c.ID_contatto)}',window._recuperoResults)">
       <td style="color:#888;font-family:monospace;font-size:10px">${esc(c.ID_contatto)}</td>
       <td><strong>${esc(c.Cognome||'')}</strong></td><td>${esc(c.Nome||'')}</td>
