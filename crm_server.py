@@ -75,9 +75,31 @@ ROTTE_CHE_SCRIVONO = {
 #   - il pulsante Esci (/api/logout) resta un logout esplicito immediato;
 #   - in emergenza, cambiare CRM_SECRET su Railway invalida tutti i login
 #     in un colpo solo (sezione 7 del rapporto).
-# Nessun hook di rinnovo: non serve piu' rinnovare una scadenza che non
-# c'e'.
+#
+# AGGIORNATO IL 24/09/2026 — questo restava vero per la DURATA della
+# sessione (nessun limite di ore complessive), ma il titolare ha chiesto un
+# limite separato sull'INATTIVITA', solo per gli operatori: «SOLO PER
+# OPERATORI DOPO 1 ORA DI INATTIVITA DEVONO RIFARE IL LOGIN». Il rinnovo
+# torna, ma mirato: dopo ogni richiesta autenticata di un operatore (tranne
+# il solo controllo automatico di sfondo, vedi ROTTE_SENZA_ATTIVITA sotto)
+# il cookie viene riscritto con un "attivo" fresco (crm_auth.crea_token,
+# stesso "creato" originale). crm_auth.verifica_token rifiuta il token se
+# sono passati piu' di SESSIONE_INATTIVITA_SEC dall'ultimo "attivo". Il
+# titolare non è toccato: per lui verifica_token non controlla ne' il
+# giorno ne' l'inattivita', quindi il rinnovo qui sotto è no-op per lui
+# (comunque saltato: si applica solo se ruolo != titolare).
 # ---------------------------------------------------------------------------
+
+# Rotte del controllo automatico di sfondo (ogni 2 minuti, anche a browser
+# abbandonato — vedi CRM_Arte.html, _controllaAggiornamenti): NON contano
+# come attivita' vera, altrimenti l'inattivita' di un operatore non
+# scadrebbe mai finche' la scheda resta aperta in un'altra finestra.
+# /api/logout ci sta per un motivo diverso e piu' importante: la richiesta
+# che arriva a /api/logout porta ancora il VECCHIO cookie (il browser lo ha
+# gia' mandato prima che il server lo cancelli), quindi senza questa
+# esclusione il rinnovo riscriverebbe un cookie valido appena dopo che
+# l'operatore ha premuto Esci.
+ROTTE_SENZA_ATTIVITA = {'/api/status', '/api/chisono', '/api/logout'}
 
 @app.before_request
 def _prendi_blocco():
@@ -731,6 +753,14 @@ def _registra_attivita(risposta):
             crm_db.attivita_registra(nome, u.get('ruolo', ''), u.get('zona', ''),
                                      AZIONI_LEGGIBILI[percorso],
                                      _id_dal_corpo(), _dettaglio_dal_corpo(percorso))
+        # NUOVO 24/09/2026: rinnovo del token per l'operatore (vedi nota sopra
+        # "DURATA DELLA SESSIONE"). Il titolare non ha questo limite, quindi
+        # per lui non serve rinnovare niente.
+        if u.get('ruolo') != 'titolare' and percorso not in ROTTE_SENZA_ATTIVITA:
+            nuovo_token = crm_auth.crea_token(u['nome'], u.get('ruolo', ''),
+                                               zona=u.get('zona', ''), creato=u.get('creato'))
+            risposta.set_cookie("crm_token", nuovo_token, httponly=True,
+                                 samesite="Lax", secure=True)
     except Exception:
         pass          # il registro non deve mai disturbare il lavoro
     return risposta

@@ -103,23 +103,43 @@ UTENTI = _parse_utenti()
 # momento. Per invalidare TUTTI i login in un colpo solo, in un'emergenza,
 # resta la leva di sempre: cambiare CRM_SECRET su Railway (sezione 7 del
 # rapporto: farlo SOLO se necessario, disconnette anche tutti gli operatori).
+#
+# AGGIORNATA IL 24/09/2026 — richiesta esplicita del titolare: «SOLO PER
+# OPERATORI DOPO 1 ORA DI INATTIVITA DEVONO RIFARE IL LOGIN». Non e' un
+# ripensamento della scelta di agosto: la sessione resta senza una durata
+# MASSIMA (puo' lavorare tutto il giorno), quello che torna e' un limite
+# sull'INATTIVITA' vera, e solo per gli operatori — il titolare resta senza
+# nessuno scadenza, ne' di durata ne' di inattivita'. Il token porta ora
+# anche un secondo orario, "attivo" (ultima richiesta vera), accanto a
+# "creato" (il login originale, che continua a governare la regola del
+# giorno qui sotto). crm_server.py rinnova il cookie con un "attivo" fresco
+# a ogni richiesta autenticata dell'operatore, TRANNE quelle del controllo
+# automatico di sfondo (/api/status, /api/chisono, ogni 2 minuti anche a
+# browser abbandonato) — altrimenti quel giro automatico terrebbe la
+# sessione viva per sempre e l'inattivita' vera non scadrebbe mai.
+SESSIONE_INATTIVITA_SEC = 60 * 60   # 1 ora, solo per gli operatori
+
 def _firma(msg):
     return hmac.new(SECRET.encode(), msg.encode(), hashlib.sha256).hexdigest()
 
-def crea_token(nome, ruolo, zona=''):
-    # Il campo "creato" resta nel token solo a scopo informativo (non e'
-    # piu' controllato da verifica_token): utile per un domani, se servisse
-    # di nuovo un limite, senza dover cambiare il formato del token.
-    creato = int(time.time())
-    corpo = f"{nome}|{ruolo}|{zona}|{creato}"
+def crea_token(nome, ruolo, zona='', creato=None):
+    # "creato" resta il momento del login vero (usato dalla regola del
+    # giorno, sotto). Se non viene passato è un login nuovo: vale "adesso".
+    # Passarlo serve solo al rinnovo per inattivita' fatto da crm_server.py,
+    # per non spostare in avanti il giorno di nascita del token a ogni
+    # richiesta.
+    if creato is None:
+        creato = int(time.time())
+    attivo = int(time.time())
+    corpo = f"{nome}|{ruolo}|{zona}|{creato}|{attivo}"
     firma = _firma(corpo)
     return base64.urlsafe_b64encode(f"{corpo}|{firma}".encode()).decode()
 
 def verifica_token(token):
     try:
         dati = base64.urlsafe_b64decode(token.encode()).decode()
-        nome, ruolo, zona, creato, firma = dati.rsplit('|', 4)
-        if _firma(f"{nome}|{ruolo}|{zona}|{creato}") != firma:
+        nome, ruolo, zona, creato, attivo, firma = dati.rsplit('|', 5)
+        if _firma(f"{nome}|{ruolo}|{zona}|{creato}|{attivo}") != firma:
             return None
         # Il token di una TELEFONISTA vale solo per la giornata in cui e' stato
         # emesso: alle 21 il CRM chiude e la mattina dopo deve rifare l'accesso.
@@ -132,7 +152,12 @@ def verifica_token(token):
             adesso = _ora_italiana()
             if nato.date() != adesso.date():
                 return None
-        return {'nome': nome, 'ruolo': ruolo, 'zona': zona}
+            # NUOVO 24/09/2026: dopo 1 ora senza una richiesta "vera" (non il
+            # solo controllo automatico di sfondo) il token scade comunque,
+            # anche nello stesso giorno.
+            if int(time.time()) - int(attivo) > SESSIONE_INATTIVITA_SEC:
+                return None
+        return {'nome': nome, 'ruolo': ruolo, 'zona': zona, 'creato': int(creato)}
     except Exception:
         return None
 
@@ -237,7 +262,10 @@ def aggiorna_da_elenco(u):
         return None
     return {'nome': v.get('nome') or u.get('nome'),
             'ruolo': (v.get('ruolo') or u.get('ruolo') or 'operatore'),
-            'zona': (v.get('zona') or '')}
+            'zona': (v.get('zona') or ''),
+            # portato avanti solo per il rinnovo del token per inattivita'
+            # (crm_server.py): non e' letto da nessun controllo di permessi.
+            'creato': u.get('creato')}
 
 def elenco_utenti_visibile():
     """Nomi, ruoli e zone di TUTTI gli utenti (cifrati + variabile), senza
