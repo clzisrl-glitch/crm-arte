@@ -660,7 +660,7 @@ body:not([data-ruolo="operatore"]) ._soloOperatore{display:none!important}
       <button class="btn-u pt-controllare" title="Manda questa scheda in Da controllare (per ricontrollarla: numero errato, indirizzo vecchio, ecc.)." onclick="segnalaContatto(currentResults[currentIdx]?.ID_contatto)">&#9888; Da controllare</button>
       <button class="btn-u pt-deceduto" title="Segna questo contatto come DECEDUTO: lo esclude da elenco, ricerca e agenda e lo sposta nella scheda Deceduti." onclick="segnaDeceduto()">&#9904; Segna deceduto</button>
       <button class="btn-u btn-blue-soft" id="btnAzzera" onclick="azzeraRicerca()" style="display:none" title="Torna a navigare tutto il database">&#10005; Azzera ricerca</button>
-<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 24/09/2026 09:40</span>
+<span id="verBadge" title="Versione del pacchetto in uso: se non corrisponde a quella che ti aspetti, stai aprendo una cartella vecchia o la cache del browser." style="margin-left:8px;font-size:11px;color:#8a8a8f;font-weight:600;background:#eef;border:1px solid #dde;border-radius:7px;padding:4px 10px;white-space:nowrap;align-self:center">v. 24/09/2026 10:30</span>
       <div style="flex:1"></div>
       <button class="btn-u btn-del-discreet" onclick="deleteContact()" title="Elimina questo contatto">&#128465;</button>
     </div>
@@ -840,6 +840,7 @@ body:not([data-ruolo="operatore"]) ._soloOperatore{display:none!important}
       <div style="color:#777;margin-bottom:18px">Guida rapida. Le sezioni in alto sono i pulsanti della barra. Clicca un argomento per saltarci.</div><div class="_soloOperatore" style="background:#eef7ee;border:1px solid #cce5cc;border-left:4px solid #2a7a2a;border-radius:8px;padding:12px 14px;margin-bottom:18px;color:#2a5a2a"><b>&#127758; Lavori sulla tua zona.</b> Ricerche, elenchi e agenda ti mostrano <b>solo i contatti delle regioni della tua zona</b>, e l'agenda solo le telefonate e gli appuntamenti registrati da te o dalle tue colleghe di zona. Non &#232; un errore se non trovi un nominativo di un'altra regione: &#232; di un'altra zona.</div><div class="_soloTitolare" style="background:#eef4fc;border:1px solid #cfdcf0;border-left:4px solid #1a3a6a;border-radius:8px;padding:12px 14px;margin-bottom:18px;color:#33506f"><b>&#128273; Accesso titolare.</b> Vedi <b>tutte le zone</b> e tutti i contatti. In pi&#249; rispetto alle telefoniste hai: <b>&#128202; Statistiche</b> (andamento, zone, vendite per regione, accessi), backup ed esportazioni nel riquadro Strumenti, importazione contatti, correzione province, fusione dei doppioni ed eliminazione schede.</div>
       <div id="welcome-strumenti" style="background:#f4f6fa;border:1px solid #dfe5ee;border-radius:12px;padding:16px 18px;margin-bottom:22px"><div style="font-size:15px;font-weight:700;color:#1a3a6a;margin-bottom:4px">&#128295; Strumenti</div><div style="font-size:12.5px;color:#777;margin-bottom:12px"><span class="_soloTitolare">Backup, esportazioni e viste complete. <b>Backup, Excel e Completo sono riservati al titolare.</b></span><span class="_soloOperatore">Mappa dei contatti, ricerca &quot;vicino a me&quot; e archivio dei deceduti. Gli strumenti di backup ed esportazione sono del titolare e qui non compaiono.</span></div><div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center"><button class="btn-u btn-green" onclick="backupCompleto()" title="Scarica una copia di sicurezza di tutti i dati (crm_data.json) sul tuo computer.">&#128190; Backup</button><button class="btn-u btn-blue _soloTitolare" onclick="mostraBackupAuto()" title="Le copie di sicurezza automatiche: una per giornata e una per ogni ora di lavoro. Con i numeri di ciascuna, la verifica e il ripristino.">&#128338; Copie di sicurezza</button>
           <button onclick="mostraVicinoModal()" class="tool-btn" style="background:#eaf3fb;border:1px solid #c2dcf0;color:#1a5a93;padding:10px 14px;border-radius:9px;font-size:13px;cursor:pointer;font-weight:600">&#128205; Vicino a me</button>
+          <button onclick="_libApri()" class="tool-btn _soloTitolare" style="background:#fbeeee;border:1px solid #efc9c9;color:#a33;padding:10px 14px;border-radius:9px;font-size:13px;cursor:pointer;font-weight:600" title="Elenco delle librerie e cartolibrerie in archivio, da togliere in blocco. Prima viene fatta una copia di sicurezza.">&#128218; Elimina librerie</button>
           <button onclick="apriUtenti()" class="tool-btn _soloTitolare" style="background:#eef0fb;border:1px solid #ccd2f0;color:#3a45a0;padding:10px 14px;border-radius:9px;font-size:13px;cursor:pointer;font-weight:600" title="Crea e modifica gli accessi al CRM. Le password vengono cifrate: nessuno puo rileggerle, nemmeno tu.">&#128100; Utenti e password</button><button onclick="mostraImportModal()" class="tool-btn _soloTitolare" style="background:#eef7ee;border:1px solid #cce5cc;color:#2a7a2a;padding:10px 14px;border-radius:9px;font-size:13px;cursor:pointer;font-weight:600">&#128229; Importa contatti</button><button onclick="_correggiDati()" class="tool-btn _soloTitolare" style="background:#fdeedd;border:1px solid #f0cfa0;color:#b35900;padding:10px 14px;border-radius:9px;font-size:13px;cursor:pointer;font-weight:600" title="Corregge le province sbagliate (da comune/CAP) e mette gli esteri in categoria Estero. Solo Provincia/Regione.">&#128295; Correggi province/esteri</button><button onclick="_fondiDuplicati()" class="tool-btn _soloTitolare" style="background:#e7f5ec;border:1px solid #a9d8bb;color:#0a6b45;padding:10px 14px;border-radius:9px;font-size:13px;cursor:pointer;font-weight:600" title="Fonde i duplicati sicuri (stesso cognome+nome+citta): tiene la scheda migliore, porta li opere/telefonate/dati, marca gli altri come fuso.">&#128260; Fondi duplicati</button><button class="btn-u pt-mail" onclick="exportExcel(false)" title="Esporta tutti i contatti in un file Excel.">&#128202; Excel</button><button class="btn-u pt-lista" onclick="vistaCompleto()" title="Mostra tutti i contatti, dal piu recente inserito al primo.">&#128203; Completo</button><button class="btn-u" onclick="showTab('deceduti')" title="Contatti segnati come deceduti: tenuti da parte ed esclusi dalle ricerche.">&#9904; Deceduti</button></div></div>
       <div style="background:#eef7ee;border:1px solid #cce5cc;border-radius:12px;padding:16px 18px;margin-bottom:22px">
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px">
@@ -4442,6 +4443,59 @@ function _matchNomeLibero(c,q){
     if(_nzCompatto((c.Cognome||'')+' '+(c.Nome||'')).indexOf(qw.slice(1).join('')+qw[0])===0)return 1;
   }
   return 0;
+}
+
+// ═══════════════════════════════════════════════════
+// ELIMINA LIBRERIE (24/09/2026, solo titolare)
+// Schede con LIBRERIA/CARTOLIBRERIA nel cognome o nel nome: sono negozi,
+// non clienti. Restano fuori le persone che hanno "libreria" solo nelle
+// note, nell'indirizzo o nell'email, e chiunque abbia opere comprate.
+// Il server fa una copia di sicurezza prima di cancellare.
+// ═══════════════════════════════════════════════════
+function _libLista(){
+  var conOpere={};(typeof opere!=='undefined'?opere:[]).forEach(function(o){conOpere[String(o.ID_contatto)]=1;});
+  return (typeof contacts!=='undefined'?contacts:[]).filter(function(c){
+    return /librer/i.test((c.Cognome||'')+' '+(c.Nome||''))&&!conOpere[String(c.ID_contatto)];
+  }).sort(function(a,b){return String(a.Regione||'').localeCompare(String(b.Regione||''),'it')||String(a.Cognome||'').localeCompare(String(b.Cognome||''),'it');});
+}
+function _libApri(){
+  if(typeof _ruolo!=='undefined'&&_ruolo&&_ruolo!=='titolare')return;
+  var l=_libLista(), stati={attivo:'cliente',potenziale:'potenziale',da_verificare:'da verificare'};
+  var m=document.getElementById('libModal');
+  if(!m){m=document.createElement('div');m.id='libModal';m.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;display:flex;align-items:center;justify-content:center';document.body.appendChild(m);}
+  m.style.display='flex';
+  m.innerHTML='<div style="background:#fff;border-radius:14px;padding:22px;max-width:900px;width:94%;max-height:88vh;display:flex;flex-direction:column">'+
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><h3 style="margin:0;color:#a33">&#128218; Elimina librerie</h3>'+
+    '<button onclick="document.getElementById(\'libModal\').style.display=\'none\'" style="border:none;background:none;font-size:22px;cursor:pointer;color:#999">&times;</button></div>'+
+    '<div style="font-size:12.5px;color:#555;line-height:1.5;margin-bottom:10px">Schede con <b>libreria</b> o <b>cartolibreria</b> nel cognome o nel nome. Le persone con la parola solo nelle note, nell\'indirizzo o nell\'email <b>non</b> sono qui, e nemmeno chi ha opere comprate. Togli la spunta a quelle da tenere. Prima di cancellare il CRM mette da parte una <b>copia di sicurezza</b>: la trovi in Copie di sicurezza e con Ripristina si torna indietro.</div>'+
+    '<div style="margin-bottom:6px;font-size:12px"><label><input type="checkbox" checked onchange="document.querySelectorAll(\'.libChk\').forEach(function(x){x.checked=event.target.checked});_libConta()"> tutte</label></div>'+
+    '<div style="overflow-y:auto;flex:1;border:1px solid #eee;border-radius:8px"><table style="width:100%;border-collapse:collapse;font-size:12px">'+
+    '<tr style="background:#f6f6f6;position:sticky;top:0"><th></th><th style="text-align:left;padding:5px">ID</th><th style="text-align:left">Nominativo</th><th style="text-align:left">Citt&agrave;</th><th style="text-align:left">Regione</th><th style="text-align:left">Stato</th></tr>'+
+    l.map(function(c){return '<tr style="border-top:1px solid #f0f0f0"><td style="padding:4px 6px"><input type="checkbox" class="libChk" value="'+esc(String(c.ID_contatto))+'" checked onchange="_libConta()"></td><td style="color:#888">'+esc(String(c.ID_contatto))+'</td><td><b>'+esc(c.Cognome||'')+'</b> '+esc(c.Nome||'')+'</td><td>'+esc(c.Citta||'')+' '+esc(c.Provincia||'')+'</td><td>'+esc(c.Regione||'')+'</td><td>'+esc(stati[c.Stato]||c.Stato||'')+'</td></tr>';}).join('')+
+    '</table></div>'+
+    '<div style="display:flex;gap:10px;align-items:center;margin-top:12px"><button id="libVai" onclick="_libElimina()" style="background:#c0392b;color:#fff;border:none;border-radius:8px;padding:10px 18px;font-size:13px;font-weight:700;cursor:pointer"></button><span id="libEsito" style="font-size:13px"></span></div></div>';
+  _libConta();
+}
+function _libConta(){
+  var n=document.querySelectorAll('.libChk:checked').length, b=document.getElementById('libVai');
+  if(b){b.textContent='Elimina '+n+' schede';b.disabled=!n;b.style.opacity=n?1:.5;}
+}
+async function _libElimina(){
+  var ids=[].map.call(document.querySelectorAll('.libChk:checked'),function(x){return x.value;});
+  if(!ids.length)return;
+  if(!confirm('ELIMINARE '+ids.length+' SCHEDE?\n\nVengono tolte dall\'archivio insieme alle loro telefonate.\nPrima viene fatta una copia di sicurezza (Copie di sicurezza → Ripristina per tornare indietro).'))return;
+  var e=document.getElementById('libEsito'), b=document.getElementById('libVai');
+  b.disabled=true; e.style.color='#555'; e.textContent='Eliminazione in corso...';
+  try{
+    var r=await fetch('/api/elimina_contatti',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ids:ids,motivo:'(librerie)'})});
+    var j=await r.json().catch(function(){return {};});
+    if(!r.ok||!j.ok)throw new Error(j.error||('HTTP '+r.status));
+    e.style.color='#1a7a30';
+    e.innerHTML='&#10003; Eliminate <b>'+j.eliminati.contatti+'</b> schede'+(j.eliminati.telefonate?' e '+j.eliminati.telefonate+' telefonate':'')+'. Contatti rimasti: '+Number(j.contatti_rimasti).toLocaleString('it')+'. La pagina si ricarica...';
+    setTimeout(function(){location.reload();},2500);
+  }catch(err){
+    e.style.color='#c0392b'; e.textContent='NON riuscita: '+err.message+' — nessuna scheda eliminata.'; b.disabled=false;
+  }
 }
 
 // SEARCH

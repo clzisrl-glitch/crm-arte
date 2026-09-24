@@ -472,7 +472,7 @@ def blocco_scrittura():
         except Exception:
             pass
 
-def _db_save(data, forza=False, autore='', conferma_riduzione=False):
+def _db_save(data, forza=False, autore='', conferma_riduzione=False, copia_prima=''):
     """L'ordine delle operazioni qui e' la protezione:
        1. i controlli (mai zero contatti, mai una riduzione grossa non voluta);
        2. le copie dello stato PRECEDENTE;
@@ -490,6 +490,10 @@ def _db_save(data, forza=False, autore='', conferma_riduzione=False):
         motivo = None
         if not forza:
             motivo = _controlla_riduzione(cur, numeri, conferma_riduzione)
+        # copia_prima: chi chiama chiede comunque una copia da evento dello stato
+        # precedente (es. eliminazione in blocco), anche se la riduzione e' piccola
+        if not motivo and copia_prima:
+            motivo = copia_prima
         _copie_prima_di_scrivere(cur, motivo)
         cur.execute("INSERT INTO crm_blob (id, data) VALUES (1, %s) "
                     "ON CONFLICT (id) DO UPDATE SET data = EXCLUDED.data", (payload,))
@@ -606,13 +610,14 @@ def _file_save(data):
 def load_data():
     return _db_load() if USE_DB else _file_load()
 
-def save_data(data, forza=False, autore='', conferma_riduzione=False):
+def save_data(data, forza=False, autore='', conferma_riduzione=False, copia_prima=''):
     """forza=True SOLO per il reset esplicito del titolare.
     conferma_riduzione=True SOLO quando il titolare ha confermato a schermo
     che la riduzione e' voluta (vedi _controlla_riduzione)."""
     if USE_DB:
         return _db_save(data, forza=forza, autore=autore,
-                        conferma_riduzione=conferma_riduzione)
+                        conferma_riduzione=conferma_riduzione,
+                        copia_prima=copia_prima)
     _controlla_payload(data, forza)   # stessa protezione anche in locale
     if not forza:
         _controlla_riduzione_file(data, conferma_riduzione)

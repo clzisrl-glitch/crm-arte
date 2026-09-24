@@ -49,7 +49,7 @@ ROTTE_CHE_SCRIVONO = {
     '/api/aggiungi_telefonata', '/api/contatto_stato', '/api/segnala',
     '/api/verifica', '/api/save', '/api/save_full', '/api/importa',
     '/api/correggi_dati', '/api/fondi_duplicati', '/api/reset', '/api/ordine_schede',
-    '/api/bulk_assegna_orari', '/api/copia_ripristina',
+    '/api/bulk_assegna_orari', '/api/copia_ripristina', '/api/elimina_contatti',
     # 12/09/2026: /api/login scrive il registro accessi dentro l'archivio, quindi
     # deve prendere il blocco come tutte le altre. Senza, un accesso fatto mentre
     # una telefonista salva una scheda riscriveva la versione letta PRIMA di quel
@@ -183,7 +183,7 @@ def _auto_backup(text):
     except Exception as e:
         print(f"  (backup automatico non riuscito: {e})")
 
-def save_data(data, forza=False, conferma_riduzione=False):
+def save_data(data, forza=False, conferma_riduzione=False, copia_prima=''):
     """L'autore lo ricava da solo dalla sessione: cosi' ogni scrittura, anche
     quelle scritte mesi fa, finisce firmata senza doverle toccare una per una."""
     autore = ''
@@ -193,7 +193,8 @@ def save_data(data, forza=False, conferma_riduzione=False):
     except Exception:
         pass
     return crm_db.save_data(data, forza=forza, autore=autore,
-                            conferma_riduzione=conferma_riduzione)
+                            conferma_riduzione=conferma_riduzione,
+                            copia_prima=copia_prima)
 def blocco_scrittura():
     return crm_db.blocco_scrittura()
 
@@ -1375,6 +1376,51 @@ def api_bulk_assegna_orari():
             save_data(data)
         return jsonify({'ok': True, 'aggiornati': aggiornati,
                         'non_trovati': non_trovati, 'fuori_zona': fuori_zona})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/elimina_contatti', methods=['POST'])
+@solo_titolare('elimina')
+def api_elimina_contatti():
+    """Elimina PIU' contatti in un colpo solo (24/09/2026, pulizia librerie).
+    Una sola lettura e una sola scrittura dell'archivio, invece di 200 giri
+    da 7 MB l'uno. Prima di scrivere viene messa da parte una copia da evento
+    ("prima della riduzione — ..."): si ritrova in Copie di sicurezza e con
+    Ripristina si torna indietro. Si rifiuta di toccare un contatto che ha
+    opere comprate: quelle schede non sono mai "da buttare" in blocco."""
+    try:
+        body = request.get_json(force=True) or {}
+        ids = [str(x).strip() for x in (body.get('ids') or []) if str(x).strip()]
+        motivo = str(body.get('motivo', '') or '').strip()[:60]
+        if not ids:
+            return jsonify({'error': 'nessun contatto indicato'}), 400
+        if len(ids) > 500:
+            return jsonify({'error': 'troppi contatti in una volta (massimo 500)'}), 400
+        data = load_data() or {}
+        chiesti = set(ids)
+        con_opere = set(str(o.get('ID_contatto')) for o in (data.get('opere') or [])
+                        if str(o.get('ID_contatto')) in chiesti)
+        da_togliere = chiesti - con_opere
+        presenti = set(str(c.get('ID_contatto')) for c in data.get('contacts', [])
+                       if str(c.get('ID_contatto')) in da_togliere)
+        if not presenti:
+            return jsonify({'error': 'nessuno dei contatti indicati e\' eliminabile',
+                            'con_opere': sorted(con_opere)}), 400
+        tolti = {'contatti': len(presenti)}
+        data['contacts'] = [c for c in data.get('contacts', [])
+                            if str(c.get('ID_contatto')) not in presenti]
+        for campo in ('telefonate', 'verifiche'):
+            prima = data.get(campo) or []
+            dopo = [x for x in prima if str(x.get('ID_contatto')) not in presenti]
+            if len(dopo) != len(prima):
+                data[campo] = dopo
+                tolti[campo] = len(prima) - len(dopo)
+        save_data(data, copia_prima=('eliminati %d contatti %s' % (len(presenti), motivo)).strip())
+        return jsonify({'ok': True, 'eliminati': tolti,
+                        'non_trovati': sorted(da_togliere - presenti),
+                        'saltati_con_opere': sorted(con_opere),
+                        'contatti_rimasti': len(data['contacts'])})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
