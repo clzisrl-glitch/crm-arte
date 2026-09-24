@@ -1286,6 +1286,11 @@ async function salvaContattoSingolo(c){
       let m='';try{const j=await r.json();m=j.error||'';}catch(e){}
       throw new Error('HTTP '+r.status+'. '+m);
     }
+    // Il contatto e' stato salvato (nuovo o con indirizzo modificato): la
+    // posizione in cache (coordinate.json) puo' essere vecchia o assente.
+    // La tolgo cosi' _coordDi ricalcola al volo con l'indirizzo aggiornato,
+    // usando via ANNCSU se disponibile, senza aspettare una rigenerazione manuale.
+    try{ if(_coordContatti&&c&&c.ID_contatto){ delete _coordContatti[String(c.ID_contatto)]; } }catch(e){}
     if(status){status.textContent='✓ Salvato';setTimeout(()=>{status.textContent='';},2000);}
     showSaveToast('ok');
     return true;
