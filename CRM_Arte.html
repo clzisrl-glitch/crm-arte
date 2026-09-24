@@ -6433,12 +6433,21 @@ function _normVia(s){
   return t.join(' ');
 }
 function _normCom(s){return (s||'').toString().toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();}
+function _stripCivico(s){
+  var t=(s||'').toString().replace(/,/g,' ').split(/\s+/).filter(Boolean);
+  while(t.length){
+    var last=t[t.length-1];
+    if(/^\d+[\/\-]?[A-Za-z]?$/.test(last)||/^[A-Za-z]\/\d+$/.test(last))t.pop();
+    else break;
+  }
+  return t.join(' ');
+}
 function _coordDi(c){
   if(!c)return null;
   var id=String(c.ID_contatto);
   if(_coordContatti&&_coordContatti[id])return _coordContatti[id];
   var com=_normCom(c.Citta);
-  if(_coordVie&&c.Via){var k=com+'|'+_normVia(c.Via);if(_coordVie[k])return _coordVie[k];}
+  if(_coordVie&&c.Via){var k=com+'|'+_normVia(_stripCivico(c.Via));if(_coordVie[k])return _coordVie[k];}
   if(_coordComuni){if(_coordComuni[com])return _coordComuni[com];if(_coordComuni[(c.Citta||'').toUpperCase().trim()])return _coordComuni[(c.Citta||'').toUpperCase().trim()];}
   return null;
 }
