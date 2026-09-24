@@ -1245,7 +1245,9 @@ def api_aggiungi_telefonata():
         # aggiungo la telefonata in testa
         data['telefonate'].insert(0, tel)
         # aggiorno i campi esito del contatto (solo questi, niente altro)
-        campi_ok = {'Esito_ultima_chiamata', 'Prossima_telefonata', 'Ora_appuntamento'}
+        # Note_telefono = "Stato numero": aggiunto per farlo compilare dalla
+        # Registra Telefonata, non solo dalla Modifica (appendice 28).
+        campi_ok = {'Esito_ultima_chiamata', 'Prossima_telefonata', 'Ora_appuntamento', 'Note_telefono'}
         for c in data['contacts']:
             if str(c.get('ID_contatto')) == cid:
                 for k, v in upd.items():

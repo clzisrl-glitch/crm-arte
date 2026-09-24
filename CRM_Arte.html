@@ -614,13 +614,21 @@ body:not([data-ruolo="operatore"]) ._soloOperatore{display:none!important}
     <div class="cal-time-scroll" id="calTimeScroll"><div class="cal-time-inner" id="calTimeInner"></div></div>
     <div id="calListView">
       <div style="display:flex;gap:8px;align-items:center;padding:6px 10px;background:#eef1f5;border-bottom:1px solid #ccc;flex-wrap:wrap">
-        <span style="font-size:11px;color:#555;font-weight:600">3 settimane (questa + 2 precedenti)</span>
+        <span style="font-size:11px;color:#555;font-weight:600" id="agendaListFinestra">3 settimane (questa + 2 precedenti)</span>
         <select id="agendaListSort" onchange="renderAgenda()" style="padding:3px 6px;border:1px solid #aaa;border-radius:3px;font-size:11px">
           <option value="giorno">Per giorno</option>
+          <option value="settimana">Per settimana</option>
+          <option value="mese">Per mese</option>
           <option value="prov">Per provincia</option>
+          <option value="regione">Per regione</option>
         </select>
+        <input type="week" id="agendaListSettimana" onchange="renderAgenda()" style="display:none;padding:3px 6px;border:1px solid #aaa;border-radius:3px;font-size:11px" title="Scegli la settimana da mostrare">
+        <input type="month" id="agendaListMese" onchange="renderAgenda()" style="display:none;padding:3px 6px;border:1px solid #aaa;border-radius:3px;font-size:11px" title="Scegli il mese da mostrare">
         <select id="agendaListProv" onchange="renderAgenda()" style="padding:3px 6px;border:1px solid #aaa;border-radius:3px;font-size:11px" title="Filtra per provincia">
           <option value="">Tutte le province</option>
+        </select>
+        <select id="agendaListRegione" onchange="renderAgenda()" style="padding:3px 6px;border:1px solid #aaa;border-radius:3px;font-size:11px" title="Filtra per regione">
+          <option value="">Tutte le regioni</option>
         </select>
         <span class="list-count" id="agendaListCount" style="margin-left:auto;font-size:11px;color:#555"></span>
       </div>
@@ -679,6 +687,16 @@ body:not([data-ruolo="operatore"]) ._soloOperatore{display:none!important}
     <div class="list-bar">
       <button class="btn-sm" onclick="showTab(lastTab||'principale')">&#8592; Indietro</button>
       <input class="list-search" id="listSearch" placeholder="Cerca cognome, nome, citta, telefono..." oninput="filterList()">
+      <select id="elencoListSort" onchange="_elencoSortChanged()" style="padding:3px 6px;border:1px solid #aaa;border-radius:3px;font-size:11px" title="Cambia l'ordine e il raggruppamento della lista">
+        <option value="manuale">Ordine libero (clic sulle colonne)</option>
+        <option value="giorno">Per giorno</option>
+        <option value="settimana">Per settimana</option>
+        <option value="mese">Per mese</option>
+        <option value="prov">Per provincia</option>
+        <option value="regione">Per regione</option>
+      </select>
+      <input type="week" id="elencoListSettimana" onchange="_elencoSortChanged()" style="display:none;padding:3px 6px;border:1px solid #aaa;border-radius:3px;font-size:11px" title="Scegli la settimana (in base alla Prossima telefonata)">
+      <input type="month" id="elencoListMese" onchange="_elencoSortChanged()" style="display:none;padding:3px 6px;border:1px solid #aaa;border-radius:3px;font-size:11px" title="Scegli il mese (in base alla Prossima telefonata)">
       <span class="list-count" id="listCount"></span>
       <button onclick="exportExcel(true)" style="padding:3px 10px;background:#1a7a30;color:#fff;border:1px solid #0a5a20;border-radius:3px;font-size:11px;cursor:pointer" title="Esporta lista filtrata in Excel">&#128202; Excel</button>
       <button onclick="stampaElenco()" style="padding:3px 10px;background:#1a3a6a;color:#fff;border:1px solid #122a4e;border-radius:3px;font-size:11px;cursor:pointer" title="Stampa la lista così come la vedi: con ricerca, filtri e ordinamento attivi (anche 'Senza numero').">&#128424; Stampa</button>
@@ -926,6 +944,26 @@ body:not([data-ruolo="operatore"]) ._soloOperatore{display:none!important}
         </div>
       </div>
       <div id="regTelDataNota" style="font-size:11px;color:#6b7a8c;margin-bottom:12px"></div>
+      <div style="margin-bottom:14px">
+        <label style="font-size:10px;font-weight:700;color:#666;text-transform:uppercase;display:block;margin-bottom:6px">Stato numero <span style="text-transform:none;font-weight:400;color:#999">(solo se c'&#232; un problema col numero, facoltativo)</span></label>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <label style="display:flex;align-items:center;gap:4px;cursor:pointer;padding:5px 10px;border:1px solid #ddd;border-radius:4px;font-size:11.5px">
+            <input type="radio" name="regStatoNum" value="ok"> <span style="color:#1a7a30">ok</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:4px;cursor:pointer;padding:5px 10px;border:1px solid #ddd;border-radius:4px;font-size:11.5px">
+            <input type="radio" name="regStatoNum" value="non risponde"> <span style="color:#b35900">non risponde</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:4px;cursor:pointer;padding:5px 10px;border:1px solid #ddd;border-radius:4px;font-size:11.5px">
+            <input type="radio" name="regStatoNum" value="numero errato"> <span style="color:#c0392b">numero errato</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:4px;cursor:pointer;padding:5px 10px;border:1px solid #ddd;border-radius:4px;font-size:11.5px">
+            <input type="radio" name="regStatoNum" value="trasferito"> <span style="color:#0a7d6b">trasferito</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:4px;cursor:pointer;padding:5px 10px;border:1px solid #ddd;border-radius:4px;font-size:11.5px">
+            <input type="radio" name="regStatoNum" value="non interessato"> <span style="color:#7a3ea0">non interessato</span>
+          </label>
+        </div>
+      </div>
       <div style="margin-bottom:16px">
         <label style="font-size:10px;font-weight:700;color:#666;text-transform:uppercase;display:block;margin-bottom:4px">Note</label>
         <textarea id="regTelNote" rows="4" style="width:100%;padding:5px 8px;border:1px solid #aaa;border-radius:3px;font-size:12px;resize:vertical;font-family:inherit" placeholder="Note appuntamento..."></textarea>
@@ -2099,6 +2137,39 @@ function _appDelGiorno(iso){if(typeof buildAgendaIndex==='function')buildAgendaI
 function _dataIT(iso){const p=iso.split('-');return p.length===3?p[2]+'/'+p[1]+'/'+p[0]:iso;}
 async function stampaAppDelGiorno(){const iso=_agDayISO();const ids=_appDelGiorno(iso);if(!ids.length){alert('Nessun appuntamento per il '+_dataIT(iso)+'.');return;}const res=await _scaricaPDF(ids,'Appuntamenti_'+iso);if(!res)return;const a=document.createElement('a');a.href=res.url;a.download='Appuntamenti_'+iso+'.pdf';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(res.url),4000);}
 async function inviaAppDelGiorno(){const iso=_agDayISO();const ids=_appDelGiorno(iso);if(!ids.length){alert('Nessun appuntamento per il '+_dataIT(iso)+'.');return;}const res=await _scaricaPDF(ids,'Appuntamenti_'+iso);if(!res)return;const w=window.open(res.url,'_blank');if(!w)alert('Per inviare via e-mail: consenti le finestre pop-up, poi dal PDF usa Condividi \u2192 Mail.');else alert('PDF degli appuntamenti del '+_dataIT(iso)+' pronto.\n\nDal PDF aperto usa Condividi \u2192 Mail per inviarlo come allegato.');setTimeout(()=>URL.revokeObjectURL(res.url),60000);}
+// Lista agenda "per settimana"/"per mese": conversioni fra il valore degli
+// input <input type=week>/<input type=month> e le date vere (ISO 8601).
+function _isoWeekStrOf(d){
+  const dt=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));
+  const dow=(dt.getUTCDay()+6)%7; // lunedi=0
+  dt.setUTCDate(dt.getUTCDate()-dow+3); // giovedi della stessa settimana ISO
+  const isoYear=dt.getUTCFullYear();
+  const jan4=new Date(Date.UTC(isoYear,0,4));
+  const jan4Dow=(jan4.getUTCDay()+6)%7;
+  const week1Mon=new Date(jan4);week1Mon.setUTCDate(jan4.getUTCDate()-jan4Dow);
+  const week=1+Math.round((dt-week1Mon)/(7*86400000));
+  return `${isoYear}-W${String(week).padStart(2,'0')}`;
+}
+function _mondayOfISOWeek(year,week){
+  const jan4=new Date(Date.UTC(year,0,4));
+  const jan4Dow=(jan4.getUTCDay()+6)%7;
+  const week1Mon=new Date(jan4);week1Mon.setUTCDate(jan4.getUTCDate()-jan4Dow);
+  const mon=new Date(week1Mon);mon.setUTCDate(week1Mon.getUTCDate()+(week-1)*7);
+  return new Date(mon.getUTCFullYear(),mon.getUTCMonth(),mon.getUTCDate(),12,0,0);
+}
+// Riempie una tendina (province/regioni della lista agenda) solo se l'elenco
+// e' davvero cambiato, e non perde la scelta fatta se e' ancora valida —
+// stesso schema gia' usato in "Da controllare" (ctrlPopolaProvince/Regioni).
+function _popolaTendina(sel,items,keyFn,placeholder){
+  if(!sel)return;
+  const vals=[...new Set(items.map(keyFn).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'it'));
+  const sig=vals.join('|');
+  if(sel.dataset.sig===sig)return;
+  sel.dataset.sig=sig;
+  const cur=sel.value;
+  sel.innerHTML=`<option value="">${esc(placeholder)}</option>`+vals.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');
+  sel.value=vals.includes(cur)?cur:'';
+}
 function renderAgenda(){
   if(!currentWeek)currentWeek=getMonday(new Date());
   try{
@@ -2235,11 +2306,44 @@ function renderAgenda(){
     const sortMode=document.getElementById('agendaListSort')?.value||'giorno';
     const provSel=document.getElementById('agendaListProv');
     const provFilter=(provSel?.value||'').toUpperCase();
-    // 3 settimane: questa + 2 precedenti (21 giorni a partire da lunedi-14)
-    const startMon=addDays(monday,-14);
+    const regSel=document.getElementById('agendaListRegione');
+    const regFilter=(regSel?.value||'').toUpperCase();
+    const wkInput=document.getElementById('agendaListSettimana');
+    const meseInput=document.getElementById('agendaListMese');
+    const finestraLbl=document.getElementById('agendaListFinestra');
+    // La finestra di date dipende dal modo scelto: "per settimana"/"per mese"
+    // si allargano a UNA settimana/mese scelti da te (default: quella/quello
+    // di oggi); "per giorno"/"per provincia"/"per regione" restano sulle 3
+    // settimane fisse di sempre (questa + 2 precedenti).
+    let startDay,giorniFinestra,labelFinestra;
+    if(sortMode==='settimana'){
+      if(wkInput&&!wkInput.value)wkInput.value=_isoWeekStrOf(new Date());
+      const wm=((wkInput&&wkInput.value)||'').match(/^(\d{4})-W(\d{2})$/);
+      startDay=wm?_mondayOfISOWeek(parseInt(wm[1],10),parseInt(wm[2],10)):monday;
+      giorniFinestra=7;
+      const fine=addDays(startDay,6);
+      const _fd=(d)=>`${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
+      labelFinestra=`Settimana dal ${_fd(startDay)} al ${_fd(fine)}`;
+    }else if(sortMode==='mese'){
+      if(meseInput&&!meseInput.value){const _n=new Date();meseInput.value=`${_n.getFullYear()}-${String(_n.getMonth()+1).padStart(2,'0')}`;}
+      const mm=((meseInput&&meseInput.value)||'').match(/^(\d{4})-(\d{2})$/);
+      const yy=mm?parseInt(mm[1],10):new Date().getFullYear();
+      const mo=mm?parseInt(mm[2],10):(new Date().getMonth()+1);
+      startDay=new Date(yy,mo-1,1,12,0,0);
+      giorniFinestra=new Date(yy,mo,0).getDate();
+      const MESI=['gennaio','febbraio','marzo','aprile','maggio','giugno','luglio','agosto','settembre','ottobre','novembre','dicembre'];
+      labelFinestra=`Mese di ${MESI[mo-1]} ${yy}`;
+    }else{
+      startDay=addDays(monday,-14);
+      giorniFinestra=21;
+      labelFinestra='3 settimane (questa + 2 precedenti)';
+    }
+    if(finestraLbl)finestraLbl.textContent=labelFinestra;
+    if(wkInput)wkInput.style.display=sortMode==='settimana'?'':'none';
+    if(meseInput)meseInput.style.display=sortMode==='mese'?'':'none';
     const allEvs=[];const seen2=new Set();
-    for(let dd=0;dd<21;dd++){
-      const iso=fISO(addDays(startMon,dd));
+    for(let dd=0;dd<giorniFinestra;dd++){
+      const iso=fISO(addDays(startDay,dd));
       for(const item of(telByDate[iso]||[])){
         if(calFilter==='call'&&item.type!=='call')continue;
         if(calFilter==='app'&&item.type!=='app')continue;
@@ -2252,25 +2356,42 @@ function renderAgenda(){
         allEvs.push({iso,item,c,zona:_zn2});
       }
     }
-    if(provSel && provSel.options.length<=1){
-      const provs=[...new Set(allEvs.map(e=>(e.c.Provincia||'').trim().toUpperCase()).filter(Boolean))].sort();
-      provSel.innerHTML='<option value="">Tutte le province</option>'+provs.map(p=>`<option value="${esc(p)}">${esc(p)}</option>`).join('');
-    }
-    let evs=provFilter?allEvs.filter(e=>(e.c.Provincia||'').trim().toUpperCase()===provFilter):allEvs;
-    const weekOf=(iso)=>Math.floor(Math.round((new Date(iso+'T12:00:00')-startMon)/86400000)/7);
+    // Tendine provincia/regione: la regione scelta restringe le province
+    // proposte (stesso schema di "Da controllare"), non il contrario.
+    _popolaTendina(provSel, regFilter?allEvs.filter(e=>(e.c.Regione||'').trim().toUpperCase()===regFilter):allEvs, e=>(e.c.Provincia||'').trim().toUpperCase(), 'Tutte le province');
+    _popolaTendina(regSel, allEvs, e=>(e.c.Regione||'').trim().toUpperCase(), 'Tutte le regioni');
+    let evs=allEvs;
+    if(provFilter)evs=evs.filter(e=>(e.c.Provincia||'').trim().toUpperCase()===provFilter);
+    if(regFilter)evs=evs.filter(e=>(e.c.Regione||'').trim().toUpperCase()===regFilter);
+    const weekOf=(iso)=>Math.floor(Math.round((new Date(iso+'T12:00:00')-addDays(monday,-14))/86400000)/7);
     const weekLabels=['Due settimane fa','Settimana scorsa','Questa settimana'];
+    // Ordine "dal piu' vicino al piu' lontano": distanza assoluta da oggi,
+    // in giorni, crescente — non la data in senso assoluto. Nella finestra
+    // fissa (giorno/prov/regione), che e' tutta passata o di oggi, questo
+    // equivale a mostrare prima gli eventi piu' recenti; per settimana/mese
+    // (che possono includere anche giorni futuri) allarga da oggi verso
+    // entrambe le direzioni.
+    const _oggiT=new Date(todayISO+'T12:00:00').getTime();
+    const dist=(iso)=>Math.abs(Math.round((new Date(iso+'T12:00:00').getTime()-_oggiT)/86400000));
+    const _orario=(item)=>(item.h??99)*60+(item.m||0);
     let ordered;
     if(sortMode==='prov'){
-      ordered=[...evs].sort((a,b)=>((a.c.Provincia||'').localeCompare(b.c.Provincia||'','it'))||((a.c.Citta||'').localeCompare(b.c.Citta||'','it'))||a.iso.localeCompare(b.iso));
+      ordered=[...evs].sort((a,b)=>((a.c.Provincia||'').localeCompare(b.c.Provincia||'','it'))||(dist(a.iso)-dist(b.iso))||a.iso.localeCompare(b.iso)||(_orario(a.item)-_orario(b.item)));
+    }else if(sortMode==='regione'){
+      ordered=[...evs].sort((a,b)=>((a.c.Regione||'').localeCompare(b.c.Regione||'','it'))||(dist(a.iso)-dist(b.iso))||a.iso.localeCompare(b.iso)||(_orario(a.item)-_orario(b.item)));
     }else{
-      ordered=[...evs].sort((a,b)=>{if(a.iso!==b.iso)return a.iso.localeCompare(b.iso);const ah=(a.item.h??99)*60+(a.item.m||0);const bh=(b.item.h??99)*60+(b.item.m||0);return ah-bh;});
+      ordered=[...evs].sort((a,b)=>{const dd2=dist(a.iso)-dist(b.iso);if(dd2)return dd2;if(a.iso!==b.iso)return a.iso.localeCompare(b.iso);return _orario(a.item)-_orario(b.item);});
     }
     window._agendaResults=ordered.map(e=>e.c);
     const cnt=document.getElementById('agendaListCount');if(cnt)cnt.textContent=`${ordered.length} eventi`;
     let rows='';let curGroup=null;
     ordered.forEach(({iso,item,c,zona},idx)=>{
-      const group=sortMode==='prov'?((c.Provincia||'?').toUpperCase()):(weekLabels[weekOf(iso)]||'');
-      if(group!==curGroup){curGroup=group;rows+=`<tr><td colspan="7" style="background:#dfe6ee;font-weight:700;color:#2a4a6a;padding:5px 9px;border-bottom:1px solid #b8c4d0">${esc(group)}</td></tr>`;}
+      let group='';
+      if(sortMode==='prov')group=(c.Provincia||'?').toUpperCase();
+      else if(sortMode==='regione')group=(c.Regione||'?').toUpperCase();
+      else if(sortMode==='giorno')group=weekLabels[weekOf(iso)]||'';
+      // "per settimana"/"per mese": nessuna intestazione di gruppo, la finestra e' gia' precisa
+      if(group&&group!==curGroup){curGroup=group;rows+=`<tr><td colspan="7" style="background:#dfe6ee;font-weight:700;color:#2a4a6a;padding:5px 9px;border-bottom:1px solid #b8c4d0">${esc(group)}</td></tr>`;}
       const d=new Date(iso+'T12:00:00');const dow=['Dom','Lun','Mar','Mer','Gio','Ven','Sab'][d.getDay()];
       const dStr=`${dow} ${iso.slice(8)}/${iso.slice(5,7)}/${iso.slice(0,4)}`;
       const tStr=item.h!==null?`${String(item.h).padStart(2,'0')}:${String(item.m||0).padStart(2,'0')}`:'--';
@@ -2286,7 +2407,7 @@ function renderAgenda(){
         <td style="padding:5px 8px;border-bottom:1px solid #e8e4dc;background:${bg}">${esc(c.Citta||'')}${c.Provincia?' - '+esc(c.Provincia):''}</td>
         <td style="padding:5px 8px;border-bottom:1px solid #e8e4dc;background:${bg}"><span class="sq ${sqColor(_esitoRiga(item.t))}" style="margin-right:3px"></span>${esc(item.t.Esito||'')}</td>
       </tr>`;});
-    document.getElementById('calListBody').innerHTML=rows||'<tr><td colspan="7" style="text-align:center;color:#aaa;padding:20px">Nessun evento nelle 3 settimane</td></tr>';
+    document.getElementById('calListBody').innerHTML=rows||`<tr><td colspan="7" style="text-align:center;color:#aaa;padding:20px">Nessun evento in questo periodo</td></tr>`;
   }
 }
 
@@ -4569,6 +4690,8 @@ function modalSearchFn(q){
 // LIST
 let _currentListData=[];
 let listSortCol='ID_contatto',listSortDir=-1; // -1 = decrescente (ID: ultimi inseriti in cima)
+let _elencoBaseList=[]; // ultimo elenco "di base" passato a renderList, prima di ordinamento/raggruppamento
+let _elencoGroupLabels=null; // etichette di gruppo parallele a _currentListData quando si usa "per provincia/regione" (appendice 29)
 
 // ═══════════════════════════════════════════════════
 // RICERCA PER PROVINCIA (Blocco C) + ZONA DI LAVORO
@@ -4756,11 +4879,23 @@ async function loadZona(){
 }
 
 function renderList(list){
-  _currentListData=[...list];
-  _applyListSort();
-  listSelectedIdx=-1;
-  _renderListRows();
-  _updateListSortHeaders();
+  _elencoBaseList=[...list];
+  const modo=document.getElementById('elencoListSort')?.value||'manuale';
+  if(modo==='manuale'){
+    _currentListData=[...list];
+    _elencoGroupLabels=null;
+    _applyListSort();
+    listSelectedIdx=-1;
+    _renderListRows();
+    _updateListSortHeaders();
+  }else{
+    const ord=_ordinaComeAgenda(list,modo);
+    _currentListData=ord.list;
+    _elencoGroupLabels=ord.groups;
+    listSelectedIdx=-1;
+    _renderListRows();
+    _clearListSortHeaders();
+  }
 }
 function _applyListSort(){
   const col=listSortCol,dir=listSortDir;
@@ -4780,6 +4915,12 @@ function _applyListSort(){
   });
 }
 function sortList(col){
+  // Un clic su una colonna torna sempre all'ordine libero manuale (appendice 29:
+  // le nuove opzioni per giorno/settimana/mese/provincia/regione si spengono).
+  const sel=document.getElementById('elencoListSort');
+  if(sel&&sel.value!=='manuale'){sel.value='manuale';_toggleElencoPickers('manuale');}
+  _elencoGroupLabels=null;
+  _currentListData=[..._elencoBaseList];
   if(listSortCol===col)listSortDir=-listSortDir;
   else{listSortCol=col;listSortDir=(col==='ID_contatto')?-1:1;}
   _applyListSort();_renderListRows();_updateListSortHeaders();
@@ -4787,16 +4928,84 @@ function sortList(col){
 function _updateListSortHeaders(){
   ['ID_contatto','Cognome','Nome','Citta','Provincia','Esito_ultima_chiamata','Prossima_telefonata'].forEach(c=>{
     const th=document.getElementById('lh_'+c);if(!th)return;
-    const base=th.textContent.replace(/[ \u25B2\u25BC]+$/,'');
-    th.textContent=base+(listSortCol===c?(listSortDir>0?' \u25B2':' \u25BC'):'');
+    const base=th.textContent.replace(/[ ▲▼]+$/,'');
+    th.textContent=base+(listSortCol===c?(listSortDir>0?' ▲':' ▼'):'');
   });
+}
+function _clearListSortHeaders(){
+  ['ID_contatto','Cognome','Nome','Citta','Provincia','Esito_ultima_chiamata','Prossima_telefonata'].forEach(c=>{
+    const th=document.getElementById('lh_'+c);if(!th)return;
+    th.textContent=th.textContent.replace(/[ ▲▼]+$/,'');
+  });
+}
+function _toggleElencoPickers(modo){
+  const wk=document.getElementById('elencoListSettimana');
+  const me=document.getElementById('elencoListMese');
+  if(wk){wk.style.display=modo==='settimana'?'':'none';if(modo==='settimana'&&!wk.value)wk.value=_isoWeekStrOf(new Date());}
+  if(me){me.style.display=modo==='mese'?'':'none';if(modo==='mese'&&!me.value){const _n=new Date();me.value=`${_n.getFullYear()}-${String(_n.getMonth()+1).padStart(2,'0')}`;}}
+}
+function _elencoSortChanged(){
+  const modo=document.getElementById('elencoListSort')?.value||'manuale';
+  _toggleElencoPickers(modo);
+  renderList(_elencoBaseList);
+}
+function _ordinaComeAgenda(list,modo){
+  // Stesso ordine e le stesse scelte della lista Agenda (giorno/settimana/mese/
+  // provincia/regione, dal piu' vicino al piu' lontano da oggi), qui applicate
+  // alla "Prossima telefonata" di ogni scheda invece che agli eventi di agenda.
+  // "Per giorno" riordina tutto l'elenco senza restringerlo; "per settimana"/
+  // "per mese" mostrano solo le schede con Prossima telefonata in quel periodo
+  // (si allargano, come in agenda); "per provincia"/"per regione" raggruppano
+  // senza restringere il periodo, perche' qui non c'e' una finestra fissa
+  // dell'agenda da cui partire.
+  const todayISO2=fISO(new Date());
+  const oggiT=new Date(todayISO2+'T12:00:00').getTime();
+  const dist=(iso)=>Math.abs(Math.round((new Date(iso+'T12:00:00').getTime()-oggiT)/86400000));
+  const withDate=list.map(c=>{const p=pd(c.Prossima_telefonata);return {c,iso:p?p.iso:''};});
+  if(modo==='settimana'){
+    const wkInput=document.getElementById('elencoListSettimana');
+    const wkVal=(wkInput&&wkInput.value)||_isoWeekStrOf(new Date());
+    const wm=wkVal.match(/^(\d{4})-W(\d{2})$/);
+    const monday=wm?_mondayOfISOWeek(parseInt(wm[1],10),parseInt(wm[2],10)):getMonday(new Date());
+    const giorni=[...Array(7)].map((_,i)=>fISO(addDays(monday,i)));
+    const filtrati=withDate.filter(x=>x.iso&&giorni.includes(x.iso));
+    filtrati.sort((a,b)=>dist(a.iso)-dist(b.iso)||a.iso.localeCompare(b.iso));
+    return {list:filtrati.map(x=>x.c),groups:null};
+  }
+  if(modo==='mese'){
+    const meInput=document.getElementById('elencoListMese');
+    const now=new Date();
+    const meVal=(meInput&&meInput.value)||`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+    const mm=meVal.match(/^(\d{4})-(\d{2})$/);
+    const prefix=mm?`${mm[1]}-${mm[2]}`:meVal;
+    const filtrati=withDate.filter(x=>x.iso&&x.iso.startsWith(prefix));
+    filtrati.sort((a,b)=>dist(a.iso)-dist(b.iso)||a.iso.localeCompare(b.iso));
+    return {list:filtrati.map(x=>x.c),groups:null};
+  }
+  if(modo==='prov'||modo==='regione'){
+    const campo=modo==='prov'?'Provincia':'Regione';
+    const conDati=list.map(c=>{
+      const p=pd(c.Prossima_telefonata);
+      return {c,iso:p?p.iso:'',chiave:(c[campo]||'').trim()||('(senza '+campo.toLowerCase()+')')};
+    });
+    conDati.sort((a,b)=>a.chiave.localeCompare(b.chiave,'it')||(dist(a.iso||todayISO2)-dist(b.iso||todayISO2))||((a.iso?0:1)-(b.iso?0:1)));
+    const groups=[];let curGroup=null;
+    conDati.forEach(x=>{groups.push(x.chiave!==curGroup?x.chiave:'');curGroup=x.chiave;});
+    return {list:conDati.map(x=>x.c),groups};
+  }
+  // 'giorno': riordina l'intero elenco per distanza da oggi, senza restringerlo;
+  // le schede senza Prossima telefonata restano in fondo, invariate fra loro.
+  const conData=withDate.filter(x=>x.iso), senzaData=withDate.filter(x=>!x.iso);
+  conData.sort((a,b)=>dist(a.iso)-dist(b.iso)||a.iso.localeCompare(b.iso));
+  return {list:[...conData.map(x=>x.c),...senzaData.map(x=>x.c)],groups:null};
 }
 
 function _renderListRows(){
   const list=_currentListData;
-  document.getElementById('listCount').textContent=`${list.length.toLocaleString('it')} contatti${searchActive?' \u00b7 dalla ricerca':''}`;
+  const groups=_elencoGroupLabels;
+  document.getElementById('listCount').textContent=`${list.length.toLocaleString('it')} contatti${searchActive?' · dalla ricerca':''}`;
   const MAX=1200;
-  document.getElementById('listBody').innerHTML=list.slice(0,MAX).map((c,i)=>`
+  document.getElementById('listBody').innerHTML=list.slice(0,MAX).map((c,i)=>`${(groups&&groups[i])?`<tr><td colspan="8" style="background:#dfe6ee;font-weight:700;color:#2a4a6a;padding:5px 9px;border-bottom:1px solid #b8c4d0">${esc(groups[i])}</td></tr>`:''}
     <tr data-idx="${i}" onclick="listSelectRow(${i},true)"
         onmouseover="if(listSelectedIdx!==${i})this.style.background='#d4e8ff'"
         onmouseout="if(listSelectedIdx!==${i})this.style.background=''">
@@ -5050,6 +5259,7 @@ function openRegTel(){
   _regTelContact=c;
   document.getElementById('regTelContactName').textContent=esc(c.Cognome||'')+' '+esc(c.Nome||'')+' ('+esc(c.ID_contatto)+')';
   document.querySelectorAll('input[name="regEsito"]').forEach(r=>r.checked=false);
+  document.querySelectorAll('input[name="regStatoNum"]').forEach(r=>r.checked=false);
   const today=new Date();
   document.getElementById('regTelDate').value=fISO(today);
   document.getElementById('regTelOra').value='10:00';
@@ -5103,6 +5313,10 @@ function saveRegTel(){
     alert(_esitoPositivo(esito)?'Metti la data dell’appuntamento fissata con il cliente.':'Metti la data del richiamo.');
     return;
   }
+  // Stato numero: facoltativo, non tocca Note_telefono se non e' stato scelto
+  // nulla (cosi' non si cancella per sbaglio una nota gia' presente).
+  const statoNum=document.querySelector('input[name="regStatoNum"]:checked')?.value||'';
+  if(statoNum)c.Note_telefono=statoNum;
   const oraStr=ora?ora+':00':'';
   const today=new Date();
   const todayStr=String(today.getDate()).padStart(2,'0')+'/'+String(today.getMonth()+1).padStart(2,'0')+'/'+today.getFullYear();
@@ -5143,7 +5357,7 @@ function saveRegTel(){
 }
 async function _salvaTelefonataIncrementale(tel, c){
   showSaveToast('saving');
-  const upd={Esito_ultima_chiamata:c.Esito_ultima_chiamata, Prossima_telefonata:c.Prossima_telefonata||'', Ora_appuntamento:c.Ora_appuntamento||''};
+  const upd={Esito_ultima_chiamata:c.Esito_ultima_chiamata, Prossima_telefonata:c.Prossima_telefonata||'', Ora_appuntamento:c.Ora_appuntamento||'', Note_telefono:c.Note_telefono||''};
   try{
     const r=await fetch('/api/aggiungi_telefonata',{method:'POST',
       headers:{'Content-Type':'application/json'},
