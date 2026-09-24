@@ -997,6 +997,42 @@ def api_attivita():
                     'attivita': crm_db.attivita_elenco(giorni, 400),
                     'adesso': crm_auth._ora_italiana().isoformat(timespec='seconds')})
 
+@app.route('/api/scheda_aperta', methods=['POST'])
+@richiede_login
+def api_scheda_aperta():
+    """Registra che un operatore ha aperto la scheda di un contatto (report
+    Statistiche -> Schede aperte, solo titolare). Il titolare non genera
+    mai questa riga: il frontend non manda la richiesta per lui, cosi' il
+    report resta sul lavoro delle telefoniste, non sulla sua navigazione.
+    Tabella separata da crm_attivita (vedi crm_db.py): un'apertura di
+    scheda e' molto piu' frequente delle altre azioni e affollerebbe quel
+    registro."""
+    try:
+        u = _utente_corrente()
+        if not u or u.get('ruolo') == 'titolare':
+            return jsonify({'ok': True})
+        body = request.get_json(force=True) or {}
+        cid = str(body.get('id_contatto', '') or '')[:40]
+        nome_c = str(body.get('nome', '') or '')[:120]
+        if cid:
+            crm_db.scheda_aperta_registra(u.get('nome', ''), u.get('ruolo', ''),
+                                           u.get('zona', ''), cid, nome_c)
+        return jsonify({'ok': True})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/schede_aperte')
+@solo_titolare('schede_aperte')
+def api_schede_aperte():
+    """Registro delle schede aperte dagli operatori (solo titolare)."""
+    try:
+        giorni = int(request.args.get('giorni', 30))
+    except Exception:
+        giorni = 30
+    giorni = min(max(giorni, 1), 90)
+    return jsonify({'ok': True, 'giorni': giorni,
+                    'schede': crm_db.schede_aperte_elenco(giorni, 5000)})
+
 @app.route('/api/utenti', methods=['GET'])
 @solo_titolare('gestione_utenti')
 def api_utenti_elenco():

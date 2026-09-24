@@ -1163,6 +1163,68 @@ def sessioni_elenco(giorni=7):
 
 
 # ═══════════════════════════════════════════════════════════════════
+#  SCHEDE APERTE DAGLI OPERATORI (report Statistiche, solo titolare)
+# ═══════════════════════════════════════════════════════════════════
+# Tabella separata da crm_attivita: aprire una scheda e' un'azione di sola
+# lettura ma molto piu' frequente delle altre (una telefonista ne apre
+# decine/centinaia al giorno), quindi qui dentro affollerebbe il registro
+# delle operazioni e ne farebbe sparire dalla vista le voci piu' importanti
+# (telefonate, schede salvate...). Il titolare non genera mai queste righe:
+# la chiamata parte dal frontend solo per gli operatori (vedi _registraSchedaAperta).
+SCHEDE_APERTE_MAX = 60000   # righe conservate (volume alto: potatura piu' larga di ATTIVITA_MAX)
+
+def _sch_db_init():
+    conn = _get_pg()
+    with conn.cursor() as cur:
+        cur.execute("CREATE TABLE IF NOT EXISTS crm_schede_aperte ("
+                    "id BIGSERIAL PRIMARY KEY, nome TEXT, ruolo TEXT, zona TEXT, "
+                    "id_contatto TEXT, contatto_nome TEXT, "
+                    "quando TIMESTAMPTZ DEFAULT now())")
+        cur.execute("CREATE INDEX IF NOT EXISTS crm_schede_aperte_quando ON crm_schede_aperte (quando DESC)")
+
+def scheda_aperta_registra(nome, ruolo, zona, id_contatto, contatto_nome=''):
+    """Registra che un operatore ha aperto la scheda di un contatto. Non
+    deve MAI far fallire l'apertura della scheda per lui: se il registro
+    non si scrive, pazienza."""
+    if not USE_DB:
+        return False
+    try:
+        _sch_db_init()
+        conn = _get_pg()
+        with conn.cursor() as cur:
+            cur.execute("INSERT INTO crm_schede_aperte (nome, ruolo, zona, id_contatto, contatto_nome) "
+                        "VALUES (%s,%s,%s,%s,%s)",
+                        (str(nome or '')[:80], str(ruolo or '')[:20], str(zona or '')[:40],
+                         str(id_contatto or '')[:40], str(contatto_nome or '')[:120]))
+            # potatura: tengo le ultime SCHEDE_APERTE_MAX righe
+            cur.execute("DELETE FROM crm_schede_aperte WHERE id < "
+                        "(SELECT COALESCE(MIN(id),0) FROM (SELECT id FROM crm_schede_aperte "
+                        " ORDER BY id DESC LIMIT %s) t)", (SCHEDE_APERTE_MAX,))
+        return True
+    except Exception as e:
+        print(f"  (scheda_aperta_registra: {e})")
+        return False
+
+def schede_aperte_elenco(giorni=30, limite=5000):
+    """Ultime aperture di schede, dalla piu' recente."""
+    if not USE_DB:
+        return []
+    try:
+        _sch_db_init()
+        conn = _get_pg()
+        with conn.cursor() as cur:
+            cur.execute("SELECT nome, ruolo, zona, id_contatto, contatto_nome, quando "
+                        "FROM crm_schede_aperte WHERE quando > now() - (%s || ' days')::interval "
+                        "ORDER BY id DESC LIMIT %s", (str(int(giorni)), int(limite)))
+            return [{'nome': a, 'ruolo': b, 'zona': c, 'id_contatto': d, 'contatto_nome': e,
+                     'quando': f.isoformat(timespec='seconds') if f else ''}
+                    for a, b, c, d, e, f in cur.fetchall()]
+    except Exception as e:
+        print(f"  (schede_aperte_elenco: {e})")
+        return []
+
+
+# ═══════════════════════════════════════════════════════════════════
 #  MESSAGGI FRA TELEFONISTA E TITOLARE
 # ═══════════════════════════════════════════════════════════════════
 # Una conversazione per ogni telefonista, con il titolare. Serve a chiedere le
